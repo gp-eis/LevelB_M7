@@ -1,0 +1,37 @@
+:root{--week-1-yellow:#f6c934;--week-1-light:#ffe982;--week-1-dark:#b76d08}
+.week-1-bees-body{background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%)}
+.week-1-bees-title{color:var(--week-1-dark);text-shadow:3px 3px #fff,6px 6px rgba(183,109,8,.18)}
+.week-1-bees-card{max-width:1120px;margin:24px auto 0;padding:clamp(10px,2vw,18px);border:4px solid rgba(255,255,255,.96);border-top:9px solid var(--week-1-yellow);border-radius:30px;background:rgba(255,255,255,.96);box-shadow:0 10px 0 rgba(199,154,8,.2),0 18px 30px rgba(40,55,75,.18)}
+.week-1-bees-stage{position:relative;overflow:hidden;width:100%;aspect-ratio:1412/1114;border:7px solid #fff;border-radius:28px;background:#ffe89a}
+.week-1-bees-background{display:block;width:100%;height:100%;object-fit:contain}
+.week-1-bees-hotspots{position:absolute;inset:0;z-index:4}
+.bee-hotspot{position:absolute;border-radius:50%;transition:transform .16s ease,filter .16s ease}
+.bee-picture-choice{position:absolute;z-index:1;inset:0;width:100%;height:100%;padding:0;border:clamp(4px,.52vw,7px) solid transparent;border-radius:50%;background:transparent;cursor:pointer;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease}
+.bee-picture-choice:disabled{cursor:default}
+.bee-picture-choice:not(:disabled):hover,.bee-picture-choice:not(:disabled):focus-visible{border-color:rgba(255,255,255,.95);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(23,105,199,.55);outline:none}
+.bee-element-speaker{position:absolute;z-index:6;right:1%;bottom:2%;display:grid;place-items:center;width:clamp(34px,4vw,48px);aspect-ratio:1;padding:0;border:4px solid #fff;border-radius:50%;background:#1769c7;color:#fff;font-size:clamp(15px,1.8vw,22px);box-shadow:0 4px 0 #0d4384;opacity:.96;cursor:pointer}
+.bee-element-speaker:disabled{opacity:.48;cursor:default}
+.bee-hotspot::before,.bee-hotspot::after{content:"";position:absolute;z-index:5;left:4%;top:101%;width:92%;height:29%;border:clamp(3px,.42vw,6px) solid #ff9da9;border-radius:50%;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .2s ease}
+.bee-hotspot::before{transform:rotate(-4deg) scale(.78)}
+.bee-hotspot::after{left:6%;top:103%;width:88%;height:26%;border-width:clamp(2px,.28vw,4px);transform:rotate(3deg) scale(.78)}
+.bee-hotspot.is-correct::before,.bee-hotspot.is-correct::after{opacity:1;transform:rotate(-4deg) scale(1)}
+.bee-hotspot.is-correct::after{transform:rotate(3deg) scale(1)}
+.bee-hotspot.is-wrong{animation:bee-wrong-shake .42s ease}
+.bee-hotspot.is-wrong .bee-picture-choice{border-color:#e53935;background:rgba(229,57,53,.18);box-shadow:0 0 0 4px rgba(255,255,255,.9),0 0 18px rgba(229,57,53,.7)}
+.bee-hotspot.protect{left:27.1%;top:27.4%;width:20.3%;height:25.2%}
+.bee-hotspot.collect{left:53.1%;top:27.5%;width:20.3%;height:25.2%}
+.bee-hotspot.nuts{left:77.4%;top:27.8%;width:20.1%;height:25.1%}
+.bee-hotspot.flowers{left:26.5%;top:62.2%;width:20.3%;height:25.3%}
+.bee-hotspot.hives{left:53.1%;top:62.5%;width:20.3%;height:25.1%}
+.bee-hotspot.honey{left:77.3%;top:62.8%;width:20.2%;height:25.1%}
+.week-1-bees-start{position:absolute;z-index:10;inset:0;display:grid;place-items:center;background:rgba(17,41,68,.42)}
+.week-1-bees-start[hidden]{display:none}
+.week-1-bees-start-button{min-width:min(320px,72%);min-height:80px;padding:16px 30px;border:7px solid #fff;border-radius:999px;background:linear-gradient(180deg,var(--week-1-light),var(--week-1-yellow));color:#664d00;box-shadow:0 9px 0 var(--week-1-dark),0 16px 28px rgba(20,31,58,.38);font:900 clamp(1.25rem,3vw,2rem) var(--font-display);cursor:pointer}
+.week-1-bees-start-button:hover{transform:translateY(-3px)}
+.week-1-bees-status{margin:14px 0 0;min-height:1.5em;color:#315273;font-family:var(--font-friendly);font-size:clamp(1rem,2vw,1.25rem);font-weight:800;text-align:center}
+.week-1-bees-status.is-correct{color:#27831f}
+.week-1-bees-status.is-wrong{color:#c62c3b}
+.week-1-bees-restart{display:flex;margin:12px auto 0}
+@keyframes bee-wrong-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+@media(max-width:650px){.week-1-bees-card{padding:8px}.week-1-bees-stage{border-width:4px;border-radius:18px}.bee-element-speaker{right:0;bottom:0;width:36px;border-width:3px;font-size:.82rem}.bee-hotspot::before{border-width:3px}.bee-hotspot::after{border-width:2px}.week-1-bees-start-button{min-height:64px;border-width:5px}}
+@media(prefers-reduced-motion:reduce){.bee-hotspot{transition:none}.bee-hotspot.is-wrong{animation:none}}

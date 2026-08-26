@@ -1,0 +1,30 @@
+{
+  "sentenceStem": "Bees ______.",
+  "actions": [
+    {
+      "id": "protect-the-queen",
+      "completion": "protect the queen",
+      "image": "protect-the-queen.png"
+    },
+    {
+      "id": "make-honey",
+      "completion": "make honey",
+      "image": "make-honey.png"
+    },
+    {
+      "id": "collect-nectar",
+      "completion": "collect nectar",
+      "image": "collect-nectar.png"
+    },
+    {
+      "id": "find-flowers",
+      "completion": "find flowers",
+      "image": "find-flowers.png"
+    },
+    {
+      "id": "build-hives",
+      "completion": "build hives",
+      "image": "build-hives.png"
+    }
+  ]
+}

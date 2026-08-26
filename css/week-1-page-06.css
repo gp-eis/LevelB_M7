@@ -1,0 +1,197 @@
+:root { --week-1-yellow:#f6c934; --week-1-light:#ffe982; --week-1-dark:#b76d08; }
+.week-1-bees-body { background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%); }
+.week-1-bees-title { color:var(--week-1-dark); text-shadow:3px 3px #fff,6px 6px rgba(183,109,8,.18); }
+.week-1-bees-card { border:4px solid rgba(255,255,255,.96); border-top:9px solid var(--week-1-yellow); border-radius:30px; background:rgba(255,255,255,.96); box-shadow:0 10px 0 rgba(199,154,8,.2),0 18px 30px rgba(40,55,75,.18); }
+
+.page6-queen-card {
+  max-width: 1120px;
+  margin: 24px auto 0;
+  padding: clamp(10px, 2vw, 18px);
+  overflow: hidden;
+}
+
+.page6-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1412 / 1114;
+  overflow: hidden;
+  border: 7px solid #fff;
+  border-radius: 28px;
+  background: #139bef;
+  isolation: isolate;
+}
+
+.page6-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+.page6-clues-speaker {
+  position: absolute;
+  z-index: 4;
+  left: 1.2%;
+  top: 30.1%;
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  min-width: 8.6%;
+  min-height: 6.3%;
+  padding: .35em .7em;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(145deg, #55b8ff, #0878d4);
+  box-shadow: 0 7px 13px rgba(3, 71, 126, .35);
+  font: 800 clamp(.68rem, 1.35vw, 1.12rem)/1.1 inherit;
+  cursor: pointer;
+}
+
+.page6-clues-speaker:hover:not(:disabled),
+.page6-clues-speaker:focus-visible:not(:disabled) { transform: scale(1.055); }
+.page6-clues-speaker:disabled { cursor: wait; filter: grayscale(.25); opacity: .62; }
+.page6-speaker-label { letter-spacing: .02em; }
+
+.page6-choices {
+  position: absolute;
+  z-index: 2;
+  left: 13.8%;
+  right: 11.7%;
+  top: 38.2%;
+  bottom: 2.6%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 5vw, 4.6rem);
+  align-items: stretch;
+}
+
+.page6-choice {
+  appearance: none;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 1.5%;
+  padding: 0;
+  border: 0;
+  color: #171717;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.page6-choice:hover:not(:disabled),
+.page6-choice:focus-visible:not(:disabled) { transform: translateY(-5px) scale(1.012); }
+.page6-choice:focus-visible { outline: 5px solid #ffe45d; outline-offset: 5px; border-radius: 24px; }
+.page6-choice:disabled { cursor: default; }
+
+.page6-picture-frame {
+  display: block;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  border: 7px solid transparent;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 10px 18px rgba(5, 69, 121, .33);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.page6-picture-frame img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+.page6-answer-strip {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 13.8%;
+  align-items: center;
+  justify-content: center;
+  gap: .38em;
+  padding: .3em .38em;
+  border: 6px solid transparent;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 15px rgba(5, 69, 121, .32);
+  font-size: clamp(.7rem, 1.9vw, 1.72rem);
+  font-weight: 800;
+  white-space: nowrap;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.page6-answer-strip strong { color: #1169ce; font-weight: 900; }
+.page6-checkbox {
+  display: grid;
+  width: 1.15em;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  place-items: center;
+  border: .12em solid #222;
+  border-radius: .2em;
+  background: #fff;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.1);
+  font-size: 1.1em;
+}
+
+.page6-choice.is-correct .page6-picture-frame,
+.page6-choice.is-correct .page6-answer-strip { border-color: #59c94b; box-shadow: 0 0 0 5px rgba(102, 226, 76, .25), 0 10px 18px rgba(5, 69, 121, .28); }
+.page6-choice.is-correct .page6-checkbox::after { content: '\2713'; color: #35b33b; font-size: 1.4em; font-weight: 1000; line-height: .8; }
+.page6-choice.is-wrong .page6-picture-frame,
+.page6-choice.is-wrong .page6-answer-strip { border-color: #f04c56; background-color: #fff2f2; }
+.page6-choice.is-wrong .page6-checkbox { border-color: #e72836; background: #ffe3e4; }
+.page6-choice.is-wrong { animation: page6-shake .45s ease-in-out; }
+
+@keyframes page6-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px); }
+  40% { transform: translateX(11px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(6px); }
+}
+
+.page6-start-layer {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 67, 126, .18);
+  backdrop-filter: blur(2px);
+}
+.page6-start-layer[hidden] { display: none; }
+.page6-start-button {
+  padding: .75em 1.4em;
+  border: 5px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(145deg, #32b7ff, #0874ce);
+  box-shadow: 0 10px 24px rgba(0, 62, 116, .45);
+  font: 900 clamp(1.05rem, 2.5vw, 2rem)/1 inherit;
+  cursor: pointer;
+}
+.page6-start-button:hover, .page6-start-button:focus-visible { transform: scale(1.045); }
+
+.page6-status { min-height: 1.6em; margin: .7rem 0 .35rem; text-align: center; color: #15538b; font-weight: 800; }
+.page6-restart { display: block; margin: .25rem auto 0; cursor: pointer; }
+.top-page-nav-spacer { width: 9.5rem; }
+
+@media (max-width: 720px) {
+  .page6-board { border-width: 3px; border-radius: 19px; }
+  .page6-picture-frame { border-width: 4px; border-radius: 16px; }
+  .page6-answer-strip { border-width: 3px; border-radius: 13px; gap: .35em; }
+  .page6-clues-speaker { left: .8%; top: 30.3%; min-width: 40px; min-height: 40px; border-width: 2px; }
+  .page6-speaker-label { display: none; }
+  .page6-choices { left: 11.8%; right: 9.8%; gap: 5%; }
+  .top-page-nav-spacer { width: 5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page6-choice, .page6-clues-speaker, .page6-start-button { transition: none; }
+  .page6-choice.is-wrong { animation: none; }
+}

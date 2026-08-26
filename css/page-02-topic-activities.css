@@ -1,0 +1,1025 @@
+.topic-activity-trigger { position: relative; }
+.topic-video-shell { position: relative; }
+.topic-video-shell .lesson-video { width: 100%; }
+.topic-video-lock {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: clamp(86px, 13vw, 122px);
+  aspect-ratio: 1;
+  padding: 12px;
+  border: 7px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(180deg, #ffc944, #ef8913);
+  box-shadow: 0 8px 0 #9f5207, 0 16px 28px rgba(0, 0, 0, .34);
+  font-size: clamp(2rem, 5vw, 3rem);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.topic-video-lock small {
+  position: absolute;
+  top: calc(100% + 15px);
+  width: min(290px, 72vw);
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #26486a;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .18);
+  font-size: clamp(.72rem, 2vw, .92rem);
+  font-weight: 900;
+}
+
+.topic-video-lock.is-locked { opacity: .94; cursor: default; }
+.topic-video-lock[hidden] { display: none; }
+
+.topic-activity-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(17, 43, 66, .78);
+  backdrop-filter: blur(6px);
+}
+
+.topic-activity-overlay[hidden] { display: none; }
+
+.topic-activity-dialog {
+  position: relative;
+  overflow: hidden auto;
+  width: min(920px, 96vw);
+  max-height: 94svh;
+  padding: clamp(16px, 3vw, 28px);
+  border: 7px solid #fff;
+  border-radius: 34px;
+  background: linear-gradient(145deg, #fffbe6, #e9f9ff);
+  box-shadow: 0 14px 0 #d68b1d, 0 26px 60px rgba(0, 0, 0, .34);
+}
+
+.topic-activity-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: #ed5d58;
+  box-shadow: 0 4px 0 #ad3433;
+  font-size: 2rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.topic-activity-header {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.topic-activity-heading { min-width: 0; }
+.topic-activity-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+
+.topic-activity-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 76px;
+  width: 76px;
+  aspect-ratio: 1;
+  border: 5px solid #fff;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #ffe577, #f5a822);
+  box-shadow: 0 6px 0 #bd7207;
+  font-size: 2.7rem;
+}
+
+.topic-activity-header h2 {
+  margin: 0;
+  color: #1664ab;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+}
+
+.topic-activity-header p {
+  margin: 5px 0 0;
+  color: #405f7a;
+  font-family: var(--font-friendly);
+  font-weight: 800;
+}
+
+.topic-activity-skip-top {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 8px 18px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(180deg, #ffb234, #e07a00);
+  box-shadow: 0 5px 0 #a95b0a;
+  font-weight: 900;
+  cursor: pointer;
+}
+.topic-activity-skip-top:hover { transform: translateY(-2px); }
+.topic-activity-skip-top:active { transform: translateY(2px); box-shadow: 0 2px 0 #a95b0a; }
+.topic-skip-short { display: none; }
+
+.topic-activity-progress {
+  overflow: hidden;
+  height: 16px;
+  margin: 17px 0 13px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: #d8edfb;
+  box-shadow: inset 0 2px 4px rgba(30, 58, 95, .18);
+}
+
+.topic-activity-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f8bb24, #55c567);
+  transition: width .28s ease;
+}
+
+.topic-activity-stage {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-height: min(58svh, 500px);
+  padding: clamp(54px, 9vw, 82px) clamp(12px, 3vw, 28px) clamp(18px, 3vw, 30px);
+  border: 6px solid #fff;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, .72) 0 8px, transparent 9px),
+    radial-gradient(circle at 82% 76%, rgba(255, 255, 255, .65) 0 10px, transparent 11px),
+    linear-gradient(145deg, #c9efff, #fff5b8 58%, #dff7c8);
+  box-shadow: inset 0 0 0 3px rgba(56, 150, 91, .2), 0 8px 18px rgba(30, 58, 95, .18);
+  user-select: none;
+}
+
+.topic-activity-hint {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 5;
+  width: max-content;
+  max-width: 84%;
+  margin: 0;
+  padding: 8px 16px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #23557f;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 5px 0 rgba(68, 116, 149, .45);
+  font-size: clamp(.83rem, 2.4vw, 1.05rem);
+  font-weight: 900;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.topic-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2.4vw, 22px);
+  width: min(720px, 100%);
+}
+
+.topic-choice-grid.is-sequence { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.topic-choice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 126px;
+  padding: 12px 8px;
+  border: 5px solid #fff;
+  border-radius: 26px;
+  color: #21496f;
+  background: linear-gradient(160deg, #fff, #edf8ff);
+  box-shadow: 0 7px 0 #aacde4, 0 12px 18px rgba(30, 70, 110, .16);
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+}
+
+.topic-choice:hover:not(:disabled) { filter: brightness(1.03); transform: translateY(-4px); }
+.topic-choice:active:not(:disabled) { transform: translateY(2px); }
+.topic-choice-symbol { font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1; }
+.topic-choice strong { font-family: var(--font-friendly); font-size: clamp(.86rem, 2.4vw, 1.08rem); line-height: 1.15; }
+
+.topic-choice.is-correct {
+  border-color: #fff;
+  color: #27712f;
+  background: #eaffdf;
+  box-shadow: 0 0 0 6px rgba(96, 211, 79, .25), 0 7px 0 #3fa734;
+  transform: scale(1.05);
+}
+
+.topic-choice.is-correct::after {
+  content: "✓";
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  background: #43bd45;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.topic-choice.is-wrong { animation: topic-wrong .38s ease; box-shadow: 0 0 0 6px rgba(237, 75, 75, .2), 0 7px 0 #d44b4b; }
+.topic-choice:disabled:not(.is-correct) { opacity: .5; cursor: default; }
+
+.topic-activity-feedback {
+  min-height: 30px;
+  margin-top: 10px;
+  color: #2c6b3f;
+  font-family: var(--font-friendly);
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.topic-activity-feedback.is-wrong { color: #c33e3e; }
+.topic-activity-footer { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.topic-activity-footer .pill-btn { min-width: 160px; justify-content: center; }
+
+.topic-activity-success {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(16, 65, 96, .78);
+  backdrop-filter: blur(5px);
+}
+
+.topic-activity-success[hidden] { display: none; }
+.topic-activity-success-card { width: min(440px, 92%); padding: 28px; border: 7px solid #fff; border-radius: 32px; background: linear-gradient(145deg, #fffbd6, #d9ffd7); box-shadow: 0 12px 0 #4aa058, 0 22px 40px rgba(0, 0, 0, .28); text-align: center; }
+.topic-activity-success-card > span { font-size: 4.6rem; }
+.topic-activity-success-card h3 { margin: 4px 0; color: #2c8b48; font-size: 2rem; }
+.topic-activity-success-card p { margin: 7px 0 18px; color: #31556f; font-size: 1.2rem; font-weight: 900; }
+.topic-activity-watch { min-width: min(330px, 90%); min-height: 64px; padding: 12px 24px; border: 6px solid #fff; border-radius: 999px; color: #fff; background: linear-gradient(180deg, #72d557, #39a844); box-shadow: 0 7px 0 #267633; font-size: 1.2rem; font-weight: 900; cursor: pointer; }
+
+@keyframes topic-wrong { 25%, 75% { transform: translateX(-7px); } 50% { transform: translateX(7px); } }
+
+@media (max-width: 700px) {
+  .topic-activity-overlay { padding: 0; }
+  .topic-activity-dialog { width: 100vw; max-height: 100svh; min-height: 100svh; padding: 10px; border: 0; border-radius: 0; box-shadow: none; }
+  .topic-activity-close { flex-basis: 43px; width: 43px; }
+  .topic-activity-header { grid-template-columns: 54px minmax(0, 1fr) auto; gap: 8px; }
+  .topic-activity-icon { flex-basis: 54px; width: 54px; border-width: 3px; border-radius: 17px; font-size: 2rem; }
+  .topic-activity-header p { font-size: .83rem; line-height: 1.15; }
+  .topic-activity-actions { gap: 6px; }
+  .topic-activity-skip-top { min-width: 76px; min-height: 43px; padding: 6px 9px; font-size: .8rem; }
+  .topic-skip-full { display: none; }
+  .topic-skip-short { display: inline; }
+  .topic-activity-progress { margin: 10px 0 8px; }
+  .topic-activity-stage { min-height: calc(100svh - 230px); padding: 58px 7px 10px; border-width: 4px; border-radius: 18px; }
+  .topic-choice-grid, .topic-choice-grid.is-sequence { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .topic-choice { min-height: 105px; border-width: 4px; border-radius: 20px; }
+  .topic-activity-hint { top: 8px; max-width: 88%; padding: 6px 11px; }
+}
+
+@media (max-width: 420px) {
+  .topic-video-lock { width: 78px; border-width: 5px; }
+  .topic-activity-stage { min-height: calc(100svh - 218px); }
+  .topic-choice { min-height: 92px; padding: 8px 5px; }
+  .topic-activity-feedback { margin-top: 4px; font-size: .86rem; }
+  .topic-activity-footer { margin-top: 1px; }
+  .topic-activity-footer .pill-btn { min-height: 42px; padding: 7px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topic-choice, .topic-activity-trigger { animation: none !important; transition: none !important; }
+}
+
+/* Week 2 custom season games */
+.topic-activity-stage.is-week2-custom { display: block; padding: 0; }
+.topic-activity-stage.is-week3-custom { display: block; padding: 0; }
+.topic-activity-stage.is-week3-custom [hidden] { display: none !important; }
+
+.w2-game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  touch-action: none;
+}
+
+.w2-game-hint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 30;
+  width: max-content;
+  max-width: 88%;
+  margin: 0;
+  padding: 7px 15px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #23557f;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 5px 0 rgba(47, 91, 127, .42);
+  font-family: var(--font-friendly);
+  font-size: clamp(.78rem, 2.2vw, 1rem);
+  font-weight: 900;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.w2-sprite {
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  filter: drop-shadow(0 6px 6px rgba(34, 61, 82, .26));
+}
+
+button.w2-sprite { cursor: grab; touch-action: none; }
+button.w2-sprite:active, button.w2-sprite.is-dragging { cursor: grabbing; }
+button.w2-sprite:focus-visible { filter: drop-shadow(0 0 7px #fff) drop-shadow(0 0 9px #1788dc); }
+button.w2-sprite:disabled { opacity: 1; }
+
+.w2-bee-sprite {
+  aspect-ratio: .6;
+  background-image: url('../assets/images/week-2/literacy/page-02/game-elements/bee-season-states.png');
+}
+
+.w2-spring-object-sprite {
+  aspect-ratio: .6;
+  background-image: url('../assets/images/week-2/literacy/page-02/game-elements/spring-objects.png');
+}
+
+.w2-summer-object-sprite {
+  aspect-ratio: .75;
+  background-image: url('../assets/images/week-2/literacy/page-02/game-elements/summer-winter-objects.png');
+}
+
+.w2-fall-object-sprite {
+  aspect-ratio: .695;
+  background-image: url('../assets/images/week-2/literacy/page-02/game-elements/fall-objects.png');
+}
+
+.w2-bee-sprite[data-sprite="0"], .w2-spring-object-sprite[data-sprite="0"] { background-position-x: 0%; }
+.w2-bee-sprite[data-sprite="1"], .w2-spring-object-sprite[data-sprite="1"] { background-position-x: 25%; }
+.w2-bee-sprite[data-sprite="2"], .w2-spring-object-sprite[data-sprite="2"] { background-position-x: 50%; }
+.w2-bee-sprite[data-sprite="3"], .w2-spring-object-sprite[data-sprite="3"] { background-position-x: 75%; }
+.w2-bee-sprite[data-sprite="4"], .w2-spring-object-sprite[data-sprite="4"] { background-position-x: 100%; }
+.w2-summer-object-sprite[data-sprite="0"], .w2-fall-object-sprite[data-sprite="0"] { background-position-x: 0%; }
+.w2-summer-object-sprite[data-sprite="1"], .w2-fall-object-sprite[data-sprite="1"] { background-position-x: 33.333%; }
+.w2-summer-object-sprite[data-sprite="2"], .w2-fall-object-sprite[data-sprite="2"] { background-position-x: 66.667%; }
+.w2-summer-object-sprite[data-sprite="3"], .w2-fall-object-sprite[data-sprite="3"] { background-position-x: 100%; }
+
+.w2-bee-sprite[data-sprite="2"] {
+  background-image: url('../assets/images/week-2/literacy/page-02/game-elements/hot-summer-bee.png');
+  background-position: center;
+  background-size: contain;
+}
+
+/* Four-season expression game */
+.w2-seasons-game { background-image: url('../assets/images/week-2/literacy/page-02/game-elements/seasons-panorama.png'); }
+.w2-season-zones { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+.w2-season-zone { position: relative; border-right: 2px dashed rgba(255, 255, 255, .62); }
+.w2-season-zone:last-child { border-right: 0; }
+.w2-season-zone strong {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  padding: 5px 10px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  color: #264867;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 3px 0 rgba(34, 64, 91, .25);
+  font-size: clamp(.72rem, 2vw, .95rem);
+  transform: translateX(-50%);
+}
+.w2-bee-home {
+  position: absolute;
+  left: 50%;
+  top: 78%;
+  z-index: 3;
+  display: grid;
+  place-items: end center;
+  width: 130px;
+  height: 150px;
+  padding-bottom: 2px;
+  border: 5px dashed rgba(255, 255, 255, .9);
+  border-radius: 50%;
+  color: #1d557c;
+  background: rgba(255, 255, 255, .25);
+  font-size: .72rem;
+  font-weight: 900;
+  transform: translate(-50%, -50%);
+}
+.w2-season-bee { position: absolute; z-index: 10; width: clamp(76px, 12vw, 112px); }
+.w2-season-bee.is-placed { z-index: 8; width: clamp(70px, 11vw, 102px); }
+
+/* Spring flower delivery game */
+.w2-spring-game { background-image: url('../assets/images/week-2/literacy/page-02/game-elements/spring-garden.png'); }
+.w2-spring-target {
+  position: absolute;
+  z-index: 2;
+  width: 30%;
+  height: 34%;
+  border: 4px dashed rgba(255, 255, 255, .72);
+  border-radius: 30px;
+  transition: opacity .2s ease, filter .2s ease;
+}
+.w2-spring-target strong {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #28536d;
+  background: rgba(255, 255, 255, .88);
+  font-size: clamp(.68rem, 1.8vw, .86rem);
+  transform: translateX(-50%);
+}
+.w2-spring-target.target-0 { top: 14%; left: 1%; }
+.w2-spring-target.target-1 { top: 14%; right: 1%; }
+.w2-spring-target.target-2 { bottom: 1%; left: 1%; }
+.w2-spring-target.target-3 { right: 1%; bottom: 1%; }
+.w2-spring-target.is-picked { opacity: .46; filter: grayscale(.45); }
+.w2-spring-target.is-visited { z-index: 10; }
+.w2-picked-flower-pop {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 7;
+  width: clamp(94px, 15vw, 142px);
+  pointer-events: none;
+  animation: w2-flower-pop .42s cubic-bezier(.2, 1.35, .45, 1) both;
+  transform: translate(-50%, -50%);
+}
+.w2-spring-bee { position: absolute; z-index: 12; width: clamp(68px, 10vw, 94px); }
+.w2-spring-vase-zone {
+  position: absolute;
+  left: 50%;
+  top: 72%;
+  z-index: 5;
+  width: clamp(92px, 16vw, 142px);
+  height: clamp(128px, 23vw, 192px);
+  transform: translate(-50%, -50%);
+}
+.w2-spring-vase { position: absolute; right: 18%; bottom: 0; width: 64%; }
+.w2-vase-flowers { position: absolute; inset: 0; }
+.w2-vase-flower { position: absolute; top: 6%; width: 32%; }
+.w2-vase-flower:nth-child(1) { left: 15%; transform: rotate(-13deg); }
+.w2-vase-flower:nth-child(2) { left: 31%; transform: rotate(-4deg); }
+.w2-vase-flower:nth-child(3) { left: 49%; transform: rotate(7deg); }
+.w2-vase-flower:nth-child(4) { left: 63%; transform: rotate(14deg); }
+.w2-carried-flower { position: absolute; top: -38%; right: -65%; width: 88%; pointer-events: none; }
+
+@keyframes w2-flower-pop {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Summer odd-one-out game */
+.w2-summer-game { cursor: none; background-image: url('../assets/images/week-2/literacy/page-02/game-elements/summer-meadow.png'); }
+.w2-bee-cursor { position: absolute; z-index: 40; width: 54px; pointer-events: none; transform: translate(-50%, -50%); }
+.w2-summer-object { position: absolute; z-index: 8; width: clamp(82px, 14vw, 126px); cursor: none !important; transition: transform .15s ease, filter .15s ease; }
+.w2-summer-object:hover { filter: drop-shadow(0 0 10px #fff) drop-shadow(0 7px 7px rgba(34, 61, 82, .35)); transform: scale(1.06); }
+.w2-summer-object.object-0 { top: 24%; left: 8%; }
+.w2-summer-object.object-1 { top: 20%; left: 38%; }
+.w2-summer-object.object-2 { top: 23%; right: 8%; }
+.w2-summer-object.object-3 { right: 36%; bottom: 6%; }
+.w2-summer-object.is-crossed::after {
+  content: "×";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 66%;
+  aspect-ratio: 1;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: #e54444;
+  box-shadow: 0 5px 0 #a92727;
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* Fall leaf catcher */
+.w2-fall-game { background-image: url('../assets/images/week-2/literacy/page-02/game-elements/fall-clearing.png'); }
+.w2-fall-basket { position: absolute; z-index: 14; width: clamp(94px, 15vw, 138px); }
+.w2-falling-leaf { position: absolute; top: 0; left: 0; z-index: 8; width: clamp(42px, 7vw, 66px); will-change: transform; pointer-events: none; }
+
+/* Winter cluster game */
+.w2-winter-game { background-image: url('../assets/images/week-2/literacy/page-02/game-elements/winter-hive.png'); }
+.w2-winter-cluster-zone {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  z-index: 4;
+  width: 48%;
+  height: 68%;
+  border: 5px dashed rgba(255, 255, 255, .86);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 223, 91, .42), rgba(255, 188, 52, .06) 67%, transparent 69%);
+  box-shadow: inset 0 0 28px rgba(255, 231, 119, .38);
+  transform: translate(-50%, -50%);
+}
+.w2-queen-bee { position: absolute; left: 50%; top: 48%; z-index: 7; width: clamp(82px, 13vw, 120px); max-height: 46%; object-fit: contain; filter: drop-shadow(0 7px 7px rgba(70, 45, 13, .3)); transform: translate(-50%, -50%); }
+.w2-winter-worker { position: absolute; z-index: 11; width: clamp(50px, 8vw, 76px); }
+.w2-winter-worker.is-warm { z-index: 8; width: clamp(46px, 7vw, 68px); }
+
+@media (max-width: 700px) {
+  .w2-game-hint { top: 6px; max-width: 91%; padding: 5px 10px; border-width: 3px; }
+  .w2-season-zone strong { top: 48px; padding: 3px 5px; border-width: 2px; }
+  .w2-bee-home { width: 88px; height: 115px; }
+  .w2-season-bee { width: clamp(58px, 14vw, 78px); }
+  .w2-season-bee.is-placed { width: clamp(52px, 12vw, 70px); }
+  .w2-spring-target { border-width: 3px; border-radius: 18px; }
+  .w2-spring-target strong { font-size: .62rem; }
+  .w2-spring-bee { width: clamp(54px, 13vw, 72px); }
+  .w2-picked-flower-pop { width: clamp(76px, 24vw, 108px); }
+  .w2-spring-vase-zone { width: 92px; height: 124px; }
+  .w2-summer-object { width: clamp(64px, 18vw, 94px); }
+  .w2-bee-cursor { display: none; }
+  .w2-summer-game, .w2-summer-object { cursor: pointer !important; }
+  .w2-fall-basket { width: clamp(78px, 21vw, 108px); }
+  .w2-falling-leaf { width: clamp(36px, 10vw, 50px); }
+  .w2-winter-cluster-zone { width: 56%; height: 62%; }
+  .w2-queen-bee { width: clamp(68px, 19vw, 94px); }
+  .w2-winter-worker { width: clamp(43px, 11vw, 58px); }
+  .w2-winter-worker.is-warm { width: clamp(39px, 10vw, 53px); }
+}
+
+/* Week 3 custom plant, flower, tree, fruit, and vegetable games */
+.w3-game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  touch-action: none;
+}
+
+.w3-game-hint {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  z-index: 60;
+  width: max-content;
+  max-width: 91%;
+  margin: 0;
+  padding: 7px 15px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #23557f;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 5px 0 rgba(47,91,127,.38);
+  font-family: var(--font-friendly);
+  font-size: clamp(.78rem, 2.2vw, 1rem);
+  font-weight: 900;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.w3-plant-sprite,
+.w3-flower-sprite,
+.w3-tree-sprite,
+.w3-produce-sprite {
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 6px 6px rgba(34,61,82,.28));
+}
+
+button.w3-plant-sprite,
+button.w3-flower-sprite,
+button.w3-tree-sprite,
+button.w3-produce-sprite { cursor: grab; touch-action: none; }
+button.w3-plant-sprite:active,
+button.w3-produce-sprite:active,
+button.is-dragging { cursor: grabbing; z-index: 55 !important; }
+button.w3-plant-sprite:disabled,
+button.w3-flower-sprite:disabled,
+button.w3-tree-sprite:disabled,
+button.w3-produce-sprite:disabled { opacity: 1; }
+
+.w3-plant-sprite {
+  aspect-ratio: 1;
+  background-position: center;
+  background-size: contain;
+}
+.w3-plant-sprite[data-sprite="0"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-seed-v3.png'); }
+.w3-plant-sprite[data-sprite="1"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-water-v3.png'); }
+.w3-plant-sprite[data-sprite="2"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-sun-v3.png'); }
+.w3-plant-sprite[data-sprite="3"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-heart-v3.png'); }
+.w3-plant-sprite[data-sprite="4"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/bee-v3.png'); }
+.w3-plant-sprite[data-sprite="5"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-sprout-v2.png'); }
+.w3-plant-sprite[data-sprite="6"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bud-v2.png'); }
+.w3-plant-sprite[data-sprite="7"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-leaves-v2.png'); }
+.w3-plant-sprite[data-sprite="8"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bloom-v2.png'); }
+
+.w3-flower-sprite {
+  aspect-ratio: 1;
+  background-position: center;
+  background-size: contain;
+}
+.w3-flower-sprite[data-sprite="0"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/bee-v3.png'); }
+.w3-flower-sprite[data-sprite="1"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/flower-short-v2.png'); }
+.w3-flower-sprite[data-sprite="2"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/flower-tall-v2.png'); }
+.w3-flower-sprite[data-sprite="3"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/beehive-v2.png'); }
+.w3-flower-sprite[data-sprite="4"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/vase-v2.png'); }
+
+.w3-tree-sprite {
+  aspect-ratio: 1;
+  background-position: center;
+  background-size: contain;
+}
+.w3-tree-sprite[data-sprite="0"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/apple-blossoms-v2.png'); }
+.w3-tree-sprite[data-sprite="1"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/apple-v2.png'); }
+
+.w3-produce-sprite {
+  aspect-ratio: 1;
+  background-position: center;
+  background-size: contain;
+}
+.w3-produce-sprite[data-sprite="0"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-apple-v3.png'); }
+.w3-produce-sprite[data-sprite="1"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-mango-v3.png'); }
+.w3-produce-sprite[data-sprite="2"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-strawberry-v3.png'); }
+.w3-produce-sprite[data-sprite="3"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-grapes-v3.png'); }
+.w3-produce-sprite[data-sprite="4"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-orange-v3.png'); }
+.w3-produce-sprite[data-sprite="5"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-watermelon-v3.png'); }
+.w3-produce-sprite[data-sprite="6"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-peach-v3.png'); }
+.w3-produce-sprite[data-sprite="7"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-pumpkin-v3.png'); }
+.w3-produce-sprite[data-sprite="8"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-eggplant-v3.png'); }
+.w3-produce-sprite[data-sprite="9"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-carrot-v3.png'); }
+.w3-produce-sprite[data-sprite="10"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-corn-v3.png'); }
+.w3-produce-sprite[data-sprite="11"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-cabbage-v3.png'); }
+.w3-produce-sprite[data-sprite="12"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-pepper-v3.png'); }
+.w3-produce-sprite[data-sprite="13"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/produce-basket-v3.png'); }
+
+/* Plant growth sequence */
+.w3-plant-game { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plants-horizontal-garden.png'); }
+.w3-plant-drop-zone {
+  position: absolute;
+  left: 50%;
+  top: 76%;
+  z-index: 3;
+  width: 27%;
+  height: 36%;
+  border: 5px dashed rgba(255,255,255,.72);
+  border-radius: 50%;
+  transform: translate(-50%,-50%);
+}
+.w3-plant-item {
+  position: absolute;
+  z-index: 15;
+  width: clamp(86px,10vw,112px);
+  overflow: visible;
+}
+.w3-plant-item.is-wrong { animation: w3-wrong .4s ease; }
+.w3-growing-plant {
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  z-index: 10;
+  width: clamp(116px,16vw,166px);
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.w3-growing-plant[data-sprite="0"] { top: 71%; width: clamp(66px,9vw,92px); }
+.w3-growing-plant.is-growing { animation: w3-grow .58s cubic-bezier(.34,1.55,.64,1); }
+.w3-finish-bee {
+  position: absolute;
+  left: 58%;
+  top: 46%;
+  z-index: 12;
+  width: clamp(52px,7vw,74px);
+  transform: translate(-50%,-50%);
+  animation: w3-bee-arrive .7s ease both;
+  pointer-events: none;
+}
+
+/* Flower jumping and vase collection */
+.w3-flowers-game { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/flowers-horizontal-garden.png'); }
+.w3-line-flower {
+  position: absolute;
+  z-index: 10;
+  width: clamp(80px,10.5vw,104px);
+  transition: width .35s ease, filter .18s ease, opacity .22s ease;
+}
+.w3-line-flower.is-tall { width: clamp(104px,13vw,132px); cursor: pointer; }
+.w3-line-flower.is-tall:hover:not(:disabled) { filter: drop-shadow(0 0 10px #fff) drop-shadow(0 7px 7px rgba(34,61,82,.3)); }
+.w3-line-flower.is-picked { opacity: 0; transform: translate(-50%,-50%) scale(.2) !important; }
+.w3-flower-hive { position: absolute; right: -1%; top: 26%; z-index: 8; width: clamp(90px,12vw,122px); }
+.w3-jumping-bee {
+  position: absolute;
+  z-index: 22;
+  width: clamp(88px,11vw,112px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 6px rgba(34,61,82,.28));
+  transition: left .56s ease-in-out, top .56s ease-in-out;
+  pointer-events: none;
+}
+.w3-jumping-bee.is-jumping { animation: w3-bee-hop .56s ease-in-out; }
+.w3-jump-button {
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  z-index: 45;
+  min-width: 130px;
+  min-height: 58px;
+  padding: 9px 20px;
+  border: 5px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(#ffbd42,#ed8212);
+  box-shadow: 0 7px 0 #ae5c0b;
+  font-size: clamp(1rem,3vw,1.35rem);
+  font-weight: 900;
+  cursor: pointer;
+}
+.w3-jump-button:active { transform: translateY(4px); box-shadow: 0 3px 0 #ae5c0b; }
+.w3-vase-zone { position: absolute; left: 50%; bottom: -1%; z-index: 20; width: clamp(170px,25vw,238px); height: 46%; transform: translateX(-50%); pointer-events: none; }
+.w3-vase-zone[hidden] { display: none; }
+.w3-flower-vase { position: absolute; left: 50%; bottom: -16%; z-index: 24; width: 61%; transform: translateX(-50%); }
+.w3-vase-bouquet { position: absolute; inset: 0; z-index: 22; }
+.w3-vase-stem {
+  position: absolute;
+  left: calc(50% + var(--bouquet-x, 0%));
+  bottom: 20%;
+  width: 37%;
+  transform: translateX(-50%) rotate(var(--bouquet-rotate, 0deg));
+  transform-origin: 50% 100%;
+}
+
+/* Apple tree pollination */
+.w3-trees-game { cursor: none; background-image: url('../assets/images/week-3/literacy/page-02/game-elements/apple-orchard.png'); }
+.w3-bee-cursor {
+  position: absolute;
+  z-index: 70;
+  width: 76px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 5px rgba(34,61,82,.3));
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+}
+.w3-apple-spot {
+  position: absolute;
+  z-index: 20;
+  width: clamp(78px,10vw,108px);
+  cursor: none !important;
+  transition: transform .25s cubic-bezier(.34,1.55,.64,1), filter .18s ease;
+}
+.w3-apple-spot:hover:not(:disabled) { filter: drop-shadow(0 0 12px #fff); transform: translate(-50%,-50%) scale(1.08) !important; }
+.w3-apple-spot.is-apple { animation: w3-apple-pop .55s cubic-bezier(.34,1.55,.64,1); }
+
+/* 3D fruit sorting */
+.w3-fruits-game { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/fruits-meadow.png'); }
+.w3-sort-item { position: absolute; z-index: 18; width: clamp(118px,13.5vw,146px); transition: width .2s ease, filter .2s ease; }
+.w3-sort-item:hover:not(:disabled) { filter: drop-shadow(0 0 10px #fff) drop-shadow(0 7px 7px rgba(34,61,82,.3)); }
+.w3-fruit-basket,
+.w3-fruit-basket-front { position: absolute; width: clamp(220px,28vw,280px); pointer-events: none; }
+.w3-fruit-basket { z-index: 20; }
+.w3-fruit-basket-front { z-index: 22; clip-path: inset(50% 0 0); }
+.w3-fruit-basket.is-wrong,
+.w3-fruit-basket-front.is-wrong { animation: w3-wrong .42s ease; }
+.w3-sort-item.is-in-basket { z-index: 21; width: clamp(62px,6.8vw,74px); pointer-events: none; }
+
+/* Falling vegetable catcher */
+.w3-vegetables-game { cursor: none; background-image: url('../assets/images/week-3/literacy/page-02/game-elements/vegetable-field.png'); }
+.w3-falling-produce {
+  position: absolute;
+  top: 26%;
+  z-index: 20;
+  width: clamp(102px,12vw,132px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: none;
+  transform: translate(-50%,-50%);
+  animation: w3-produce-fall var(--fall-duration,6s) linear forwards;
+}
+.w3-falling-produce > .w3-produce-sprite { width: 100%; height: 100%; }
+.w3-falling-produce .is-wrong { animation: w3-child-wrong .42s ease; }
+.w3-falling-produce.is-caught { animation: w3-caught .48s ease forwards; }
+.w3-falling-produce.is-caught::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255,255,255,.98) 0 8%, #ffe768 9% 18%, #ff9f1c 19% 31%, rgba(255,89,33,.76) 32% 40%, transparent 41%);
+  animation: w3-vegetable-burst .48s ease-out forwards;
+}
+
+@keyframes w3-wrong { 25%,75% { transform: translate(-50%,-50%) translateX(-10px); } 50% { transform: translate(-50%,-50%) translateX(10px); } }
+@keyframes w3-child-wrong { 25%,75% { transform: translateX(-10px); } 50% { transform: translateX(10px); } }
+@keyframes w3-grow { from { opacity: .2; transform: translate(-50%,-50%) scale(.45); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+@keyframes w3-bee-arrive { from { opacity: 0; transform: translate(-120%,-100%) scale(.3) rotate(-20deg); } to { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0); } }
+@keyframes w3-bee-hop { 45% { transform: translate(-50%,-50%) translateY(-74px) rotate(-8deg); } }
+@keyframes w3-apple-pop { 0% { transform: translate(-50%,-50%) scale(.45) rotate(-10deg); } 70% { transform: translate(-50%,-50%) scale(1.16) rotate(4deg); } 100% { transform: translate(-50%,-50%) scale(1); } }
+@keyframes w3-produce-fall { from { top: 26%; transform: translate(-50%,-50%) rotate(-20deg); } to { top: 92%; transform: translate(-50%,-50%) rotate(420deg); } }
+@keyframes w3-caught {
+  0% { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0); }
+  55% { opacity: 1; transform: translate(-50%,-50%) scale(2.2) rotate(16deg); filter: brightness(1.25) drop-shadow(0 0 18px #fff29b); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(.28) rotate(38deg); }
+}
+@keyframes w3-vegetable-burst {
+  from { opacity: 1; transform: scale(.28); }
+  to { opacity: 0; transform: scale(1.7); }
+}
+
+@media (max-width: 700px) {
+  .w3-game-hint { top: 5px; padding: 5px 10px; border-width: 3px; font-size: .74rem; }
+  .w3-plant-item { width: clamp(58px,14vw,72px); }
+  .w3-growing-plant { width: clamp(86px,23vw,116px); }
+  .w3-finish-bee { width: clamp(43px,11vw,58px); }
+  .w3-line-flower { width: clamp(50px,13vw,66px); }
+  .w3-line-flower.is-tall { width: clamp(64px,17vw,82px); }
+  .w3-flower-hive { width: clamp(66px,17vw,88px); }
+  .w3-jumping-bee { width: clamp(58px,15vw,76px); }
+  .w3-jump-button { right: 2%; min-width: 92px; min-height: 48px; padding: 7px 12px; border-width: 4px; }
+  .w3-vase-zone { width: 145px; }
+  .w3-bee-cursor { display: none; }
+  .w3-trees-game, .w3-vegetables-game, .w3-apple-spot, .w3-falling-produce { cursor: pointer !important; }
+  .w3-apple-spot { width: clamp(58px,15vw,76px); }
+  .w3-sort-item { width: clamp(54px,13vw,68px); }
+  .w3-fruit-basket, .w3-fruit-basket-front { width: clamp(128px,32vw,166px); }
+  .w3-sort-item.is-in-basket { width: clamp(36px,8.5vw,46px); }
+  .w3-falling-produce { width: clamp(70px,17vw,88px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w3-jumping-bee, .w3-growing-plant, .w3-apple-spot { transition: none; }
+}
+
+/* Week 3 activities must remain fully visible without scrolling. */
+body[data-page-two-week="3"] .topic-activity-overlay {
+  padding: clamp(6px, 1.2svh, 12px);
+}
+
+body[data-page-two-week="3"] .topic-activity-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(980px, 98vw);
+  height: min(96svh, 760px);
+  max-height: 96svh;
+  padding: clamp(8px, 1.5svh, 14px);
+  overflow: hidden;
+  border-width: 5px;
+  border-radius: 26px;
+}
+
+body[data-page-two-week="3"] .topic-activity-header {
+  flex: 0 0 auto;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+body[data-page-two-week="3"] .topic-activity-icon {
+  width: 54px;
+  border-width: 4px;
+  border-radius: 18px;
+  font-size: 2rem;
+}
+
+body[data-page-two-week="3"] .topic-activity-header h2 {
+  font-size: clamp(1.2rem, 3vw, 1.65rem);
+  line-height: 1.05;
+}
+
+body[data-page-two-week="3"] .topic-activity-header p {
+  margin-top: 2px;
+  font-size: clamp(.72rem, 1.6vw, .9rem);
+  line-height: 1.1;
+}
+
+body[data-page-two-week="3"] .topic-activity-close {
+  width: 42px;
+  min-height: 42px;
+}
+
+body[data-page-two-week="3"] .topic-activity-skip-top {
+  min-height: 40px;
+  padding: 5px 11px;
+  font-size: .82rem;
+}
+
+body[data-page-two-week="3"] .topic-activity-progress {
+  flex: 0 0 auto;
+  height: 11px;
+  margin: 7px 0 6px;
+}
+
+body[data-page-two-week="3"] .topic-activity-stage {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  border-width: 4px;
+  border-radius: 20px;
+}
+
+body[data-page-two-week="3"] .topic-activity-feedback {
+  flex: 0 0 auto;
+  min-height: 22px;
+  margin-top: 3px;
+  font-size: .88rem;
+  line-height: 1.1;
+}
+
+body[data-page-two-week="3"] .topic-activity-footer {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+body[data-page-two-week="3"] .topic-activity-footer .topic-activity-skip-top {
+  min-height: 38px;
+  padding: 5px 13px;
+}
+
+@media (max-width: 700px) {
+  body[data-page-two-week="3"] .topic-activity-overlay { padding: 0; }
+
+  body[data-page-two-week="3"] .topic-activity-dialog {
+    width: 100vw;
+    height: 100svh;
+    min-height: 0;
+    max-height: 100svh;
+    padding: 6px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-header {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-icon {
+    width: 44px;
+    border-width: 3px;
+    border-radius: 14px;
+    font-size: 1.6rem;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-close {
+    width: 39px;
+    min-height: 39px;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-skip-top {
+    min-height: 37px;
+    padding: 4px 8px;
+    font-size: .72rem;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-stage { min-height: 0; }
+}
+
+@media (max-height: 680px) {
+  body[data-page-two-week="3"] .topic-activity-dialog {
+    height: 98svh;
+    max-height: 98svh;
+    padding: 6px;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-header {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-icon { width: 42px; }
+  body[data-page-two-week="3"] .topic-activity-progress { margin: 4px 0; }
+  body[data-page-two-week="3"] .topic-activity-feedback { min-height: 18px; }
+  body[data-page-two-week="3"] .topic-activity-footer .topic-activity-skip-top { min-height: 34px; }
+}

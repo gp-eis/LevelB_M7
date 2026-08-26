@@ -1,0 +1,723 @@
+:root {
+  --week-2-blue: #1769c7;
+  --week-2-blue-dark: #0d4384;
+  --week-2-gold: #f3b51b;
+  --week-2-green: #3c9f35;
+  --week-2-orange: #f06a24;
+}
+
+.week-2-literacy-body {
+  background: linear-gradient(180deg, #a9e0ff 0%, #fff8d7 60%, #efffe9 100%);
+}
+
+.week-2-literacy-title {
+  color: var(--week-2-blue-dark);
+  text-shadow: 3px 3px #fff, 6px 6px rgba(13, 67, 132, .14);
+}
+
+.week-2-activity-card {
+  max-width: 1120px;
+  margin: 24px auto 0;
+  padding: clamp(9px, 2vw, 18px);
+  border: 4px solid rgba(255, 255, 255, .96);
+  border-top: 9px solid var(--week-2-gold);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 10px 0 rgba(23, 105, 199, .15), 0 18px 30px rgba(40, 55, 75, .18);
+}
+
+.week-2-stage {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1412 / 1114;
+  border: 7px solid #fff;
+  border-radius: 28px;
+  background: #e9f7ff;
+  isolation: isolate;
+}
+
+.week-2-background {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.week-2-targets,
+.week-2-match-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.week-2-targets {
+  z-index: 3;
+}
+
+.activity-target {
+  position: absolute;
+  padding: 0;
+  border: clamp(3px, .42vw, 6px) solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.activity-target:not(:disabled):hover,
+.activity-target:not(:disabled):focus-visible,
+.activity-target.is-selected {
+  border-color: rgba(255, 255, 255, .96);
+  background: rgba(255, 255, 255, .12);
+  box-shadow: 0 0 0 4px rgba(23, 105, 199, .62), 0 0 18px rgba(23, 105, 199, .35);
+  outline: none;
+}
+
+.activity-target.is-correct {
+  border-color: #fff;
+  background: rgba(75, 191, 67, .16);
+  box-shadow: 0 0 0 5px rgba(54, 166, 48, .9), 0 0 20px rgba(54, 166, 48, .55);
+}
+
+.activity-target.is-wrong {
+  border-color: #fff;
+  background: rgba(229, 57, 53, .2);
+  box-shadow: 0 0 0 5px rgba(229, 57, 53, .88);
+  animation: week-2-wrong-shake .42s ease;
+}
+
+.week-2-status {
+  min-height: 1.6em;
+  margin: 14px 0 0;
+  color: #315273;
+  font-family: var(--font-friendly);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+.week-2-status.is-correct { color: #27831f; }
+.week-2-status.is-wrong { color: #c62c3b; }
+.week-2-restart { display: flex; margin: 12px auto 0; }
+
+.week-2-completion {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 54, 87, .52);
+}
+
+.week-2-completion[hidden] { display: none; }
+
+.week-2-completion-panel {
+  width: min(460px, 88%);
+  padding: clamp(22px, 4vw, 42px);
+  border: 7px solid #fff;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #fffef4, #fff0ad);
+  box-shadow: 0 12px 0 #c88a09, 0 24px 48px rgba(13, 35, 58, .4);
+  text-align: center;
+}
+
+.week-2-completion-panel h2 {
+  margin: 0 0 8px;
+  color: var(--week-2-blue-dark);
+  font: 900 clamp(1.8rem, 5vw, 3rem) var(--font-display);
+}
+
+.week-2-completion-panel p {
+  margin: 0 0 20px;
+  font-weight: 800;
+}
+
+.week-2-completion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Page 3: drag the bee through the maze. */
+.maze-game-stage { touch-action: none; }
+.maze-game-stage.is-bumped { animation: maze-stage-bump .2s ease; }
+
+.maze-goal {
+  position: absolute;
+  z-index: 2;
+  left: 46.4%;
+  top: 58.3%;
+  width: 10.3%;
+  height: 16.8%;
+  border: clamp(3px, .45vw, 6px) dashed rgba(243, 181, 27, .9);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.maze-game-stage.is-ready .maze-goal {
+  opacity: .78;
+  animation: maze-goal-pulse 1.25s ease-in-out infinite;
+}
+
+.maze-draggable-bee {
+  position: absolute;
+  z-index: 7;
+  left: 24.2%;
+  top: 61.6%;
+  width: clamp(58px, 9.2%, 108px);
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  filter: drop-shadow(0 5px 4px rgba(18, 57, 82, .28));
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: filter .16s ease, scale .16s ease;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.maze-draggable-bee::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -22%;
+  border: clamp(3px, .42vw, 6px) solid #ffd93d;
+  border-radius: 50%;
+  background: rgba(255, 241, 89, .22);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, .78), 0 0 22px 8px rgba(255, 217, 61, .86);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.maze-draggable-bee img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.maze-game-stage.is-ready .maze-draggable-bee:not(.is-dragging)::before {
+  opacity: 1;
+  animation: maze-bee-invite-pulse 1.15s ease-in-out infinite;
+}
+
+.maze-draggable-bee:not(:disabled):hover,
+.maze-draggable-bee:not(:disabled):focus-visible {
+  filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 8px #fff) drop-shadow(0 5px 4px rgba(18, 57, 82, .28));
+  outline: 4px solid rgba(23, 105, 199, .72);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+.maze-draggable-bee.is-dragging {
+  cursor: grabbing;
+  scale: 1.08;
+}
+
+.maze-draggable-bee:disabled { cursor: default; }
+
+.maze-gate {
+  position: absolute;
+  z-index: 15;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 32px);
+  background: rgba(17, 52, 79, .56);
+}
+
+.maze-gate[hidden] { display: none; }
+
+.maze-gate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(620px, 92%);
+  max-height: 94%;
+  padding: clamp(18px, 3vw, 34px);
+  overflow: auto;
+  border: 7px solid #fff;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #fffef7, #eaf7ff);
+  box-shadow: 0 12px 0 var(--week-2-blue-dark), 0 24px 42px rgba(14, 39, 61, .38);
+  text-align: center;
+}
+
+.maze-gate-card h2 {
+  margin: 0 0 7px;
+  color: var(--week-2-blue-dark);
+  font: 900 clamp(1.35rem, 3.8vw, 2.5rem) var(--font-display);
+}
+
+.maze-gate-card p {
+  margin: 0 0 16px;
+  color: #315273;
+  font-weight: 800;
+}
+
+.maze-listen-icon {
+  display: grid;
+  place-items: center;
+  width: clamp(54px, 8vw, 82px);
+  aspect-ratio: 1;
+  margin-bottom: 10px;
+  border: 5px solid #fff;
+  border-radius: 50%;
+  background: var(--week-2-blue);
+  box-shadow: 0 5px 0 var(--week-2-blue-dark);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+}
+
+.maze-listen-icon.is-playing { animation: maze-listen-pulse .85s ease-in-out infinite; }
+.maze-listen-icon[hidden] { display: none; }
+
+.maze-intro-video {
+  width: min(480px, 100%);
+  max-height: min(54vh, 390px);
+  margin: 2px auto 16px;
+  border: 5px solid #fff;
+  border-radius: 20px;
+  background: #142536;
+  box-shadow: 0 5px 0 rgba(13, 67, 132, .72);
+  object-fit: contain;
+}
+
+.maze-intro-video[hidden] { display: none; }
+
+.maze-gate-button {
+  min-width: min(280px, 82%);
+  min-height: 64px;
+  padding: 12px 24px;
+  border: 6px solid #fff;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffe982, var(--week-2-gold));
+  color: #664d00;
+  box-shadow: 0 7px 0 #a96f00;
+  font: 900 clamp(1.1rem, 2.6vw, 1.65rem) var(--font-display);
+  cursor: pointer;
+}
+
+.maze-gate-button:hover { transform: translateY(-2px); }
+.maze-gate-button[hidden] { display: none; }
+
+/* Week 1-style activity start: one button, then audio plays over the worksheet. */
+.week-2-start-layer {
+  position: absolute;
+  z-index: 15;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 32px);
+  background: rgba(17, 41, 68, .44);
+}
+
+.week-2-start-layer[hidden],
+.week-2-video-layer[hidden],
+.week-2-start-button[hidden] { display: none; }
+
+.week-2-start-button {
+  min-width: min(320px, 78%);
+  min-height: 76px;
+  padding: 14px 30px;
+  border: 7px solid #fff;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffe982, var(--week-2-gold));
+  color: #664d00;
+  box-shadow: 0 8px 0 #a96f00, 0 16px 28px rgba(14, 39, 61, .34);
+  font: 900 clamp(1.2rem, 3vw, 1.9rem) var(--font-display);
+  cursor: pointer;
+}
+
+.week-2-start-button:hover,
+.week-2-start-button:focus-visible {
+  outline: 4px solid rgba(255, 255, 255, .88);
+  outline-offset: 3px;
+  transform: translateY(-2px);
+}
+
+.week-2-video-layer {
+  position: absolute;
+  z-index: 16;
+  inset: 0;
+  overflow: hidden;
+  background: #d9efff;
+}
+
+.week-2-video-layer .maze-intro-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  object-fit: cover;
+}
+
+.week-2-video-play {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  min-width: min(260px, 72%);
+  transform: translate(-50%, -50%);
+}
+
+.week-2-video-play:hover,
+.week-2-video-play:focus-visible {
+  transform: translate(-50%, calc(-50% - 2px));
+}
+
+.maze-help {
+  margin: 6px auto 0;
+  color: #5e7690;
+  font-size: .94rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Page 4: choose the three seasons when bees are seen. */
+.season-choice {
+  overflow: visible;
+  border-radius: 50%;
+}
+
+.season-choice.is-correct {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.season-choice.is-correct::after {
+  content: "";
+  position: absolute;
+  inset: -1.4%;
+  border: clamp(3px, .5vw, 7px) solid rgba(239, 164, 174, .82);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .45);
+  pointer-events: none;
+  animation: season-circle-in .24s ease-out both;
+}
+
+.season-choice.is-wrong { background: transparent; }
+.season-spring { left: 39.45%; top: 33.55%; width: 20.4%; height: 27%; }
+.season-summer { left: 67.45%; top: 33.55%; width: 20.4%; height: 27%; }
+.season-winter { left: 39.4%; top: 66.05%; width: 20.5%; height: 26.15%; }
+.season-fall { left: 67.4%; top: 66.05%; width: 20.4%; height: 26.2%; }
+
+.season-word-speaker {
+  position: absolute;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  width: clamp(27px, 3vw, 42px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--week-2-blue);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--week-2-blue-dark);
+  font-size: clamp(.76rem, 1.65vw, 1.1rem);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.season-word-speaker:disabled { opacity: .48; cursor: default; }
+.season-word-speaker:not(:disabled):hover,
+.season-word-speaker:not(:disabled):focus-visible {
+  outline: 4px solid rgba(255, 255, 255, .86);
+  outline-offset: 2px;
+  transform: translate(-50%, -55%);
+}
+
+.season-word-speaker-spring { left: 58.6%; top: 63.45%; }
+.season-word-speaker-summer { left: 87.3%; top: 63.45%; }
+.season-word-speaker-winter { left: 58.6%; top: 95.15%; }
+.season-word-speaker-fall { left: 84.3%; top: 95.15%; }
+
+/* Page 5: season-to-sentence matching. */
+.match-game-stage { background: #e9c9a5; }
+.week-2-match-lines { z-index: 2; width: 100%; height: 100%; pointer-events: none; }
+.week-2-match-lines line {
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 14 13;
+  filter: drop-shadow(0 1px 1px rgba(255,255,255,.9));
+}
+
+.match-source {
+  overflow: visible;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.match-source.is-dragging { cursor: grabbing; }
+.match-source.is-selected {
+  outline: clamp(4px, .55vw, 7px) solid #fff;
+  outline-offset: clamp(3px, .4vw, 6px);
+  box-shadow: 0 0 0 clamp(7px, .9vw, 12px) var(--week-2-blue), 0 8px 18px rgba(16, 61, 105, .28);
+}
+
+.match-drag-ghost {
+  position: absolute;
+  z-index: 14;
+  border: clamp(3px, .45vw, 6px) solid #fff;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  box-shadow: 0 10px 24px rgba(36, 49, 60, .36);
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.match-source.is-correct {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.match-source.is-correct::after {
+  content: "";
+  position: absolute;
+  inset: -1.4%;
+  border: clamp(3px, .5vw, 7px) solid rgba(239, 164, 174, .84);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .45);
+  pointer-events: none;
+  animation: season-circle-in .24s ease-out both;
+}
+
+.match-source-spring { left: 5.75%; top: 31.8%; width: 18.25%; height: 22.8%; }
+.match-source-summer { left: 28.45%; top: 34.15%; width: 17.8%; height: 21.75%; }
+.match-source-winter { left: 5.65%; top: 70.45%; width: 18%; height: 22.9%; }
+.match-source-fall { left: 28.55%; top: 70.8%; width: 17.95%; height: 22.9%; }
+
+.match-picture-speaker,
+.match-card-speaker {
+  display: grid;
+  place-items: center;
+  width: clamp(28px, 3.2vw, 42px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--week-2-blue);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--week-2-blue-dark);
+  font-size: clamp(.78rem, 1.7vw, 1.15rem);
+  cursor: pointer;
+}
+
+.match-picture-speaker {
+  position: absolute;
+  z-index: 7;
+  transform: translate(-50%, -50%);
+}
+
+.match-picture-speaker:disabled,
+.match-card-speaker:disabled { opacity: .48; cursor: default; }
+.match-picture-speaker:not(:disabled):hover,
+.match-picture-speaker:not(:disabled):focus-visible,
+.match-card-speaker:not(:disabled):hover,
+.match-card-speaker:not(:disabled):focus-visible {
+  outline: 4px solid rgba(255,255,255,.82);
+  outline-offset: 2px;
+  transform: translate(-50%, -53%);
+}
+.match-card-speaker:not(:disabled):hover,
+.match-card-speaker:not(:disabled):focus-visible { transform: translateY(calc(-50% - 2px)); }
+
+.picture-speaker-spring { left: 14.85%; top: 54.15%; }
+.picture-speaker-summer { left: 37.35%; top: 55.4%; }
+.picture-speaker-winter { left: 14.65%; top: 70.15%; }
+.picture-speaker-fall { left: 37.55%; top: 70.45%; }
+
+.match-card-stack {
+  position: absolute;
+  z-index: 5;
+  left: 59%;
+  top: 30.8%;
+  width: 38.5%;
+  height: 64%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4%;
+}
+
+.match-sentence-card {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  align-items: center;
+  padding: 1.2% 36% 1.2% 7%;
+  border: clamp(3px, .38vw, 5px) solid var(--match-color);
+  border-radius: clamp(16px, 2.2vw, 30px);
+  background: rgba(255, 255, 255, .95);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--match-color) 55%, #704100), 0 9px 16px rgba(73, 45, 25, .18);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.match-sentence-card p {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  color: #111;
+  font: 800 clamp(.72rem, 2.1vw, 1.7rem) var(--font-friendly);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.match-sentence-card strong { color: var(--match-color); }
+.match-sentence-card.is-matched {
+  background: color-mix(in srgb, var(--match-color) 10%, white);
+  box-shadow: 0 0 0 5px rgba(255,255,255,.82), 0 0 18px color-mix(in srgb, var(--match-color) 55%, transparent);
+  transform: scale(1.015);
+}
+
+.match-sentence-card[aria-disabled="false"] { cursor: pointer; }
+.match-sentence-card.is-drop-target {
+  outline: clamp(4px, .55vw, 7px) dashed var(--week-2-blue);
+  outline-offset: 4px;
+  transform: scale(1.025);
+}
+.match-sentence-card.is-drop-wrong {
+  animation: target-wrong .34s ease both;
+}
+
+.match-card-dot {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 50%;
+  width: clamp(15px, 2vw, 25px);
+  aspect-ratio: 1;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #111;
+  box-shadow: 0 2px 4px rgba(0,0,0,.3);
+  transform: translate(-50%, -50%);
+}
+
+.match-card-speaker {
+  position: absolute;
+  z-index: 6;
+  right: 27%;
+  top: 50%;
+  width: clamp(26px, 2.8vw, 36px);
+  transform: translateY(-50%);
+}
+
+.match-card-bee {
+  position: absolute;
+  z-index: 1;
+  right: -2%;
+  top: 4%;
+  width: 27%;
+  height: 92%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 3px rgba(62, 37, 16, .22));
+  pointer-events: none;
+}
+
+.match-card-bee-winter {
+  right: 0;
+  top: -10%;
+  width: 25%;
+  height: 120%;
+  background-image: url("../assets/images/week-2/literacy/page-05-bee-feelings-strip.png");
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  background-size: 400% 100%;
+}
+
+/* Page 6: May calendar. */
+.calendar-grid {
+  position: absolute;
+  z-index: 3;
+  left: 10.4%;
+  top: 34.6%;
+  width: 80.8%;
+  height: 61.2%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  column-gap: 2.1%;
+  row-gap: 2.6%;
+}
+.calendar-day {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+.calendar-day.is-correct {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 6px #fff, 0 0 0 12px var(--week-2-green), 0 0 24px rgba(54, 166, 48, .72);
+}
+.calendar-day.is-wrong { animation: week-2-wrong-shake .42s ease; }
+.calendar-day[disabled] { cursor: default; }
+
+@keyframes week-2-wrong-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+@keyframes maze-stage-bump {
+  0%, 100% { filter: none; }
+  50% { filter: drop-shadow(0 0 10px rgba(229, 57, 53, .8)); }
+}
+
+@keyframes maze-goal-pulse {
+  0%, 100% { transform: scale(.92); opacity: .42; }
+  50% { transform: scale(1.08); opacity: .92; }
+}
+
+@keyframes maze-bee-invite-pulse {
+  0%, 100% { transform: scale(.88); opacity: .52; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes maze-listen-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes season-circle-in {
+  from { opacity: 0; transform: scale(.82) rotate(-4deg); }
+  to { opacity: 1; transform: scale(1) rotate(-2deg); }
+}
+
+@media (max-width: 650px) {
+  .week-2-activity-card { padding: 7px; }
+  .week-2-stage { border-width: 4px; border-radius: 18px; }
+  .activity-target { border-width: 3px; }
+  .week-2-completion { padding: 12px; }
+  .week-2-completion-panel { border-width: 5px; }
+  .maze-gate-card { border-width: 5px; border-radius: 22px; }
+  .maze-gate-button { min-height: 54px; border-width: 4px; }
+  .week-2-start-button { min-height: 58px; border-width: 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-target { transition: none; }
+  .activity-target.is-wrong,
+  .calendar-day.is-wrong { animation: none; }
+  .maze-game-stage.is-ready .maze-goal,
+  .maze-game-stage.is-ready .maze-draggable-bee::before,
+  .maze-listen-icon.is-playing,
+  .season-choice.is-correct::after { animation: none; }
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week Song — Literacy — Beekeeper</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .tpr-note {
+      margin-top: 14px;
+      font-family: var(--font-friendly);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #3d5a78;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="lesson-page tool-page">
+
+  <div class="page">
+    <a class="back-link" id="back-week" href="../week-1.html#card-literacy">⬅️ Week 1 Home</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/week-home/lesson-literacy-gerry-optimized.png" alt="">Week Song</h1>
+      <p class="subtitle" id="week-label">Sing and move along!</p>
+    </header>
+
+    <div id="tpr-ready" style="display:none;">
+      <section class="card" style="margin-top:24px;">
+        <div class="video-play-shell">
+          <video
+            id="dialogue-video"
+            class="lesson-video"
+            controls
+            preload="metadata"
+            src="../assets/video/week-1/talk-song/where-are-the-bees.mp4"
+            aria-label="Week 1 Week Song video"
+          ></video>
+          <button
+            class="center-video-play"
+            type="button"
+            aria-label="Play the Week 1 Week Song"
+          >&#9654;</button>
+        </div>
+        <p class="tpr-note">Press play, sing, and move along with the song!</p>
+      </section>
+
+    </div>
+
+    <div id="tpr-soon" class="card center" style="margin-top:24px; display:none;">
+      <h2 class="section-title">✨ Coming Soon</h2>
+      <p class="tpr-note">The Week Song for this week will appear here once it is ready.</p>
+    </div>
+  </div>
+
+  <script src="../js/main.js?v=20260825-3"></script>
+  <script>
+    const week = new URLSearchParams(location.search).get('week') || '1';
+    const titles = {
+      1: 'Week 1 — Do you keep bees?',
+      2: 'Week 2 — What do bees do?',
+      3: 'Week 3 — Why do we need bees?',
+      4: 'Week 4 — I am Lorenzo Langstroth.'
+    };
+    const talkSongs = {
+      1: '../assets/video/week-1/talk-song/where-are-the-bees.mp4',
+      2: '../assets/video/week-2/talk-song/week-2-talk-song.mp4',
+      3: '../assets/video/week-3/talk-song/week-3-talk-song.mp4',
+      4: '../assets/video/week-4/talk-song/week-4-talk-song.mp4'
+    };
+    const back = document.getElementById('back-week');
+    const label = document.getElementById('week-label');
+    const returnLink = typeof resolveLiteracyToolReturn === 'function'
+      ? resolveLiteracyToolReturn('../week-' + week + '.html#card-literacy', '⬅️ Week ' + week + ' Home')
+      : { href: '../week-' + week + '.html#card-literacy', text: '⬅️ Week ' + week + ' Home' };
+    back.href = returnLink.href;
+    back.textContent = returnLink.text;
+    label.textContent = titles[week] || ('Week ' + week);
+    document.title = 'Week Song — Week ' + week + ' — Beekeeper';
+
+    const talkSong = talkSongs[week];
+    if (talkSong) {
+      const video = document.getElementById('dialogue-video');
+      const playButton = document.querySelector('.center-video-play');
+      const accessibleLabel = 'Week ' + week + ' Week Song video';
+      video.src = talkSong;
+      video.setAttribute('aria-label', accessibleLabel);
+      playButton?.setAttribute('aria-label', 'Play the Week ' + week + ' Week Song');
+      document.getElementById('tpr-ready').style.display = '';
+    } else {
+      document.getElementById('tpr-soon').style.display = '';
+    }
+  </script>
+</body>
+</html>

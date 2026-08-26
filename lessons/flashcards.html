@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards — Literacy — Beekeeper</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/flashcards.css">
+</head>
+<body class="lesson-page tool-page">
+
+  <div class="page fc-page">
+    <a class="back-link" id="back-week" href="../week-1.html#card-literacy">⬅️ Week 1 Home</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/week-home/lesson-reading-penny-optimized.png" alt="">Flashcards</h1>
+      <p class="subtitle" id="week-label">Practice words with flashcards</p>
+    </header>
+
+    <div id="fc-locked" class="card center" style="margin-top:24px; display:none;">
+      <h2 class="section-title">✨ Coming Soon</h2>
+      <p class="fc-msg">Flashcards for this week will appear here once the materials are ready.</p>
+    </div>
+
+    <div id="fc-app" class="fc-layout" style="display:none;" aria-label="Flashcard activities">
+      <aside class="fc-nav" aria-label="Activities">
+        <button type="button" class="fc-nav-btn is-active" data-activity="lesson">📚 Lesson Flashcards</button>
+        <button type="button" class="fc-nav-btn" data-activity="fast">⚡ Fast Game</button>
+        <button type="button" class="fc-nav-btn" data-activity="spot">🔦 Spot the Picture</button>
+        <button type="button" class="fc-nav-btn" data-activity="sentence">✏️ Complete the Sentence</button>
+      </aside>
+
+      <main class="fc-main">
+        <!-- Lesson Flashcards (click to view) -->
+        <section id="panel-lesson" class="fc-panel is-active" data-panel="lesson" aria-label="Lesson Flashcards">
+          <h2 class="fc-panel-title">📚 Lesson Flashcards</h2>
+          <p class="fc-panel-hint">Click a flashcard below to see it bigger.</p>
+          <div class="fc-stage">
+            <div class="fc-card-frame" id="lesson-frame">
+              <img id="lesson-img" class="fc-card-img" alt="Select a flashcard" draggable="false">
+              <button id="lesson-speak" class="fc-speak-btn" type="button" aria-label="Hear the word and sentence">🔊</button>
+            </div>
+          </div>
+          <div class="fc-lesson-list" id="lesson-list" aria-label="Flashcard list"></div>
+        </section>
+
+        <!-- Fast Game -->
+        <section id="panel-fast" class="fc-panel" data-panel="fast" aria-label="Fast Game">
+          <h2 class="fc-panel-title">⚡ Fast Game</h2>
+          <p class="fc-panel-hint">Look carefully — the flashcard appears for just 0.3 seconds!</p>
+          <div class="fc-stage">
+            <div class="fc-card-frame" id="fast-frame">
+              <img id="fast-img" class="fc-card-img" alt="" draggable="false">
+              <div id="fast-cover" class="fc-cover" aria-hidden="true">?</div>
+            </div>
+          </div>
+          <div class="fc-actions">
+            <button type="button" class="pill-btn blue" id="fast-peek">👀 Peek (0.3 sec)</button>
+            <button type="button" class="pill-btn orange" id="fast-reveal">🖼️ Show Full</button>
+            <button type="button" class="pill-btn green" id="fast-next">➡️ New Flashcard</button>
+          </div>
+        </section>
+
+        <!-- Spot the Picture -->
+        <section id="panel-spot" class="fc-panel" data-panel="spot" aria-label="Spot the Picture">
+          <h2 class="fc-panel-title">🔦 Spot the Picture</h2>
+          <p class="fc-panel-hint">Move the flashlight to peek at the picture. Can you guess what it is?</p>
+          <div class="fc-stage">
+            <div class="fc-spot-area" id="spot-area" tabindex="0" role="img" aria-label="Flashlight reveal area">
+              <img id="spot-img" class="fc-card-img" alt="" draggable="false">
+              <div id="spot-mask" class="fc-spot-mask" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="fc-actions">
+            <button type="button" class="pill-btn orange" id="spot-reveal">🖼️ Show Full Picture</button>
+            <button type="button" class="pill-btn green" id="spot-next">➡️ New Flashcard</button>
+          </div>
+        </section>
+
+        <!-- Complete the Sentence -->
+        <section id="panel-sentence" class="fc-panel" data-panel="sentence" aria-label="Complete the Sentence">
+          <h2 class="fc-panel-title">✏️ Complete the Sentence</h2>
+          <p class="fc-panel-hint">Drag a flashcard into the blank to finish the sentence.</p>
+          <div class="fc-scatter" id="sentence-scatter" aria-label="Flashcards to drag"></div>
+          <div class="fc-sentence-wrap">
+            <p class="fc-sentence" id="sentence-line" aria-live="polite">
+              <span id="sentence-lead">I </span>
+              <span class="fc-blank" id="sentence-blank" data-dropzone="true">_________</span>
+              <span id="sentence-tail">.</span>
+            </p>
+          </div>
+          <div class="fc-actions">
+            <button type="button" class="pill-btn blue" id="sentence-reset">🔄 Try Again</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/main.js?v=20260825-3"></script>
+  <script src="../js/flashcards.js?v=20260825-6"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Literacy Week 1 — Page 2 — Beekeeper</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/literacy-shell.css">
+  <link rel="stylesheet" href="../css/week-1-page-02.css?v=20260825-2">
+</head>
+<body class="lesson-page week-1-page-02">
+  <main class="page literacy-shell-page page-two-shell">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-1-page-01.html#lesson-focus">⬅️ Previous Page</a>
+      <span class="page-indicator" aria-current="page">📖 Page 2 of 6</span>
+      <a class="back-link next-page-link" href="week-1-page-03.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="../week-1.html#card-literacy">🏠 Week 1 Home</a>
+
+    <header class="literacy-header">
+      <h1 class="big-title">Week 1 — Do you keep bees?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=1">🎵 Week Song</a>
+        <a class="pill-btn blue" href="flashcards.html?week=1">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <section id="lesson-focus" class="card page-two-video-card">
+      <h2 class="section-title">✨ Learning</h2>
+      <div class="page-two-video-shell">
+        <video id="page-two-video" class="page-two-video" controls playsinline preload="metadata" poster="../assets/images/week-1/literacy/page-02/bee-world-background.webp" aria-label="Selected Week 1 bee action video"></video>
+        <button id="page-two-video-play" class="page-two-video-play is-locked" type="button" disabled>
+          <span aria-hidden="true">🔒</span>
+          <small>Choose an action below. The activity is optional.</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="card page-two-actions-card">
+      <h2 class="section-title">🎬 Tap to Watch!</h2>
+      <p>Choose a bee action. Play its mini-game or skip directly to the video.</p>
+      <div class="dialogue-grid page-two-action-grid" aria-label="Bee action activities">
+        <button class="pill-btn page-two-action honey" type="button" data-action="make-honey"><img src="../assets/images/week-1/literacy/page-02/game-elements/honey-jar-v2.webp" alt=""><strong>Make honey</strong></button>
+        <button class="pill-btn page-two-action queen" type="button" data-action="protect-the-queen"><img src="../assets/images/week-1/literacy/page-02/game-elements/queen-bee-v2.webp" alt=""><strong>Protect the queen</strong></button>
+        <button class="pill-btn page-two-action flowers" type="button" data-action="find-flowers"><img src="../assets/images/week-1/literacy/page-02/game-elements/activity-flower.webp" alt=""><strong>Find flowers</strong></button>
+        <button class="pill-btn page-two-action hive" type="button" data-action="build-hives"><img src="../assets/images/week-1/literacy/page-02/game-elements/natural-hive.webp" alt=""><strong>Build hives</strong></button>
+        <button class="pill-btn page-two-action nectar" type="button" data-action="collect-nectar"><img src="../assets/images/week-1/literacy/page-02/game-elements/worker-bee-v2.webp" alt=""><strong>Collect nectar</strong></button>
+      </div>
+    </section>
+  </main>
+
+  <div id="page-two-activity-overlay" class="page-two-activity-overlay" hidden>
+    <section class="page-two-activity-dialog" role="dialog" aria-modal="true" aria-labelledby="page-two-activity-title">
+      <header class="page-two-activity-header">
+        <span class="page-two-activity-icon" aria-hidden="true"><img id="page-two-activity-icon" src="../assets/images/week-1/literacy/page-02/game-elements/worker-bee-v2.webp" alt=""></span>
+        <div class="page-two-activity-heading">
+          <h2 id="page-two-activity-title">Bee Activity</h2>
+          <p id="page-two-activity-instruction">Follow the instructions.</p>
+        </div>
+        <div class="page-two-activity-actions">
+          <button id="page-two-activity-skip-top" class="page-two-activity-skip-top" type="button"><span class="page-two-skip-full">Skip to Video</span><span class="page-two-skip-short">Skip</span> ▶</button>
+          <button id="page-two-activity-close" class="page-two-activity-close" type="button" aria-label="Close activity">×</button>
+        </div>
+      </header>
+      <div class="page-two-progress" aria-hidden="true"><span id="page-two-progress-fill"></span></div>
+      <div id="page-two-activity-stage" class="page-two-activity-stage"></div>
+      <div id="page-two-activity-feedback" class="page-two-activity-feedback" role="status" aria-live="polite"></div>
+      <div class="page-two-activity-footer">
+        <button id="page-two-activity-restart" class="pill-btn blue" type="button">↻ Start Again</button>
+      </div>
+      <div id="page-two-success" class="page-two-success" hidden>
+        <div class="page-two-success-card">
+          <span aria-hidden="true">⭐</span>
+          <h3>Great job!</h3>
+          <p id="page-two-success-sentence"></p>
+          <button id="page-two-watch-video" class="page-two-watch-video" type="button">▶ Watch Video</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/week-1-page-02.js?v=20260825-2"></script>
+</body>
+</html>

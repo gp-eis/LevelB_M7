@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find the Letter 🔍 — Beekeeper</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .game-toolbar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .find-instruction-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .find-instruction {
+      margin: 0;
+      text-align: center;
+      color: var(--text);
+      font-size: clamp(1.4rem, 4.5vw, 2rem);
+      font-weight: 800;
+    }
+
+    .target-listen {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+    .target-listen:hover { transform: scale(1.08); }
+    .target-listen:active { transform: translateY(2px); }
+    .target-listen:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
+
+    .find-board {
+      max-width: 560px;
+      margin: 20px auto 0;
+      padding: clamp(22px, 4vw, 36px);
+      border: 8px solid #e86a5a;
+      border-radius: 28px;
+      background: var(--white);
+      box-shadow: 0 10px 0 rgba(232, 106, 90, .2), 0 16px 30px rgba(74,59,82,.1);
+    }
+
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(10px, 2.5vw, 18px);
+      justify-items: center;
+    }
+
+    .letter-btn {
+      position: relative;
+      width: clamp(48px, 12vw, 72px);
+      height: clamp(48px, 12vw, 72px);
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: #222;
+      font-family: var(--font-friendly);
+      font-size: clamp(1.7rem, 5.5vw, 2.5rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+
+    .letter-btn:hover:not(:disabled) { transform: scale(1.08); }
+    .letter-btn:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
+
+    .letter-btn.circled::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border: 4px solid #e04545;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: circle-in .22s ease;
+    }
+
+    .letter-btn.wrong {
+      animation: wrong-shake .45s ease;
+    }
+
+    .letter-btn:disabled {
+      cursor: default;
+    }
+
+    .status-text {
+      margin-top: 16px;
+      min-height: 1.4rem;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--purple-d);
+    }
+
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(30, 58, 95, .35);
+    }
+    .success-modal[hidden] { display: none; }
+    .success-card {
+      width: min(440px, 100%);
+      padding: 28px 24px;
+      border: 7px solid var(--yellow);
+      border-radius: 30px;
+      background: var(--white);
+      box-shadow: 0 14px 0 rgba(30,111,217,.2);
+      text-align: center;
+      animation: pop-in .45s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .success-emoji { font-size: 4rem; line-height: 1; }
+    .success-title {
+      margin: 10px 0 18px;
+      color: var(--pink-d);
+      font-size: clamp(1.4rem, 4.5vw, 2rem);
+      line-height: 1.25;
+    }
+
+    @keyframes circle-in {
+      from { transform: scale(.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    @media (max-width: 420px) {
+      .find-board { padding: 16px 12px; border-width: 6px; }
+      .letter-grid { gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">🔍</span>
+    <span style="top:72%; left:92%;">🔤</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" id="back-link" href="phonics.html">⬅️ Phonics Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/literacy-3d.webp" alt="">Find the Letter</h1>
+      <p class="subtitle">Tap every matching letter to circle it!</p>
+    </header>
+
+    <div class="game-toolbar">
+      <button class="pill-btn orange" id="new-board" type="button">🔄 New Board</button>
+    </div>
+
+    <div class="find-instruction-row">
+      <h2 class="find-instruction" id="find-instruction">Circle the letters: O, o</h2>
+      <button class="target-listen" id="target-listen" type="button" data-no-click-sound
+              aria-label="Hear the sound of letter O">🔊</button>
+    </div>
+
+    <section class="find-board" aria-label="Letter finding board">
+      <div class="letter-grid" id="letter-grid"></div>
+    </section>
+
+    <p class="status-text" id="status-text" role="status" aria-live="polite"></p>
+  </div>
+
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true"
+       aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <div class="success-emoji" aria-hidden="true">🎉</div>
+      <h2 class="success-title" id="success-title">You found all the letters O, o!</h2>
+      <button class="pill-btn green" id="continue-btn" type="button">🔄 Play Again</button>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/letter-phonemes.js"></script>
+  <script>
+    const origin = new URLSearchParams(location.search).get('from') === 'phonics' ? 'phonics' : 'games';
+    document.getElementById('back-link').href = `phonics.html?from=${origin}`;
+
+    const TARGET_UPPER = 'O';
+    const TARGET_LOWER = 'o';
+    const TARGET_COUNT = 6;
+    const SAMPLE_BOARD = ['O', 'r', 'F', 'u', 'T', 'o', 'D', 'o', 'O', 'b', 'C', 'I', 'O', 'P', 'o'];
+    const DISTRACTORS = ['r', 'F', 'u', 'T', 'D', 'b', 'C', 'I', 'P', 'a', 'e', 's', 'm', 'w', 'k', 'h', 'g', 'y'];
+
+    const letterGrid = document.getElementById('letter-grid');
+    const statusText = document.getElementById('status-text');
+    const successModal = document.getElementById('success-modal');
+    const continueBtn = document.getElementById('continue-btn');
+    const newBoardBtn = document.getElementById('new-board');
+    const targetListen = document.getElementById('target-listen');
+
+    let found = 0;
+    let locked = false;
+    let useSampleNext = true;
+
+    const sounds = (() => {
+      let ctx = null;
+      function audio() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
+      }
+      function tone(frequency, start, duration, type = 'sine', volume = .14) {
+        const osc = audio().createOscillator();
+        const gain = audio().createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(audio().destination);
+        osc.start(start);
+        osc.stop(start + duration + .02);
+      }
+      return {
+        win() {
+          const now = audio().currentTime;
+          tone(523, now, .12, 'sine', .15);
+          tone(659, now + .08, .12, 'sine', .15);
+          tone(784, now + .16, .22, 'sine', .17);
+        }
+      };
+    })();
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function buildBoard() {
+      if (useSampleNext) {
+        useSampleNext = false;
+        return [...SAMPLE_BOARD];
+      }
+
+      const upperCount = Math.floor(TARGET_COUNT / 2);
+      const lowerCount = TARGET_COUNT - upperCount;
+      const letters = [
+        ...Array(upperCount).fill(TARGET_UPPER),
+        ...Array(lowerCount).fill(TARGET_LOWER),
+        ...shuffle(DISTRACTORS).slice(0, 9)
+      ];
+      return shuffle(letters);
+    }
+
+    function isTarget(letter) {
+      return letter === TARGET_UPPER || letter === TARGET_LOWER;
+    }
+
+    function startRound() {
+      locked = false;
+      found = 0;
+      statusText.textContent = '';
+      successModal.hidden = true;
+      letterGrid.innerHTML = '';
+
+      buildBoard().forEach((letter, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'letter-btn';
+        btn.textContent = letter;
+        btn.dataset.letter = letter;
+        btn.dataset.index = String(index);
+        btn.setAttribute('data-no-click-sound', '');
+        btn.setAttribute('aria-label', `Letter ${letter}`);
+        btn.addEventListener('click', () => chooseLetter(btn));
+        letterGrid.appendChild(btn);
+      });
+    }
+
+    function chooseLetter(button) {
+      if (locked || button.classList.contains('circled')) return;
+
+      const letter = button.dataset.letter;
+      playLetterPhoneme(letter);
+
+      if (!isTarget(letter)) {
+        button.classList.remove('wrong');
+        void button.offsetWidth;
+        button.classList.add('wrong');
+        statusText.textContent = `Look for ${TARGET_UPPER} and ${TARGET_LOWER}!`;
+        return;
+      }
+
+      button.classList.add('circled');
+      button.disabled = true;
+      found += 1;
+      statusText.textContent = `Found ${found} / ${TARGET_COUNT}`;
+
+      if (found >= TARGET_COUNT) {
+        locked = true;
+        successModal.hidden = false;
+        continueBtn.focus();
+        setTimeout(() => sounds.win(), 350);
+      }
+    }
+
+    targetListen.addEventListener('click', () => playLetterPhoneme(TARGET_UPPER));
+    newBoardBtn.addEventListener('click', startRound);
+    continueBtn.addEventListener('click', startRound);
+    startRound();
+  </script>
+</body>
+</html>

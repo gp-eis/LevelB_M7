@@ -1,0 +1,828 @@
+:root {
+  --w4-ink: #24445f;
+  --w4-blue: #188fca;
+  --w4-green: #55b946;
+  --w4-orange: #f5a321;
+  --w4-red: #e85a55;
+}
+
+.w4-video-shell { position: relative; }
+.w4-video-shell .lesson-video { width: 100%; }
+.w4-video-cover {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: clamp(94px, 14vw, 128px);
+  aspect-ratio: 1;
+  padding: 12px;
+  border: 7px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(#ffc94a, #ef8b18);
+  box-shadow: 0 8px 0 #a45b0c, 0 18px 28px #17354c55;
+  font-size: clamp(2rem, 5vw, 3rem);
+  transform: translate(-50%, -50%);
+}
+.w4-video-cover small {
+  position: absolute;
+  top: calc(100% + 14px);
+  width: min(310px, 74vw);
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--w4-ink);
+  background: #fffffff2;
+  box-shadow: 0 4px 12px #17354c33;
+  font-size: .9rem;
+  font-weight: 900;
+}
+.w4-video-cover[hidden] { display: none; }
+
+.w4-p2-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #15354ecc;
+  backdrop-filter: blur(7px);
+}
+.w4-p2-overlay[hidden] { display: none; }
+.w4-p2-dialog {
+  position: relative;
+  overflow: hidden auto;
+  width: min(1040px, 97vw);
+  max-height: 96svh;
+  padding: clamp(15px, 2.6vw, 28px);
+  border: 7px solid #fff;
+  border-radius: 34px;
+  background: linear-gradient(145deg, #fffbed, #e9f8ff);
+  box-shadow: 0 12px 0 #d98718, 0 28px 70px #0006;
+}
+.w4-p2-header {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+}
+.w4-p2-icon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  aspect-ratio: 1;
+  border: 5px solid #fff;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffe675, #f5a31c);
+  box-shadow: 0 6px 0 #bd7108;
+  font-size: 2.4rem;
+}
+.w4-p2-heading h2 { margin: 0; color: #1466aa; font-size: clamp(1.35rem, 4vw, 2rem); }
+.w4-p2-heading p { margin: 4px 0 0; color: #526c80; font-weight: 850; }
+.w4-p2-actions { display: flex; gap: 8px; }
+.w4-p2-skip,
+.w4-p2-close,
+.w4-p2-restart,
+.w4-p2-watch {
+  border: 4px solid #fff;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+.w4-p2-skip { min-height: 48px; padding: 7px 16px; border-radius: 999px; background: #f19a1c; box-shadow: 0 5px 0 #a45b0c; }
+.w4-p2-close { width: 48px; aspect-ratio: 1; padding: 0; border-radius: 50%; background: var(--w4-red); box-shadow: 0 5px 0 #a93634; font-size: 1.8rem; }
+.w4-p2-progress { overflow: hidden; height: 15px; margin: 15px 0 12px; border: 3px solid #fff; border-radius: 99px; background: #d7eaf5; }
+.w4-p2-progress span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f8ba24, #54c769); transition: width .3s; }
+.w4-p2-stage {
+  position: relative;
+  overflow: auto;
+  min-height: min(61svh, 550px);
+  padding: 14px;
+  border: 6px solid #fff;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #cceeff, #fff4bd 58%, #dff4ce);
+  box-shadow: inset 0 0 0 3px #38965b33, 0 8px 18px #1e466e2e;
+  touch-action: pan-y;
+}
+.w4-p2-feedback { min-height: 31px; padding: 8px 5px 0; color: #25723a; font-size: 1.05rem; font-weight: 900; text-align: center; }
+.w4-p2-feedback.is-wrong { color: #b83e3b; }
+.w4-p2-footer { display: flex; justify-content: center; }
+.w4-p2-restart { padding: 8px 18px; border-radius: 999px; background: var(--w4-blue); box-shadow: 0 5px 0 #12648d; }
+.w4-p2-success {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #173a52bb;
+}
+.w4-p2-success[hidden] { display: none; }
+.w4-p2-success-card { width: min(460px, 94%); padding: 26px; border: 7px solid #fff; border-radius: 30px; background: #fffbe5; box-shadow: 0 10px 0 #d88a19; text-align: center; }
+.w4-p2-success-card > span { font-size: 4rem; }
+.w4-p2-success-card h3 { margin: 4px 0; color: #248744; font-size: 2rem; }
+.w4-p2-success-card p { color: var(--w4-ink); font-weight: 850; }
+.w4-p2-watch { padding: 11px 22px; border-radius: 999px; background: var(--w4-green); box-shadow: 0 6px 0 #347d2b; font-size: 1.08rem; }
+
+.w4-p2-dialog[data-activity="loved"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: min(820px, calc(100vw - 40px), calc((94svh - 190px) * 1.5));
+  height: min(94svh, 720px);
+  max-height: 94svh;
+  padding: 10px 14px;
+}
+.w4-p2-dialog[data-activity="loved"] .w4-p2-header { grid-template-columns: 52px minmax(0, 1fr) auto; gap: 9px; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-icon { width: 52px; border-width: 4px; border-radius: 18px; font-size: 1.85rem; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-heading p { margin-top: 1px; font-size: .88rem; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-progress { height: 11px; margin: 7px 0 6px; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-stage { flex: 1 1 auto; min-height: 0; padding: 7px; overflow: hidden; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-feedback { min-height: 24px; padding-top: 3px; font-size: .92rem; }
+.w4-p2-dialog[data-activity="loved"] .w4-p2-restart { padding: 5px 14px; }
+
+.w4-game-hint { margin: 0 0 10px; color: var(--w4-ink); font-weight: 900; text-align: center; }
+.w4-shake { animation: w4-shake .42s ease; }
+.w4-dragging { z-index: 90 !important; filter: drop-shadow(0 12px 10px #163a5266); }
+
+/* Wrote a book */
+.w4-book-game { display: grid; grid-template-columns: minmax(240px, .72fr) minmax(290px, 1.28fr); gap: 18px; align-items: center; min-height: 500px; }
+.w4-book-scene {
+  justify-self: center;
+  width: min(100%, 240px);
+  aspect-ratio: .5;
+  border: 7px solid #fff;
+  border-radius: 25px;
+  background-image: url('../assets/images/week-4/literacy/page-02/game-elements/lorenzo-book-states-v2.png');
+  background-position-y: center;
+  background-size: 500% 100%;
+  box-shadow: 0 9px 0 #a76222, 0 16px 26px #253d5238;
+}
+.w4-book-scene[data-state="0"] { background-position-x: 0%; }
+.w4-book-scene[data-state="1"] { background-position-x: 25%; }
+.w4-book-scene[data-state="2"] { background-position-x: 50%; }
+.w4-book-scene[data-state="3"] { background-position-x: 75%; }
+.w4-book-scene[data-state="4"] { background-position-x: 100%; }
+.w4-book-tray { display: grid; grid-template-columns: repeat(2, minmax(120px, 1fr)); gap: 14px; }
+.w4-book-item {
+  min-height: 116px;
+  padding: 10px;
+  border: 5px solid #fff;
+  border-radius: 24px;
+  color: #27536f;
+  background: linear-gradient(155deg, #fff, #edf8ff);
+  box-shadow: 0 7px 0 #aacde3;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: grab;
+  touch-action: none;
+}
+.w4-object-sprite {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background-image: url('../assets/images/week-4/literacy/page-02/game-elements/activity-objects-3d.png');
+  background-size: 300% 200%;
+  background-repeat: no-repeat;
+}
+.w4-object-sprite[data-cell="0"] { background-position: 0% 0%; }
+.w4-object-sprite[data-cell="1"] { background-position: 50% 0%; }
+.w4-object-sprite[data-cell="2"] { background-position: 100% 0%; }
+.w4-object-sprite[data-cell="3"] { background-position: 0% 100%; }
+.w4-object-sprite[data-cell="4"] { background-position: 50% 100%; }
+.w4-object-sprite[data-cell="5"] { background-position: 100% 100%; }
+.w4-book-item.is-used { opacity: .38; filter: grayscale(1); pointer-events: none; }
+
+/* Helped beekeepers */
+.w4-dress-game { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(270px, .9fr); gap: 22px; align-items: center; min-height: 500px; }
+.w4-coover-state {
+  justify-self: center;
+  width: min(100%, 280px);
+  aspect-ratio: .6;
+  background-image: url('../assets/images/week-4/literacy/page-02/game-elements/coover-beekeeper-states.png');
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: 500% 100%;
+  filter: drop-shadow(0 12px 8px #26445844);
+}
+.w4-coover-state[data-state="0"] { background-position-x: 0%; }
+.w4-coover-state[data-state="1"] { background-position-x: 25%; }
+.w4-coover-state[data-state="2"] { background-position-x: 50%; }
+.w4-coover-state[data-state="3"] { background-position-x: 75%; }
+.w4-coover-state[data-state="4"] { background-position-x: 100%; }
+.w4-dress-panel { padding: 18px; border: 5px solid #fff; border-radius: 28px; background: #ffffffc9; box-shadow: 0 8px 0 #9fcadf; }
+.w4-dress-panel h3 { margin: 0 0 12px; color: #1c6699; text-align: center; }
+.w4-dress-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.w4-dress-choice { padding: 7px; border: 5px solid #fff; border-radius: 22px; color: var(--w4-ink); background: #eff9ff; box-shadow: 0 6px 0 #a6cadf; font-weight: 900; cursor: pointer; }
+.w4-dress-image { display: block; width: 100%; height: 170px; object-fit: contain; pointer-events: none; }
+
+/* Kept bees journey */
+.w4-journey { position: relative; min-height: 510px; padding-bottom: 105px; }
+.w4-journey-canvas { position: relative; width: 100%; aspect-ratio: 2.5; }
+.w4-journey-scenes { position: absolute; inset: 0; border: 6px solid #fff; border-radius: 24px; background: url('../assets/images/week-4/literacy/page-02/game-elements/kept-bees-scenes-v3.png') center/100% 100% no-repeat; box-shadow: 0 8px 0 #6ea44e; }
+.w4-kept-object { position: absolute; z-index: 25; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; }
+.w4-kept-object[hidden] { display: none; }
+.w4-kept-object img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.w4-kept-object:focus-visible { outline: 6px solid #ffe05a; outline-offset: 3px; }
+.w4-kept-object.is-selected { border-radius: 15px; filter: drop-shadow(0 0 7px #fff) drop-shadow(0 0 10px #ffe05a); box-shadow: 0 0 0 6px #ffe05aaa; }
+.w4-kept-suit { top: 11%; left: 2.5%; width: 20%; height: 78%; border-radius: 45%; cursor: pointer; }
+.w4-kept-suit:hover:not(:disabled), .w4-kept-suit:focus-visible { box-shadow: 0 0 0 7px #ffe05aaa; }
+.w4-kept-lid { left: 29%; top: 27%; width: 17%; aspect-ratio: 1.5; }
+.w4-kept-lid.is-left-ground { left: 29%; top: 65%; }
+.w4-kept-lid.is-right-ground { left: 77%; top: 65%; }
+.w4-kept-lid.is-closed { left: 77%; top: 27%; }
+.w4-kept-frame { left: 55%; top: 19%; width: 15%; aspect-ratio: 1.5; }
+.w4-kept-object.is-height-ready { border-radius: 18px; filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 12px #42d74b); box-shadow: 0 0 0 8px #5ce06499; }
+.w4-kept-guide {
+  position: absolute;
+  z-index: 22;
+  display: grid;
+  place-items: center;
+  border: 5px dashed #f04444;
+  border-radius: 14px;
+  color: #fff;
+  background: #ef3e3e30;
+  box-shadow: 0 0 0 4px #fff9, 0 0 15px #d91f1faa;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 1000;
+  opacity: 0;
+  transform: scale(.88);
+  transition: opacity .16s, transform .16s, border-color .16s, background .16s;
+  pointer-events: none;
+}
+.w4-kept-guide.is-visible { opacity: 1; transform: scale(1); }
+.w4-kept-guide.is-reached { border-color: #31be45; background: #36c94b40; box-shadow: 0 0 0 4px #fff9, 0 0 18px #2fc148; }
+.w4-kept-lid-guide { width: 17%; aspect-ratio: 1.5; }
+.w4-kept-lid-guide.is-ground-target { left: 29%; top: 65%; }
+.w4-kept-lid-guide.is-hive-target { left: 77%; top: 27%; }
+.w4-kept-lid-guide.is-ground-target::after { content: "\2193"; }
+.w4-kept-lid-guide.is-hive-target::after { content: "\2191"; }
+.w4-kept-frame-guide { left: 55%; width: 15%; aspect-ratio: 1.5; }
+.w4-kept-frame-guide.is-top-target { top: 1%; }
+.w4-kept-frame-guide.is-bottom-target { top: 19%; }
+.w4-journey-track { position: absolute; right: 3%; bottom: 24px; left: 3%; height: 66px; }
+.w4-journey-line { position: absolute; top: 30px; right: 5%; left: 5%; height: 9px; border: 3px solid #fff; border-radius: 99px; background: #edaf34; box-shadow: 0 3px 0 #a46413; }
+.w4-journey-dot { position: absolute; top: 19px; width: 30px; aspect-ratio: 1; border: 5px solid #fff; border-radius: 50%; background: #48b951; box-shadow: 0 4px 0 #26742d; transform: translateX(-50%); }
+.w4-journey-dot.is-current { background: #ffbd27; box-shadow: 0 0 0 7px #ffdb6c88, 0 4px 0 #a7650c; }
+.w4-journey-coover { position: absolute; top: -18px; width: 82px; aspect-ratio: .6; border: 0; background: url('../assets/images/week-4/literacy/page-02/game-elements/coover-beekeeper-states.png') 0% center/500% 100% no-repeat; filter: drop-shadow(0 7px 5px #213d5344); cursor: grab; transform: translateX(-50%); touch-action: none; }
+.w4-journey-coover.is-suited { background-position-x: 100%; }
+
+/* Loved bees */
+.w4-love-game { display: flex; flex-direction: column; height: 100%; cursor: none; }
+.w4-love-game .w4-game-hint { flex: 0 0 auto; margin-bottom: 5px; }
+.w4-love-grid { display: grid; flex: 1 1 auto; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; }
+.w4-love-card { display: grid; overflow: hidden; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; padding: 0 0 7px; border: 5px solid #fff; border-radius: 22px; color: var(--w4-ink); background: #fff; box-shadow: 0 7px 0 #a6cadd; font-weight: 900; cursor: none; }
+.w4-love-image { display: block; align-self: center; width: 100%; aspect-ratio: 1; background-image: url('../assets/images/week-4/literacy/page-02/game-elements/loved-bees-scenes.png'); background-size: 300% 200%; background-repeat: no-repeat; }
+.w4-love-image[data-cell="0"] { background-position: 0% 0%; }
+.w4-love-image[data-cell="1"] { background-position: 50% 0%; }
+.w4-love-image[data-cell="2"] { background-position: 100% 0%; }
+.w4-love-image[data-cell="3"] { background-position: 0% 100%; }
+.w4-love-image[data-cell="4"] { background-position: 50% 100%; }
+.w4-love-image[data-cell="5"] { background-position: 100% 100%; }
+.w4-love-card.is-good { border-color: #57c656; box-shadow: 0 0 0 6px #77dc7755, 0 7px 0 #318a33; }
+.w4-bee-cursor { position: fixed; z-index: 1500; pointer-events: none; font-size: 3rem; transform: translate(-50%, -50%) rotate(-12deg); filter: drop-shadow(0 5px 4px #263c4d55); }
+
+/* 3D hive builder */
+.w4-hive-game { display: grid; grid-template-columns: minmax(280px, 1.2fr) minmax(230px, .8fr); gap: 18px; min-height: 500px; }
+.w4-hive-build { position: relative; min-height: 470px; border: 6px dashed #ffffffcc; border-radius: 28px; background: radial-gradient(circle at 50% 80%, #e6c688 0 24%, transparent 25%), linear-gradient(#bdeaff, #e9f8c8); }
+.w4-hive-build::after { content: "Build here"; position: absolute; top: 12px; left: 50%; padding: 6px 13px; border-radius: 99px; color: #39708d; background: #ffffffde; font-weight: 900; transform: translateX(-50%); }
+.w4-hive-tray { display: grid; grid-template-columns: 1fr 1fr; align-content: center; gap: 12px; }
+.w4-hive-piece { aspect-ratio: .75; background-image: url('../assets/images/week-4/literacy/page-02/game-elements/modern-hive-parts.png'); background-size: 400% 100%; background-repeat: no-repeat; }
+.w4-hive-piece { width: 100%; border: 5px solid #fff; border-radius: 20px; background-color: #ffffffb8; box-shadow: 0 6px 0 #a4c9d8; cursor: grab; touch-action: none; }
+.w4-hive-piece[data-piece="0"] { background-position-x: 0%; }
+.w4-hive-piece[data-piece="1"] { background-position-x: 33.333%; }
+.w4-hive-piece[data-piece="2"] { background-position-x: 66.667%; }
+.w4-hive-piece[data-piece="3"] { background-position-x: 100%; }
+.w4-hive-piece.is-used { opacity: .25; pointer-events: none; }
+.w4-hive-progress {
+  position: absolute;
+  inset: auto auto 3px 50%;
+  z-index: 4;
+  width: min(390px, 88%);
+  aspect-ratio: .75;
+  background: url('../assets/images/week-4/literacy/page-02/game-elements/modern-hive-build-states.png') 0% center/400% 100% no-repeat;
+  filter: drop-shadow(0 12px 8px #263f4e3b);
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: w4-block-drop .5s cubic-bezier(.34, 1.5, .64, 1);
+}
+.w4-hive-progress[data-state="0"] { background-position-x: 0%; }
+.w4-hive-progress[data-state="1"] { background-position-x: 33.333%; }
+.w4-hive-progress[data-state="2"] { background-position-x: 66.667%; }
+.w4-hive-progress[data-state="3"] { background-position-x: 100%; }
+
+@keyframes w4-shake { 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+@keyframes w4-block-drop { from { opacity: .2; transform: translate(-50%, -90px) scale(.7); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
+
+@media (max-width: 720px) {
+  .w4-p2-header { grid-template-columns: 52px minmax(0, 1fr); }
+  .w4-p2-icon { width: 52px; border-width: 4px; font-size: 1.8rem; }
+  .w4-p2-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  .w4-p2-stage { min-height: 520px; padding: 9px; }
+  .w4-book-game, .w4-dress-game, .w4-hive-game { grid-template-columns: 1fr; min-height: 500px; }
+  .w4-book-scene { width: 190px; }
+  .w4-book-tray { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .w4-book-item { min-height: 82px; padding: 5px; font-size: .7rem; }
+  .w4-book-item .w4-object-sprite { border-radius: 9px; }
+  .w4-coover-state { width: 240px; }
+  .w4-dress-panel { padding: 10px; }
+  .w4-journey { min-height: 430px; padding-bottom: 100px; }
+  .w4-journey-canvas { aspect-ratio: 2.5; }
+  .w4-love-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .w4-love-card { font-size: .76rem; }
+  .w4-bee-cursor { display: none; }
+  .w4-love-game, .w4-love-card { cursor: pointer; }
+  .w4-hive-build { min-height: 390px; }
+  .w4-hive-tray { grid-template-columns: repeat(4, 1fr); }
+  .w4-p2-dialog[data-activity="loved"] .w4-love-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .w4-p2-dialog[data-activity="loved"] .w4-love-card { border-width: 3px; border-radius: 13px; font-size: .66rem; box-shadow: 0 4px 0 #a6cadd; }
+  .w4-p2-dialog[data-activity="loved"] .w4-p2-actions { grid-column: auto; }
+  .w4-p2-dialog[data-activity="loved"] .w4-p2-skip { min-height: 40px; padding: 5px 10px; }
+  .w4-p2-dialog[data-activity="loved"] .w4-p2-close { width: 42px; }
+}
+
+/* Fit the Modern Beehive builder without shrinking its navigation controls. */
+.w4-p2-dialog[data-activity="hive"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: min(1040px, 97vw);
+  height: min(94svh, 760px);
+  max-height: 94svh;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-p2-header,
+.w4-p2-dialog[data-activity="hive"] .w4-p2-progress,
+.w4-p2-dialog[data-activity="hive"] .w4-p2-feedback,
+.w4-p2-dialog[data-activity="hive"] .w4-p2-footer {
+  flex: 0 0 auto;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-p2-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-hive-game {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-hive-build {
+  height: 100%;
+  min-height: 0;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-hive-tray {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  align-content: stretch;
+  height: 100%;
+  min-height: 0;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-hive-piece {
+  justify-self: center;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: .75;
+}
+
+.w4-p2-dialog[data-activity="hive"] .w4-hive-progress {
+  width: auto;
+  max-width: 88%;
+  height: min(94%, 450px);
+  aspect-ratio: .75;
+}
+
+@media (max-width: 720px) {
+  .w4-p2-dialog[data-activity="hive"] {
+    width: calc(100vw - 12px);
+    height: calc(100svh - 12px);
+    max-height: calc(100svh - 12px);
+    padding: 9px;
+    border-width: 4px;
+    border-radius: 18px;
+  }
+
+  .w4-p2-dialog[data-activity="hive"] .w4-hive-game {
+    grid-template-columns: minmax(0, 1.2fr) minmax(150px, .8fr);
+    gap: 8px;
+  }
+
+  .w4-p2-dialog[data-activity="hive"] .w4-hive-tray {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .w4-p2-dialog[data-activity="hive"] .w4-hive-build { min-height: 0; }
+}
+
+/* Large, high-contrast labels and controls for early readers. */
+.w4-p2-dialog[data-activity="loved"] .w4-love-card {
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 0;
+}
+
+.w4-p2-dialog[data-activity="loved"] .w4-love-image {
+  justify-self: center;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: 1;
+}
+
+.w4-love-label {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 8px;
+  border-top: 3px solid #d5ebf7;
+  color: #173f5f;
+  background: #fff;
+  font-size: clamp(.92rem, 1.45vw, 1.08rem);
+  font-weight: 1000;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.w4-p2-dialog[data-activity="loved"] .w4-p2-restart {
+  min-width: 190px;
+  min-height: 52px;
+  padding: 9px 24px;
+  border-width: 5px;
+  font-size: 1.05rem;
+  box-shadow: 0 6px 0 #12648d;
+}
+
+@media (max-width: 720px) {
+  .w4-p2-dialog[data-activity="loved"] .w4-love-label {
+    min-height: 34px;
+    padding: 4px;
+    font-size: clamp(.78rem, 3vw, .92rem);
+  }
+
+  .w4-p2-dialog[data-activity="loved"] .w4-p2-restart {
+    min-width: 160px;
+    min-height: 46px;
+    padding: 7px 18px;
+    font-size: .92rem;
+  }
+}
+
+/* Keep the four-stop Kept Bees journey inside the visible viewport. */
+.w4-p2-dialog[data-activity="kept"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: min(980px, 95vw);
+  height: min(94svh, 720px);
+  max-height: 94svh;
+  padding: 12px 16px;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-header {
+  flex: 0 0 auto;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-icon {
+  width: 54px;
+  border-width: 4px;
+  border-radius: 18px;
+  font-size: 1.9rem;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-heading h2 { font-size: clamp(1.35rem, 3vw, 1.75rem); }
+.w4-p2-dialog[data-activity="kept"] .w4-p2-heading p { margin-top: 1px; font-size: .9rem; }
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-progress {
+  flex: 0 0 auto;
+  height: 11px;
+  margin: 7px 0 6px;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 9px;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-feedback {
+  flex: 0 0 auto;
+  min-height: 23px;
+  padding-top: 3px;
+  font-size: .9rem;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-p2-footer { flex: 0 0 auto; }
+.w4-p2-dialog[data-activity="kept"] .w4-p2-restart { padding: 5px 14px; }
+
+.w4-p2-dialog[data-activity="kept"] .w4-journey {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding-bottom: 78px;
+}
+
+.w4-p2-dialog[data-activity="kept"] .w4-game-hint { margin-bottom: 6px; font-size: .92rem; }
+.w4-p2-dialog[data-activity="kept"] .w4-journey-track { bottom: 8px; height: 62px; }
+.w4-p2-dialog[data-activity="kept"] .w4-journey-coover { top: -13px; width: 72px; }
+
+@media (max-width: 720px) {
+  .w4-p2-dialog[data-activity="kept"] {
+    width: calc(100vw - 12px);
+    height: calc(100svh - 12px);
+    max-height: calc(100svh - 12px);
+    padding: 7px;
+    border-width: 4px;
+    border-radius: 18px;
+  }
+
+  .w4-p2-dialog[data-activity="kept"] .w4-p2-header {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .w4-p2-dialog[data-activity="kept"] .w4-p2-icon { width: 44px; }
+  .w4-p2-dialog[data-activity="kept"] .w4-p2-actions { grid-column: 1 / -1; }
+  .w4-p2-dialog[data-activity="kept"] .w4-p2-skip { min-height: 38px; padding: 4px 9px; }
+  .w4-p2-dialog[data-activity="kept"] .w4-p2-close { width: 40px; }
+  .w4-p2-dialog[data-activity="kept"] .w4-game-hint { font-size: .76rem; }
+  .w4-p2-dialog[data-activity="kept"] .w4-journey { padding-bottom: 66px; }
+  .w4-p2-dialog[data-activity="kept"] .w4-journey-track { height: 54px; }
+  .w4-p2-dialog[data-activity="kept"] .w4-journey-coover { width: 58px; }
+  .w4-kept-guide { border-width: 3px; border-radius: 8px; box-shadow: 0 0 0 2px #fff9, 0 0 10px #d91f1faa; }
+}
+
+/* Keep Helped Beekeepers fully visible and use complete transparent item cutouts. */
+.w4-p2-dialog[data-activity="help"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: min(900px, 95vw);
+  height: min(94svh, 720px);
+  max-height: 94svh;
+  padding: 12px 16px;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-header {
+  flex: 0 0 auto;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-icon {
+  width: 54px;
+  border-width: 4px;
+  border-radius: 18px;
+  font-size: 1.9rem;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-heading h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-heading p {
+  margin-top: 1px;
+  font-size: .9rem;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-progress {
+  flex: 0 0 auto;
+  height: 11px;
+  margin: 7px 0 6px;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 9px;
+  overflow: hidden;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-feedback {
+  flex: 0 0 auto;
+  min-height: 23px;
+  padding-top: 3px;
+  font-size: .9rem;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-p2-footer { flex: 0 0 auto; }
+.w4-p2-dialog[data-activity="help"] .w4-p2-restart { padding: 5px 14px; }
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-game {
+  grid-template-columns: minmax(160px, .72fr) minmax(330px, 1.28fr);
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-coover-state { width: min(100%, 210px); }
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-panel {
+  padding: 10px;
+  border-width: 4px;
+  border-radius: 20px;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-panel h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-choices { gap: 8px; }
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-choice {
+  padding: 5px;
+  border-width: 4px;
+  border-radius: 16px;
+  box-shadow: 0 4px 0 #a6cadf;
+  font-size: .8rem;
+}
+
+.w4-p2-dialog[data-activity="help"] .w4-dress-image { height: min(25svh, 160px); }
+
+@media (max-width: 720px) {
+  .w4-p2-dialog[data-activity="help"] {
+    width: calc(100vw - 12px);
+    height: calc(100svh - 12px);
+    max-height: calc(100svh - 12px);
+    padding: 7px;
+    border-width: 4px;
+    border-radius: 18px;
+  }
+
+  .w4-p2-dialog[data-activity="help"] .w4-p2-header {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .w4-p2-dialog[data-activity="help"] .w4-p2-icon { width: 44px; }
+  .w4-p2-dialog[data-activity="help"] .w4-p2-actions { grid-column: 1 / -1; }
+  .w4-p2-dialog[data-activity="help"] .w4-p2-skip { min-height: 38px; padding: 4px 9px; }
+  .w4-p2-dialog[data-activity="help"] .w4-p2-close { width: 40px; }
+
+  .w4-p2-dialog[data-activity="help"] .w4-dress-game {
+    grid-template-columns: minmax(92px, 125px) minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .w4-p2-dialog[data-activity="help"] .w4-coover-state { width: min(100%, 125px); }
+  .w4-p2-dialog[data-activity="help"] .w4-dress-panel { padding: 6px; }
+  .w4-p2-dialog[data-activity="help"] .w4-dress-panel h3 { margin-bottom: 5px; font-size: .78rem; }
+  .w4-p2-dialog[data-activity="help"] .w4-dress-choices { gap: 5px; }
+  .w4-p2-dialog[data-activity="help"] .w4-dress-choice { padding: 3px; border-width: 3px; border-radius: 12px; font-size: .64rem; }
+  .w4-p2-dialog[data-activity="help"] .w4-dress-image { height: min(22svh, 120px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w4-p2-progress span, .w4-hive-placed { transition: none; animation-duration: .01ms; }
+}
+
+/* Keep the Wrote a Book activity fully inside the visible viewport. */
+.w4-p2-dialog[data-activity="book"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: min(920px, 95vw);
+  height: min(94svh, 720px);
+  max-height: 94svh;
+  padding: 12px 16px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-header {
+  flex: 0 0 auto;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-icon {
+  width: 54px;
+  border-width: 4px;
+  border-radius: 18px;
+  font-size: 1.9rem;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-heading h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-heading p {
+  margin-top: 1px;
+  font-size: .9rem;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-progress {
+  flex: 0 0 auto;
+  height: 11px;
+  margin: 7px 0 6px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 9px;
+  overflow: hidden;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-feedback {
+  flex: 0 0 auto;
+  min-height: 23px;
+  padding-top: 3px;
+  font-size: .9rem;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-footer {
+  flex: 0 0 auto;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-p2-restart {
+  padding: 5px 14px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-book-game {
+  grid-template-columns: minmax(150px, .65fr) minmax(340px, 1.35fr);
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-book-scene {
+  width: min(100%, 170px);
+  border-width: 5px;
+  border-radius: 20px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-book-tray {
+  grid-template-columns: repeat(2, minmax(120px, 155px));
+  justify-content: center;
+  align-content: center;
+  gap: 9px;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-book-item {
+  min-height: 0;
+  padding: 5px;
+  border-width: 4px;
+  border-radius: 18px;
+  font-size: .82rem;
+}
+
+.w4-p2-dialog[data-activity="book"] .w4-book-item .w4-object-sprite {
+  border-radius: 12px;
+}
+
+@media (max-width: 720px) {
+  .w4-p2-dialog[data-activity="book"] {
+    width: calc(100vw - 12px);
+    height: calc(100svh - 12px);
+    max-height: calc(100svh - 12px);
+    padding: 7px;
+    border-width: 4px;
+    border-radius: 18px;
+  }
+
+  .w4-p2-dialog[data-activity="book"] .w4-p2-header {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .w4-p2-dialog[data-activity="book"] .w4-p2-icon { width: 44px; }
+  .w4-p2-dialog[data-activity="book"] .w4-p2-actions { grid-column: 1 / -1; }
+  .w4-p2-dialog[data-activity="book"] .w4-p2-skip { min-height: 38px; padding: 4px 9px; }
+  .w4-p2-dialog[data-activity="book"] .w4-p2-close { width: 40px; }
+
+  .w4-p2-dialog[data-activity="book"] .w4-book-game {
+    grid-template-columns: minmax(86px, 108px) minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .w4-p2-dialog[data-activity="book"] .w4-book-scene { width: min(100%, 106px); }
+
+  .w4-p2-dialog[data-activity="book"] .w4-book-tray {
+    grid-template-columns: repeat(2, minmax(72px, 96px));
+    gap: 5px;
+  }
+
+  .w4-p2-dialog[data-activity="book"] .w4-book-item {
+    padding: 3px;
+    border-width: 3px;
+    border-radius: 12px;
+    font-size: .66rem;
+  }
+}

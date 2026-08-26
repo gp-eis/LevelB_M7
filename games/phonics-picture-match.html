@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phonics Picture Match — Beekeeper</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .match-board {
+      width: min(820px, 100%);
+      margin: 22px auto 0;
+      padding: clamp(18px, 4vw, 30px);
+      border: 6px solid rgba(255,255,255,.94);
+      border-radius: 32px;
+      background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(227,248,255,.96));
+      box-shadow: 0 11px 0 #b9e5f2, 0 20px 34px rgba(30,58,95,.16);
+    }
+    .progress { margin-bottom: 16px; color: var(--purple-d); font: 700 1.1rem var(--font-friendly); text-align: center; }
+    .picture-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .picture-choice {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      aspect-ratio: 1;
+      padding: 12px;
+      border: 5px solid transparent;
+      border-radius: 24px;
+      background: radial-gradient(circle at 35% 18%, #fff, #effaff 78%);
+      box-shadow: inset 0 -9px 14px rgba(30,111,217,.07), 0 8px 0 #c4e6f2, 0 14px 20px rgba(30,58,95,.14);
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .picture-choice:hover:not(:disabled) { border-color: var(--yellow); transform: translateY(-6px) scale(1.02); }
+    .picture-choice:focus-visible { outline: 5px solid var(--yellow); outline-offset: 2px; }
+    .picture-choice img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 10px 6px rgba(30,58,95,.2)); }
+    .picture-choice.correct { border-color: var(--green); background: #eaffdf; box-shadow: 0 8px 0 var(--green-d); }
+    .picture-choice.wrong { border-color: var(--pink-d); background: #ffe9eb; animation: shake .5s ease; }
+    .sentence-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 26px;
+      padding: 20px;
+      border: 6px solid var(--blue);
+      border-radius: 26px;
+      background: linear-gradient(180deg, #eef9ff, #fff);
+    }
+    .sentence-text { flex: 1; color: var(--text); font: 700 clamp(1.6rem, 5vw, 2.2rem)/1.25 var(--font-literacy); text-align: center; }
+    .listen-btn {
+      flex: 0 0 54px;
+      width: 54px;
+      height: 54px;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .feedback { min-height: 32px; margin: 16px 0 0; color: var(--purple-d); font: 700 1.15rem var(--font-friendly); text-align: center; }
+    .success-modal { position: fixed; inset: 0; z-index: 150; display: grid; place-items: center; padding: 20px; background: rgba(30,58,95,.42); backdrop-filter: blur(3px); }
+    .success-modal[hidden] { display: none; }
+    .success-card { width: min(440px, 94vw); padding: 28px; border: 7px solid var(--green); border-radius: 32px; background: #fff; box-shadow: 0 12px 0 rgba(61,140,30,.25); text-align: center; animation: pop .4s cubic-bezier(.34,1.56,.64,1); }
+    .success-card h2 { color: var(--green-d); font-size: 2.2rem; }
+    .success-card p { margin: 8px 0 20px; font: 700 1.25rem var(--font-friendly); }
+    @keyframes shake { 25%,75% { transform: translateX(-8px); } 50% { transform: translateX(8px); } }
+    @keyframes pop { from { opacity: 0; transform: scale(.55); } }
+    @media (max-width: 560px) { .picture-choices { gap: 8px; } .picture-choice { padding: 6px; border-width: 4px; border-radius: 18px; } .sentence-box { padding: 14px 12px; } }
+  </style>
+</head>
+<body class="phonics-activity-page">
+  <main class="page">
+    <a class="back-link" id="back-link" href="phonics.html">⬅️ Phonics Games</a>
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/phonics-games/picture-match-3d.png" alt="">Picture Match</h1>
+      <p class="subtitle">Listen to the sentence. Tap the matching picture!</p>
+    </header>
+
+    <section class="match-board" aria-label="Phonics picture matching game">
+      <p class="progress" id="progress">Sentence 1 of 3</p>
+      <div class="picture-choices" id="picture-choices"></div>
+      <div class="sentence-box">
+        <p class="sentence-text" id="sentence-text"></p>
+        <button class="listen-btn" id="hear-sentence" type="button" aria-label="Listen to the sentence">🔊</button>
+      </div>
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <div style="font-size:4rem;" aria-hidden="true">🎉</div>
+      <h2 id="success-title">Great job!</h2>
+      <p>You matched dog, log, and fog!</p>
+      <button class="pill-btn green" id="try-again" type="button">🔄 Try Again</button>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const origin = new URLSearchParams(location.search).get('from') === 'phonics' ? 'phonics' : 'games';
+    document.getElementById('back-link').href = `phonics.html?from=${origin}`;
+
+    const WORDS = [
+      { id: 'dog', label: 'Dog', sentence: 'There is a dog.', image: '../assets/images/week-1/phonics/dog.png' },
+      { id: 'log', label: 'Log', sentence: 'There is a log.', image: '../assets/images/week-1/phonics/log.png' },
+      { id: 'fog', label: 'Fog', sentence: 'There is some fog.', image: '../assets/images/week-1/phonics/fog.png' }
+    ];
+
+    const choices = document.getElementById('picture-choices');
+    const sentenceText = document.getElementById('sentence-text');
+    const progress = document.getElementById('progress');
+    const feedback = document.getElementById('feedback');
+    const successModal = document.getElementById('success-modal');
+    let rounds = [];
+    let roundIndex = 0;
+    let locked = false;
+    let usVoice = null;
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let index = result.length - 1; index > 0; index--) {
+        const swap = Math.floor(Math.random() * (index + 1));
+        [result[index], result[swap]] = [result[swap], result[index]];
+      }
+      return result;
+    }
+
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+      usVoice = voices.find(voice => /^en[-_]US$/i.test(voice.lang || '')) || null;
+    }
+    if ('speechSynthesis' in window) {
+      pickVoice();
+      speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = .88;
+      if (usVoice) utterance.voice = usVoice;
+      speechSynthesis.speak(utterance);
+    }
+
+    function renderRound(autoSpeak = true) {
+      locked = false;
+      feedback.textContent = '';
+      const current = rounds[roundIndex];
+      progress.textContent = `Sentence ${roundIndex + 1} of ${rounds.length}`;
+      sentenceText.textContent = current.sentence;
+      choices.innerHTML = '';
+
+      shuffle(WORDS).forEach(word => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'picture-choice';
+        button.setAttribute('aria-label', `Choose ${word.label}`);
+        const image = document.createElement('img');
+        image.src = word.image;
+        image.alt = word.label;
+        image.draggable = false;
+        button.appendChild(image);
+        button.addEventListener('click', () => choosePicture(button, word));
+        choices.appendChild(button);
+      });
+
+      if (autoSpeak) speak(current.sentence);
+    }
+
+    function choosePicture(button, word) {
+      if (locked) return;
+      const current = rounds[roundIndex];
+      if (word.id !== current.id) {
+        button.classList.add('wrong');
+        feedback.textContent = 'Try another picture.';
+        window.setTimeout(() => button.classList.remove('wrong'), 550);
+        return;
+      }
+
+      locked = true;
+      button.classList.add('correct');
+      feedback.textContent = `Yes! ${current.label}.`;
+      choices.querySelectorAll('button').forEach(choice => choice.disabled = true);
+      speak(current.sentence);
+      window.setTimeout(() => {
+        roundIndex++;
+        if (roundIndex < rounds.length) renderRound();
+        else {
+          successModal.hidden = false;
+          speak('Great job! You matched dog, log, and fog!');
+          document.getElementById('try-again').focus();
+        }
+      }, 1300);
+    }
+
+    function startGame() {
+      rounds = shuffle(WORDS);
+      roundIndex = 0;
+      successModal.hidden = true;
+      renderRound();
+    }
+
+    document.getElementById('hear-sentence').addEventListener('click', () => speak(rounds[roundIndex].sentence));
+    document.getElementById('try-again').addEventListener('click', startGame);
+    startGame();
+  </script>
+</body>
+</html>

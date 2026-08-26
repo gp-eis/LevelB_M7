@@ -1,0 +1,257 @@
+.games-framework-page,
+.week-one-game-page {
+  min-height: 100vh;
+  min-height: 100svh;
+  color: var(--text);
+  background: linear-gradient(180deg, #7ed0ff 0%, #c4efff 40%, #e8fff4 100%);
+  font-family: var(--font-display);
+}
+
+.games-framework-page .floaties,
+.week-one-game-page .floaties {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.games-framework-page .floaties span,
+.week-one-game-page .floaties span {
+  position: absolute;
+  font-size: 2rem;
+  opacity: .22;
+  animation: game-float 8s ease-in-out infinite alternate;
+}
+.games-framework-page .floaties span:nth-child(2n),
+.week-one-game-page .floaties span:nth-child(2n) { animation-duration: 9s; font-size: 2.6rem; }
+.games-framework-page .floaties span:nth-child(3n),
+.week-one-game-page .floaties span:nth-child(3n) { animation-duration: 11s; font-size: 1.6rem; }
+
+@keyframes game-float {
+  from { transform: translateY(-8px) rotate(-5deg); }
+  to { transform: translateY(16px) rotate(7deg); }
+}
+
+.week-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 26px;
+  margin-top: 32px;
+}
+.week-pick-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 46px;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--frame-light), var(--frame));
+  box-shadow: 0 10px 0 var(--frame-dark), 0 16px 24px rgba(30,58,95,.18);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.week-pick-btn:hover {
+  filter: brightness(1.03);
+  transform: translateY(-8px) rotate(-1deg);
+  box-shadow: 0 16px 0 var(--frame-dark), 0 22px 28px rgba(30,58,95,.22);
+}
+.week-pick-btn:active { transform: translateY(3px); box-shadow: 0 4px 0 var(--frame-dark), 0 8px 14px rgba(30,58,95,.16); }
+.week-pick-btn:focus-visible { outline: 6px solid var(--yellow); outline-offset: 5px; }
+.week-pick-btn__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-height: 250px;
+  padding: 26px 16px 24px;
+  border-radius: 36px;
+  background: linear-gradient(180deg, #fff, #f4fbff);
+}
+.week-pick-btn__icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 30px;
+  background: linear-gradient(160deg, var(--frame-light), var(--frame));
+  box-shadow: inset 0 5px 12px rgba(255,255,255,.8), inset 0 -9px 16px rgba(0,0,0,.12), 0 8px 14px rgba(30,58,95,.18);
+}
+.week-pick-btn__icon::after {
+  content: '';
+  position: absolute;
+  inset: 7px 7px 52%;
+  border-radius: 23px 23px 40px 40px;
+  background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0));
+  pointer-events: none;
+}
+.week-pick-btn__icon-img { display: block; width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 6px 4px rgba(30,58,95,.18)); }
+.week-pick-btn__label { color: #1e3a5f; font-size: 1.55rem; font-weight: 800; }
+.week-pick-btn__hint { max-width: 18ch; color: #3d5a78; font: 600 1.05rem/1.28 var(--font-friendly); text-align: center; }
+.week-pick-btn.pink { --frame:#ff6b6b; --frame-light:#ff9a9a; --frame-dark:#d64545; }
+.week-pick-btn.blue { --frame:#3db5ff; --frame-light:#8ad4ff; --frame-dark:#1e6fd9; }
+.week-pick-btn.green { --frame:#7ed957; --frame-light:#aeec8d; --frame-dark:#4ea62c; }
+.week-pick-btn.orange { --frame:#ff9f1c; --frame-light:#ffc978; --frame-dark:#d97d00; }
+
+.week-games-panel[hidden], #week-picker[hidden] { display: none; }
+.games-hub .week-games-panel { animation: games-panel-in .35s ease; }
+@keyframes games-panel-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.game-placeholder-board {
+  max-width: 820px;
+  margin: 22px auto 0;
+  padding: 28px 24px 32px;
+  border: 5px solid rgba(255,255,255,.9);
+  border-radius: 30px;
+  background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(228,248,255,.94));
+  box-shadow: inset 0 -12px 20px rgba(30,111,217,.06), 0 12px 0 #b9e5f2, 0 22px 34px rgba(30,58,95,.16);
+  text-align: center;
+}
+
+/* LevelA_M7 Games hub parity.
+   Keep these rules scoped to the Games pages so the Beekeeper lesson pages
+   retain their own theme while the hub uses LevelA's exact measurements. */
+.games-framework-page .games-hub {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.games-framework-page .hub-title-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  font-weight: 800;
+}
+
+.games-framework-page .hub-title-icon {
+  width: clamp(76px, 11vw, 118px);
+  height: clamp(76px, 11vw, 118px);
+  margin-right: 12px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.games-framework-page .subtitle {
+  margin: 8px 0 0;
+  color: var(--purple-d);
+  font-family: var(--font-friendly);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+}
+
+.week-one-game-page h1,
+.week-one-game-page h2,
+.week-one-game-page p {
+  margin: 0;
+  padding: 0;
+}
+
+.week-one-game-page .big-title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.week-one-game-page .subtitle {
+  margin: 8px 0 0;
+  color: var(--purple-d);
+  font-family: var(--font-friendly);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+}
+
+.games-framework-page .week-games-panel {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 30px;
+  background: rgba(255,255,255,.7);
+  box-shadow: 0 8px 0 rgba(74,59,82,.08);
+}
+
+.games-framework-page .week-games-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.games-framework-page .week-games-panel .week-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  color: var(--purple-d);
+  font-size: clamp(1.35rem, 3.5vw, 1.9rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.games-framework-page .card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.games-framework-page .nav-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 0;
+  padding: 28px 20px;
+  border: 5px solid transparent;
+  border-radius: 30px;
+  color: var(--text);
+  background: linear-gradient(155deg, #fff 0%, #f4fbff 72%, #e7f7ff 100%);
+  box-shadow: 0 9px 0 rgba(30,111,217,.14), 0 16px 24px rgba(30,58,95,.13), inset 0 3px 0 #fff;
+  text-align: center;
+  text-decoration: none;
+}
+
+.games-framework-page .nav-card .icon-img {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+
+.games-framework-page .nav-card .emoji {
+  font-size: 3.4rem;
+  line-height: 1;
+}
+
+.games-framework-page .nav-card .label {
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.games-framework-page .nav-card .hint {
+  color: #8b7a99;
+  font-family: var(--font-friendly);
+  font-size: .95rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .week-picker { gap: 18px; }
+  .week-pick-btn__inner { min-height: 220px; }
+  .games-framework-page .week-games-panel { padding: 17px 12px; }
+  .games-framework-page .week-number { width: 42px; height: 42px; }
+  .games-framework-page .nav-card .icon-img { width: 72px; height: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .games-framework-page .floaties span,
+  .week-one-game-page .floaties span,
+  .week-games-panel { animation: none; }
+}

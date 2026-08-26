@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Literacy Week 2 — Page 3 — When can I see bees?</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/literacy-shell.css">
+  <link rel="stylesheet" href="../css/week-2-pages.css">
+</head>
+<body class="lesson-page week-2-literacy-body" data-week-two-activity="3">
+  <main class="page literacy-shell-page">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-2-page-02.html#lesson-focus">⬅️ Previous Page</a>
+      <span class="page-indicator" aria-current="page">📖 Page 3 of 6</span>
+      <a class="back-link next-page-link" href="week-2-page-04.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="../week-2.html#card-literacy">🏠 Week 2 Home</a>
+    <header class="literacy-header">
+      <h1 class="big-title week-2-literacy-title">Week 2 — When can I see bees?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=2">🎵 Week Song</a>
+        <a class="pill-btn blue" href="flashcards.html?week=2">🃏 Flashcards</a>
+      </nav>
+    </header>
+    <section id="lesson-focus" class="card week-2-activity-card" aria-label="Guide the bee through the maze activity">
+      <div class="week-2-stage maze-game-stage">
+        <img id="week-2-maze-background" class="week-2-background" src="../assets/images/week-2/literacy/page-03-maze-background-v2.png" width="1411" height="1114" decoding="async" alt="When can I see bees? Guide the bee through the maze to the beehive.">
+
+        <div class="maze-goal" aria-hidden="true"></div>
+        <button id="week-2-maze-bee" class="maze-draggable-bee" type="button" aria-label="Drag the bee through the maze to the beehive" disabled>
+          <img src="../assets/images/week-2/literacy/page-03-draggable-bee.png" draggable="false" alt="">
+        </button>
+
+        <div id="week-2-maze-gate" class="week-2-start-layer">
+          <button id="week-2-maze-start" class="week-2-start-button" type="button">▶ Start Activity</button>
+        </div>
+
+        <div id="week-2-maze-video-layer" class="week-2-video-layer" hidden>
+          <video id="week-2-maze-video" class="maze-intro-video" src="../assets/video/week-2/literacy/page-03-before-activity.mp4" playsinline preload="metadata"></video>
+          <button id="week-2-maze-play-video" class="week-2-start-button week-2-video-play" type="button" hidden>▶ Play Clip</button>
+        </div>
+
+        <div id="week-2-completion" class="week-2-completion" hidden>
+          <div class="week-2-completion-panel">
+            <h2>Great job! 🐝</h2>
+            <p>You guided the bee safely to its hive.</p>
+            <div class="week-2-completion-actions">
+              <button id="week-2-completion-retry" class="pill-btn blue" type="button">↻ Try Again</button>
+              <a class="pill-btn orange" href="week-2-page-04.html#lesson-focus">Next Page ➡️</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p id="week-2-status" class="week-2-status" role="status" aria-live="polite"></p>
+      <p class="maze-help">Drag with a mouse or finger. Keyboard users can move the bee with the arrow keys.</p>
+      <button id="week-2-restart" class="pill-btn blue week-2-restart" type="button" disabled>↻ Try Again</button>
+    </section>
+  </main>
+  <script src="../js/main.js"></script>
+  <script src="../js/week-2-pages.js"></script>
+  <script src="../js/literacy-good-job.js"></script>
+</body>
+</html>
