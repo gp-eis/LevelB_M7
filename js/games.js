@@ -33,6 +33,12 @@
     matching: 'week-2-picture-match.html',
     'pick-the-right-one': 'week-2-pick-the-right-one.html'
   };
+  const weekFourGamePages = {
+    memory: 'week-4/memory.html',
+    'spin-the-wheel': 'week-4/spin-the-wheel.html',
+    matching: 'week-4/matching.html',
+    'pick-the-right-one': 'week-4/pick-the-right-one.html'
+  };
 
   function gameHref(week, game) {
     if (game.key === 'phonics') {
@@ -40,6 +46,7 @@
     }
     if (week === 1 && weekOneGamePages[game.key]) return weekOneGamePages[game.key];
     if (week === 2 && weekTwoGamePages[game.key]) return weekTwoGamePages[game.key];
+    if (week === 4 && weekFourGamePages[game.key]) return weekFourGamePages[game.key];
     return `placeholder.html?week=${week}&game=${game.key}`;
   }
 
