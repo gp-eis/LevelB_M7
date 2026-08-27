@@ -24,12 +24,14 @@
   const weekOneGamePages = {
     memory: 'week-1-memory.html',
     'spin-the-wheel': 'week-1-spin-the-wheel.html',
-    matching: 'week-1-picture-match.html'
+    matching: 'week-1-picture-match.html',
+    'pick-the-right-one': 'pick-the-right-one.html'
   };
   const weekTwoGamePages = {
     memory: 'week-2-memory.html',
     'spin-the-wheel': 'week-2-spin-the-wheel.html',
-    matching: 'week-2-picture-match.html'
+    matching: 'week-2-picture-match.html',
+    'pick-the-right-one': 'week-2-pick-the-right-one.html'
   };
 
   function gameHref(week, game) {

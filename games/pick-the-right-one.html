@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick the Right One — Beekeeper</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/games-framework.css">
+  <style>
+    .pick-page { width:100%; max-width:1000px; }
+    .game-toolbar { display:flex; justify-content:center; margin-top:18px; }
+    .pick-board { width:min(840px,96vw); margin:22px auto 0; padding:28px 24px 32px; border:5px solid rgba(255,255,255,.92); border-radius:30px; background:rgba(255,255,255,.9); box-shadow:0 10px 0 rgba(179,136,255,.18),0 16px 30px rgba(74,59,82,.12); }
+    .question-box { display:grid; grid-template-columns:190px 1fr 54px; align-items:center; gap:16px; padding:18px; border:6px solid var(--purple); border-radius:26px; background:linear-gradient(180deg,#faf5ff,#fff); }
+    .sprite-visual { overflow:hidden; background-repeat:no-repeat; border-radius:18px; filter:drop-shadow(0 7px 6px rgba(74,59,82,.17)); }
+    .question-visual { width:190px; height:150px; }
+    .question-text { margin:0; color:var(--text); font-family:var(--font-friendly); font-size:clamp(1.3rem,4vw,1.8rem); font-weight:700; line-height:1.3; text-align:center; }
+    .listen-btn { display:grid; place-items:center; width:54px; height:54px; padding:0; border:3px solid #fff; border-radius:50%; background:linear-gradient(180deg,var(--blue),var(--blue-d)); box-shadow:0 5px 0 #1b7fae; color:#fff; font-size:1.4rem; cursor:pointer; transition:transform .12s ease; }
+    .listen-btn:hover:not(:disabled) { transform:scale(1.08); }
+    .listen-btn:active:not(:disabled) { transform:translateY(2px); }
+    .listen-btn:focus-visible { outline:4px solid var(--yellow); outline-offset:2px; }
+    .listen-btn:disabled { opacity:.5; cursor:default; }
+    .answers-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px; }
+    .answer-btn { display:flex; min-width:0; flex-direction:column; align-items:stretch; gap:11px; padding:15px 13px 17px; border:5px solid transparent; border-radius:24px; background:#fff; box-shadow:0 7px 0 rgba(74,59,82,.12); cursor:pointer; text-align:center; transition:transform .15s ease,border-color .15s ease,background .15s ease; }
+    .answer-btn:hover:not(:disabled) { border-color:var(--yellow); transform:translateY(-4px); }
+    .answer-btn:focus-visible { outline:5px solid var(--yellow); outline-offset:2px; }
+    .answer-btn:disabled { cursor:default; }
+    .answer-visual { width:100%; height:190px; background-color:#fff9d8; }
+    .answer-text { flex:1; color:var(--text); font-family:var(--font-friendly); font-size:clamp(1rem,3vw,1.25rem); font-weight:700; line-height:1.28; }
+    .answer-btn .listen-btn { margin:0 auto; }
+    .answer-btn.wrong { border-color:#e04b55; background:#ffe9eb; animation:wrong-shake .55s ease; }
+    .answer-btn.correct { border-color:var(--green); background:#eaffdf; }
+    .success-modal { position:fixed; inset:0; z-index:160; display:grid; place-items:center; padding:20px; background:rgba(65,45,86,.45); backdrop-filter:blur(3px); }
+    .success-modal[hidden] { display:none; }
+    .success-card { width:min(520px,94vw); padding:28px 26px 24px; border:7px solid var(--green); border-radius:32px; background:#fff; box-shadow:0 12px 0 rgba(61,140,30,.25),0 24px 50px rgba(74,59,82,.28); text-align:center; animation:pop-in .5s cubic-bezier(.34,1.56,.64,1); }
+    .success-title { margin:0 0 16px; color:var(--green-d); font-size:clamp(2rem,7vw,2.8rem); }
+    .success-review { margin-bottom:20px; padding:16px; border-radius:20px; background:#f6f0ff; text-align:left; }
+    .success-review p { margin:0 0 10px; color:var(--text); font:600 1.05rem/1.35 var(--font-friendly); }
+    .success-review p:last-child { margin-bottom:0; }
+    .success-review strong { color:var(--purple-d); }
+    @keyframes pop-in { from{opacity:0;transform:scale(.5) rotate(-4deg)} to{opacity:1;transform:scale(1)} }
+    @keyframes wrong-shake { 0%,100%{transform:translateX(0)} 25%,75%{transform:translateX(-8px)} 50%{transform:translateX(8px)} }
+    @media(max-width:620px){
+      .pick-page { padding-inline:8px; }
+      .pick-board { width:100%; padding:14px 9px 20px; border-radius:22px; }
+      .question-box { grid-template-columns:1fr 48px; gap:8px; padding:10px; border-width:4px; border-radius:20px; }
+      .question-visual { grid-column:1/-1; width:100%; height:142px; }
+      .question-text { font-size:1.15rem; }
+      .listen-btn { width:46px; height:46px; font-size:1.15rem; }
+      .answers-row { grid-template-columns:1fr 1fr; gap:9px; margin-top:13px; }
+      .answer-btn { gap:7px; padding:8px 6px 11px; border-width:4px; border-radius:17px; }
+      .answer-visual { height:126px; border-radius:12px; }
+      .answer-text { font-size:.88rem; }
+    }
+    @media(max-width:370px){ .answers-row{grid-template-columns:1fr}.answer-visual{height:145px} }
+    @media(prefers-reduced-motion:reduce){ .answer-btn,.success-card{animation:none;transition:none} }
+  </style>
+</head>
+<body class="week-one-game-page">
+  <div class="floaties" aria-hidden="true"><span style="top:10%;left:4%;">✅</span><span style="top:75%;left:93%;">🐝</span></div>
+  <main class="page pick-page">
+    <a class="back-link" href="index.html?week=1">⬅️ All Games</a>
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/game-pick.webp" alt="">Pick the Right One</h1>
+      <p class="subtitle">Listen to the question, then pick the best answer!</p>
+    </header>
+    <div class="game-toolbar"><button class="pill-btn orange" id="new-question" type="button">🔄 New Question</button></div>
+    <section class="pick-board" aria-label="Pick the Right One activity">
+      <div class="question-box">
+        <div class="sprite-visual question-visual" id="question-visual" role="img"></div>
+        <p class="question-text" id="question-text"></p>
+        <button class="listen-btn" id="question-listen" type="button" aria-label="Listen to the question">🔊</button>
+      </div>
+      <div class="answers-row" id="answers-row"></div>
+    </section>
+  </main>
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <h2 class="success-title" id="success-title">Correct! 🎉</h2>
+      <div class="success-review"><p><strong>Question:</strong> <span id="review-question"></span></p><p><strong>Answer:</strong> <span id="review-answer"></span></p></div>
+      <button class="pill-btn green" id="continue-btn" type="button">✓ Continue</button>
+    </div>
+  </div>
+  <script src="../js/main.js"></script>
+  <script>
+    const ART_BASE = '../assets/images/week-1/games/pick-right/';
+    const VISUALS = {
+      beekeeperQuestion:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'0% 50%',alt:'Gerry dressed as a beekeeper beside a natural hive'},
+      beekeeper:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'50% 50%',alt:'Gerry working as a beekeeper'},
+      athlete:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'100% 50%',alt:'Gerry dressed as an athlete'},
+      beesQuestion:{sheet:'bee-actions.png',size:'300% 200%',position:'0% 0%',alt:'Cute bees working near flowers and a natural hive'},
+      makeHoney:{sheet:'bee-actions.png',size:'300% 200%',position:'50% 0%',alt:'Bees making honey'},
+      buildHives:{sheet:'bee-actions.png',size:'300% 200%',position:'100% 0%',alt:'Bees building a natural hive'},
+      protectQueen:{sheet:'bee-actions.png',size:'300% 200%',position:'0% 100%',alt:'Worker bees protecting the queen bee'},
+      findFlowers:{sheet:'bee-actions.png',size:'300% 200%',position:'50% 100%',alt:'A bee finding flowers'},
+      collectNectar:{sheet:'bee-actions.png',size:'300% 200%',position:'100% 100%',alt:'A bee collecting nectar'},
+      queenQuestion:{sheet:'queen-choices.png',size:'300% 100%',position:'0% 50%',alt:'A kind queen wearing a crown and a red dress'},
+      crown:{sheet:'queen-choices.png',size:'300% 100%',position:'50% 50%',alt:'A golden crown'},
+      dress:{sheet:'queen-choices.png',size:'300% 100%',position:'100% 50%',alt:'A red royal dress'},
+      queenBeeQuestion:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'0% 50%',alt:'A cute crowned queen bee'},
+      wings:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'25% 50%',alt:'Bee wings'},
+      antennae:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'50% 50%',alt:'Bee antennae'},
+      abdomen:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'75% 50%',alt:'A striped bee abdomen'},
+      stinger:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'100% 50%',alt:'A small bee stinger'}
+    };
+    const ANSWERS = {
+      beekeeper:{text:'Yes, I do. I am a beekeeper.',visual:'beekeeper'},
+      athlete:{text:'No, I don’t. I am an athlete.',visual:'athlete'},
+      makeHoney:{text:'Bees make honey.',visual:'makeHoney'},
+      buildHives:{text:'Bees build hives.',visual:'buildHives'},
+      protectQueen:{text:'Bees protect the queen.',visual:'protectQueen'},
+      findFlowers:{text:'Bees find flowers.',visual:'findFlowers'},
+      collectNectar:{text:'Bees collect nectar.',visual:'collectNectar'},
+      crown:{text:'She has a crown.',visual:'crown'},
+      dress:{text:'She has a dress.',visual:'dress'},
+      wings:{text:'She has wings.',visual:'wings'},
+      antennae:{text:'She has antennae.',visual:'antennae'},
+      abdomen:{text:'She has an abdomen.',visual:'abdomen'},
+      stinger:{text:'She has a stinger.',visual:'stinger'}
+    };
+    const QUESTIONS = [
+      {question:'Do you keep bees?',visual:'beekeeperQuestion',correct:['beekeeper'],wrong:['athlete']},
+      {question:'What do bees do?',visual:'beesQuestion',correct:['makeHoney'],wrong:['buildHives','protectQueen','findFlowers','collectNectar']},
+      {question:'She is a queen.',visual:'queenQuestion',correct:['crown'],wrong:['dress']},
+      {question:'This is a queen bee.',visual:'queenBeeQuestion',correct:['wings'],wrong:['antennae','abdomen','stinger']}
+    ];
+    const questionText=document.getElementById('question-text');
+    const questionVisual=document.getElementById('question-visual');
+    const questionListen=document.getElementById('question-listen');
+    const answersRow=document.getElementById('answers-row');
+    const successModal=document.getElementById('success-modal');
+    const reviewQuestion=document.getElementById('review-question');
+    const reviewAnswer=document.getElementById('review-answer');
+    const continueBtn=document.getElementById('continue-btn');
+    let locked=false,currentRound=null,questionQueue=[];
+    function shuffle(items){const copy=[...items];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
+    function randomFrom(items){return items[Math.floor(Math.random()*items.length)]}
+    function speak(text){if(typeof window.speakAmericanEnglish==='function')return window.speakAmericanEnglish(text,{rate:.88});if(!('speechSynthesis'in window))return Promise.resolve();speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='en-US';utterance.rate=.88;return new Promise(resolve=>{utterance.onend=resolve;utterance.onerror=resolve;speechSynthesis.speak(utterance)})}
+    function correctSound(){if(typeof window.playTone!=='function')return;window.playTone(523,.12,.15,'sine');window.playTone(659,.12,.15,'sine',.08);window.playTone(784,.2,.17,'sine',.16)}
+    function wrongSound(){if(typeof window.playTone!=='function')return;window.playTone(220,.14,.075,'sawtooth');window.playTone(165,.2,.065,'sawtooth',.11)}
+    function applyVisual(element,key){const art=VISUALS[key];element.style.backgroundImage=`url('${ART_BASE}${art.sheet}')`;element.style.backgroundSize=art.size;element.style.backgroundPosition=art.position;element.setAttribute('aria-label',art.alt)}
+    function nextQuestion(){if(!questionQueue.length)questionQueue=shuffle(QUESTIONS);const item=questionQueue.shift();const correctKey=randomFrom(item.correct);const wrongKey=randomFrom(item.wrong);return {...item,correctKey,wrongKey}}
+    function makeSpeaker(text,label){const button=document.createElement('button');button.type='button';button.className='listen-btn';button.textContent='🔊';button.setAttribute('aria-label',label);button.addEventListener('click',event=>{event.stopPropagation();if(!locked)speak(text)});return button}
+    function renderRound(){locked=false;successModal.hidden=true;questionListen.disabled=false;currentRound=nextQuestion();questionText.textContent=currentRound.question;applyVisual(questionVisual,currentRound.visual);answersRow.innerHTML='';questionListen.onclick=()=>{if(!locked)speak(currentRound.question)};shuffle([currentRound.correctKey,currentRound.wrongKey]).forEach(key=>{const answer=ANSWERS[key];const button=document.createElement('button');button.type='button';button.className='answer-btn';button.dataset.answer=key;const visual=document.createElement('div');visual.className='sprite-visual answer-visual';visual.setAttribute('role','img');applyVisual(visual,answer.visual);const text=document.createElement('span');text.className='answer-text';text.textContent=answer.text;button.append(visual,text,makeSpeaker(answer.text,`Listen to answer: ${answer.text}`));button.addEventListener('click',()=>chooseAnswer(button,key));answersRow.appendChild(button)})}
+    async function chooseAnswer(button,key){if(locked)return;locked=true;answersRow.querySelectorAll('.answer-btn').forEach(item=>item.disabled=true);const answer=ANSWERS[key];if(key===currentRound.correctKey){correctSound();button.classList.add('correct');questionListen.disabled=true;await speak(answer.text);reviewQuestion.textContent=currentRound.question;reviewAnswer.textContent=answer.text;successModal.hidden=false;continueBtn.focus();return}wrongSound();button.classList.add('wrong');await speak(answer.text);window.setTimeout(()=>{button.classList.remove('wrong');answersRow.querySelectorAll('.answer-btn').forEach(item=>item.disabled=false);locked=false},250)}
+    continueBtn.addEventListener('click',renderRound);
+    document.getElementById('new-question').addEventListener('click',renderRound);
+    renderRound();
+  </script>
+</body>
+</html>
