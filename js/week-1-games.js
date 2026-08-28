@@ -9,10 +9,10 @@
   const audioBase = '../assets/audio/week-1/literacy/';
   const weekOneActions = [
     { id:'protect-the-queen', word:'protect the queen', label:'Protect the queen', sentence:'Bees protect the queen.', color:'#7ed957', image:`${imageBase}protect-the-queen.png`, elementAudio:`${audioBase}page-04-element-protect-the-queen.mp3`, sentenceAudio:`${audioBase}page-04-sentence-protect-the-queen.mp3` },
-    { id:'make-honey', word:'make honey', label:'Make honey', sentence:'Bees make honey.', color:'#b388ff', image:`${imageBase}make-honey.png`, elementAudio:`${audioBase}page-04-element-make-honey.mp3`, sentenceAudio:`${audioBase}page-04-sentence-make-honey.mp3` },
+    { id:'make-honey', word:'make honey', label:'Make honey', sentence:'Bees make honey.', color:'#b388ff', image:`${imageBase}make-honey.png`, elementAudio:`${audioBase}page-04-element-build-hives.mp3`, sentenceAudio:`${audioBase}page-04-sentence-make-honey.mp3` },
     { id:'collect-nectar', word:'collect nectar', label:'Collect nectar', sentence:'Bees collect nectar.', color:'#ffa62b', image:`${imageBase}collect-nectar.png`, elementAudio:`${audioBase}page-04-element-collect-nectar.mp3`, sentenceAudio:`${audioBase}page-04-sentence-collect-nectar.mp3` },
-    { id:'find-flowers', word:'find flowers', label:'Find flowers', sentence:'Bees find flowers.', color:'#ff8f66', image:`${imageBase}find-flowers.png`, elementAudio:`${audioBase}page-04-element-find-flowers.mp3`, sentenceAudio:`${audioBase}page-04-sentence-find-flowers.mp3` },
-    { id:'build-hives', word:'build hives', label:'Build hives', sentence:'Bees build hives.', color:'#2ec4b6', image:`${imageBase}build-hives.png`, elementAudio:`${audioBase}page-04-element-build-hives.mp3`, sentenceAudio:`${audioBase}page-04-sentence-build-hives.mp3` }
+    { id:'find-flowers', word:'find flowers', label:'Find flowers', sentence:'Bees find flowers.', color:'#ff8f66', image:`${imageBase}find-flowers.png`, elementAudio:`${audioBase}page-04-element-eat-nuts.mp3`, sentenceAudio:`${audioBase}page-04-sentence-find-flowers.mp3` },
+    { id:'build-hives', word:'build hives', label:'Build hives', sentence:'Bees build hives.', color:'#2ec4b6', image:`${imageBase}build-hives.png`, elementAudio:`${audioBase}page-04-element-find-flowers.mp3`, sentenceAudio:`${audioBase}page-04-sentence-build-hives.mp3` }
   ];
   const weekTwoImageBase = '../assets/images/week-2/games/seasons/';
   const weekTwoPictureMatchBase = '../assets/images/week-2/games/picture-match/';
