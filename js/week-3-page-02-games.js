@@ -288,70 +288,79 @@
 
   function fruitsGame({ stage, setProgress, setFeedback, finishActivity }) {
     const cleanups = [];
-    const homes = [[9, 22], [25, 22], [41, 22], [57, 22], [73, 22], [89, 22], [18, 49], [39, 49], [61, 49], [82, 49]];
-    const basketSlots = [[46, 71.5], [50, 70], [54, 71.5], [44.5, 77], [50, 77], [55.5, 77]];
-    const shuffle = (items) => {
-      const copy = [...items];
-      for (let index = copy.length - 1; index > 0; index -= 1) {
-        const swapIndex = Math.floor(Math.random() * (index + 1));
-        [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
-      }
-      return copy;
-    };
-    const fruits = shuffle(fruitItems.filter((item) => item.correct));
-    const vegetables = shuffle(fruitItems.filter((item) => !item.correct));
-    const topFruitCount = Math.random() < 0.5 ? 3 : 4;
-    const topVegetableCount = 6 - topFruitCount;
-    const arrangedItems = [
-      ...shuffle([...fruits.slice(0, topFruitCount), ...vegetables.slice(0, topVegetableCount)]),
-      ...shuffle([...fruits.slice(topFruitCount), ...vegetables.slice(topVegetableCount)])
-    ];
-    let sorted = 0;
+    const target = 10;
+    let caught = 0;
+    const active = new Set();
+    const lanes = [14, 26, 38, 50, 62, 74, 86];
+    let laneQueue = [];
+    let queue = [...fruitItems];
+    for (let index = queue.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [queue[index], queue[swap]] = [queue[swap], queue[index]];
+    }
     stage.innerHTML = `
       <div class="w3-game w3-fruits-game">
-        <p class="w3-game-hint">Drag only the fruits into the basket.</p>
-        ${arrangedItems.map((item, index) => `<button class="w3-produce-sprite w3-sort-item" data-item="${index}" data-sprite="${item.sprite}" type="button" aria-label="Drag ${item.name}"></button>`).join('')}
-        <span class="w3-produce-sprite w3-fruit-basket" data-sprite="13" aria-label="Fruit basket"></span>
-        <span class="w3-produce-sprite w3-fruit-basket-front" data-sprite="13" aria-hidden="true"></span>
+        <p class="w3-game-hint">Use the bee cursor. Click fruits—not vegetables!</p>
+        <img class="w3-bee-cursor" src="../assets/images/week-3/literacy/page-02/game-elements/bee-cursor-v4.png?v=4" alt="" aria-hidden="true" hidden>
       </div>`;
     const game = stage.querySelector('.w3-fruits-game');
-    const basket = stage.querySelector('.w3-fruit-basket');
-    const basketFront = stage.querySelector('.w3-fruit-basket-front');
-    placeAt(basket, 50, 77);
-    placeAt(basketFront, 50, 77);
-    arrangedItems.forEach((item, index) => {
-      const button = stage.querySelector(`[data-item="${index}"]`);
-      placeAt(button, homes[index][0], homes[index][1]);
-      cleanups.push(makeDraggable(button, game, (_element, event) => {
-        if (!droppedInside(button, basket, event)) {
-          placeAt(button, homes[index][0], homes[index][1]);
-          setFeedback('Drop the fruit inside the basket.', true);
-          return;
+    const cursor = stage.querySelector('.w3-bee-cursor');
+    attachBeeCursor(game, cursor, cleanups);
+
+    const spawn = () => {
+      if (caught >= target) return;
+      const item = queue.shift() || fruitItems[Math.floor(Math.random() * fruitItems.length)];
+      if (!item) return;
+      if (!laneQueue.length) {
+        laneQueue = [...lanes];
+        for (let index = laneQueue.length - 1; index > 0; index -= 1) {
+          const swap = Math.floor(Math.random() * (index + 1));
+          [laneQueue[index], laneQueue[swap]] = [laneQueue[swap], laneQueue[index]];
         }
-        if (!item.correct) {
-          placeAt(button, homes[index][0], homes[index][1]);
-          basket.classList.remove('is-wrong');
-          basketFront.classList.remove('is-wrong');
-          void basket.offsetWidth;
-          basket.classList.add('is-wrong');
-          basketFront.classList.add('is-wrong');
-          setFeedback(`${item.name[0].toUpperCase() + item.name.slice(1)} is a vegetable. Try a fruit.`, true);
-          const timer = window.setTimeout(() => {
-            basket.classList.remove('is-wrong');
-            basketFront.classList.remove('is-wrong');
-          }, 430);
+      }
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'w3-falling-produce';
+      button.setAttribute('aria-label', item.name);
+      button.style.left = `${laneQueue.shift()}%`;
+      button.style.setProperty('--fall-duration', `${4.8 + Math.random() * 2.2}s`);
+      button.innerHTML = `<span class="w3-produce-sprite" data-sprite="${item.sprite}" aria-hidden="true"></span>`;
+      game.appendChild(button);
+      active.add(button);
+      const remove = () => { active.delete(button); button.remove(); };
+      const click = () => {
+        if (item.correct) {
+          caught += 1;
+          button.classList.add('is-caught');
+          button.disabled = true;
+          setProgress(caught, target);
+          setFeedback(`You popped the ${item.name}! ${caught} of ${target} fruits.`);
+          const timer = window.setTimeout(remove, 560);
           cleanups.push(() => window.clearTimeout(timer));
+          if (caught === target) {
+            game.style.pointerEvents = 'none';
+            cursor.hidden = true;
+            window.setTimeout(finishActivity, 600);
+          }
           return;
         }
-        button.disabled = true;
-        button.classList.add('is-in-basket');
-        placeAt(button, basketSlots[sorted][0], basketSlots[sorted][1]);
-        sorted += 1;
-        setProgress(sorted, 6);
-        setFeedback(`${item.name[0].toUpperCase() + item.name.slice(1)} is in the basket! ${sorted} of 6 fruits.`);
-        if (sorted === 6) window.setTimeout(finishActivity, 650);
-      }));
-    });
+        const sprite = button.querySelector('.w3-produce-sprite');
+        sprite.classList.remove('is-wrong');
+        void sprite.offsetWidth;
+        sprite.classList.add('is-wrong');
+        setFeedback(`${item.name[0].toUpperCase() + item.name.slice(1)} is a vegetable. Catch fruits.`, true);
+      };
+      button.addEventListener('click', click);
+      const finishFall = (event) => {
+        if (event.target === button && event.animationName === 'w3-produce-fall') remove();
+      };
+      button.addEventListener('animationend', finishFall);
+      cleanups.push(() => button.removeEventListener('animationend', finishFall));
+    };
+    spawn();
+    const spawner = window.setInterval(spawn, 720);
+    cleanups.push(() => window.clearInterval(spawner));
+    cleanups.push(() => active.forEach((button) => button.remove()));
     return cleanAll(cleanups);
   }
 
@@ -414,7 +423,11 @@
           setFeedback(`You popped the ${item.name}! ${caught} of ${target} vegetables.`);
           const timer = window.setTimeout(remove, 560);
           cleanups.push(() => window.clearTimeout(timer));
-          if (caught === target) window.setTimeout(finishActivity, 600);
+          if (caught === target) {
+            game.style.pointerEvents = 'none';
+            cursor.hidden = true;
+            window.setTimeout(finishActivity, 600);
+          }
           return;
         }
         const sprite = button.querySelector('.w3-produce-sprite');

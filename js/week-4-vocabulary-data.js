@@ -71,3 +71,9 @@ window.playVocabulary = async (item, includeSentence = false) => {
   if (item.sentenceAudio) await playRecordedVocabulary(item.sentenceAudio);
   else await speakVocabulary(item.sentence, .86);
 };
+
+window.playVocabularySentence = async (item) => {
+  stopVocabularyNarration();
+  if (item.sentenceAudio) await playRecordedVocabulary(item.sentenceAudio);
+  else await speakVocabulary(item.sentence, .86);
+};

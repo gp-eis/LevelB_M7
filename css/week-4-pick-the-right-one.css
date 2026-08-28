@@ -1,0 +1,14 @@
+@import url('./week-3-pick-the-right-one.css?v=20260827-3');
+
+/* Week 4 artwork is generated as complete square scenes. Keep every subject visible. */
+.pick-right-page .question-visual,
+.pick-right-page .answer-visual {
+  object-fit: contain;
+  background: linear-gradient(180deg, #eef8ff, #fff9df);
+}
+
+.pick-right-page .answer-text {
+  min-height: 2.6em;
+  display: grid;
+  place-items: center;
+}

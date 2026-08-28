@@ -77,6 +77,7 @@
       <nav class="week-tools" aria-label="Week tools">
         <a class="pill-btn orange" href="tpr.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">🎵 Week Song</a>
         <a class="pill-btn blue" href="flashcards.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">🃏 Flashcards</a>
+        <a class="pill-btn green" href="conversation.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">💬 Conversation</a>
       </nav>
     </header>
     <section id="lesson-focus" class="card literacy-shell-card" aria-label="Week ${week} Literacy page ${page} content area">

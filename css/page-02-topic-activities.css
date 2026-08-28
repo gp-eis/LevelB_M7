@@ -275,7 +275,11 @@
 .topic-activity-success-card > span { font-size: 4.6rem; }
 .topic-activity-success-card h3 { margin: 4px 0; color: #2c8b48; font-size: 2rem; }
 .topic-activity-success-card p { margin: 7px 0 18px; color: #31556f; font-size: 1.2rem; font-weight: 900; }
-.topic-activity-watch { min-width: min(330px, 90%); min-height: 64px; padding: 12px 24px; border: 6px solid #fff; border-radius: 999px; color: #fff; background: linear-gradient(180deg, #72d557, #39a844); box-shadow: 0 7px 0 #267633; font-size: 1.2rem; font-weight: 900; cursor: pointer; }
+.topic-activity-success-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.topic-activity-watch,
+.topic-activity-success-again { min-width: min(190px, 90%); min-height: 58px; padding: 10px 20px; border: 6px solid #fff; border-radius: 999px; color: #fff; font-size: 1.08rem; font-weight: 900; cursor: pointer; }
+.topic-activity-watch { background: linear-gradient(180deg, #72d557, #39a844); box-shadow: 0 7px 0 #267633; }
+.topic-activity-success-again { background: linear-gradient(180deg, #42b9ff, #1978df); box-shadow: 0 7px 0 #145795; }
 
 @keyframes topic-wrong { 25%, 75% { transform: translateX(-7px); } 50% { transform: translateX(7px); } }
 
@@ -641,10 +645,10 @@ button.w3-produce-sprite:disabled { opacity: 1; }
 .w3-plant-sprite[data-sprite="2"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-sun-v3.png'); }
 .w3-plant-sprite[data-sprite="3"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-heart-v3.png'); }
 .w3-plant-sprite[data-sprite="4"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/bee-v3.png'); }
-.w3-plant-sprite[data-sprite="5"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-sprout-v2.png'); }
-.w3-plant-sprite[data-sprite="6"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bud-v2.png'); }
-.w3-plant-sprite[data-sprite="7"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-leaves-v2.png'); }
-.w3-plant-sprite[data-sprite="8"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bloom-v2.png'); }
+.w3-plant-sprite[data-sprite="5"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-sprout-v4.png'); }
+.w3-plant-sprite[data-sprite="6"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bud-v4.png'); }
+.w3-plant-sprite[data-sprite="7"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-leaves-v4.png'); }
+.w3-plant-sprite[data-sprite="8"] { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/plant-bloom-v4.png'); }
 
 .w3-flower-sprite {
   aspect-ratio: 1;
@@ -715,6 +719,10 @@ button.w3-produce-sprite:disabled { opacity: 1; }
   pointer-events: none;
 }
 .w3-growing-plant[data-sprite="0"] { top: 71%; width: clamp(66px,9vw,92px); }
+.w3-growing-plant[data-sprite="5"] { top: 68%; width: clamp(112px,14vw,148px); background-size: 88%; }
+.w3-growing-plant[data-sprite="7"] { top: 65%; width: clamp(132px,16vw,170px); background-size: 82%; }
+.w3-growing-plant[data-sprite="6"] { top: 59%; width: clamp(160px,20vw,210px); background-size: 88%; }
+.w3-growing-plant[data-sprite="8"] { top: 55%; width: clamp(184px,23vw,236px); background-size: 90%; }
 .w3-growing-plant.is-growing { animation: w3-grow .58s cubic-bezier(.34,1.55,.64,1); }
 .w3-finish-bee {
   position: absolute;
@@ -803,8 +811,8 @@ button.w3-produce-sprite:disabled { opacity: 1; }
 .w3-apple-spot:hover:not(:disabled) { filter: drop-shadow(0 0 12px #fff); transform: translate(-50%,-50%) scale(1.08) !important; }
 .w3-apple-spot.is-apple { animation: w3-apple-pop .55s cubic-bezier(.34,1.55,.64,1); }
 
-/* 3D fruit sorting */
-.w3-fruits-game { background-image: url('../assets/images/week-3/literacy/page-02/game-elements/fruits-meadow.png'); }
+/* Falling fruit catcher */
+.w3-fruits-game { cursor: none; background-image: url('../assets/images/week-3/literacy/page-02/game-elements/fruits-meadow.png'); }
 .w3-sort-item { position: absolute; z-index: 18; width: clamp(118px,13.5vw,146px); transition: width .2s ease, filter .2s ease; }
 .w3-sort-item:hover:not(:disabled) { filter: drop-shadow(0 0 10px #fff) drop-shadow(0 7px 7px rgba(34,61,82,.3)); }
 .w3-fruit-basket,
@@ -872,7 +880,7 @@ button.w3-produce-sprite:disabled { opacity: 1; }
   .w3-jump-button { right: 2%; min-width: 92px; min-height: 48px; padding: 7px 12px; border-width: 4px; }
   .w3-vase-zone { width: 145px; }
   .w3-bee-cursor { display: none; }
-  .w3-trees-game, .w3-vegetables-game, .w3-apple-spot, .w3-falling-produce { cursor: pointer !important; }
+  .w3-trees-game, .w3-fruits-game, .w3-vegetables-game, .w3-apple-spot, .w3-falling-produce { cursor: pointer !important; }
   .w3-apple-spot { width: clamp(58px,15vw,76px); }
   .w3-sort-item { width: clamp(54px,13vw,68px); }
   .w3-fruit-basket, .w3-fruit-basket-front { width: clamp(128px,32vw,166px); }
@@ -899,6 +907,10 @@ body[data-page-two-week="3"] .topic-activity-dialog {
   overflow: hidden;
   border-width: 5px;
   border-radius: 26px;
+}
+
+body[data-page-two-week="3"] .topic-activity-success {
+  top: 70px;
 }
 
 body[data-page-two-week="3"] .topic-activity-header {
@@ -979,6 +991,10 @@ body[data-page-two-week="3"] .topic-activity-footer .topic-activity-skip-top {
     padding: 6px;
     border: 0;
     border-radius: 0;
+  }
+
+  body[data-page-two-week="3"] .topic-activity-success {
+    top: 58px;
   }
 
   body[data-page-two-week="3"] .topic-activity-header {

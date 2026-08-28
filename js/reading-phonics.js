@@ -22,9 +22,14 @@
   const phonicsVideos = {
     1: '../assets/video/week-1/phonics/week-1.mp4',
     2: '../assets/video/week-2/phonics/week-2.mp4',
-    3: '../assets/video/week-3/phonics/week-3.mp4'
+    3: '../assets/video/week-3/phonics/week-3.mp4',
+    4: '../assets/video/week-4/phonics/week-4.mp4'
   };
   const phonicsVideo = isReading ? null : phonicsVideos[week];
+  const readingThumbnails = {
+    1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.png'
+  };
+  const readingThumbnail = isReading ? readingThumbnails[week] : null;
   const phonicsGamesHref = week === 1
     ? '../games/phonics.html?from=phonics'
     : `../games/week-${week}/phonics.html?from=phonics`;
@@ -59,11 +64,13 @@
         </div>
       ` : `
         <div class="track-video-placeholder">
-          <div class="track-video-placeholder__copy">
-            <span aria-hidden="true">\u{1F3AC}</span>
-            <strong>Week ${week} ${label} video placeholder</strong>
-            <small>The lesson video will be added here.</small>
-          </div>
+          ${readingThumbnail
+            ? `<img class="track-reading-thumbnail" src="${readingThumbnail}" alt="Who is the Queen? reading thumbnail">`
+            : `<div class="track-video-placeholder__copy">
+                <span aria-hidden="true">\u{1F3AC}</span>
+                <strong>Week ${week} ${label} video placeholder</strong>
+                <small>The lesson video will be added here.</small>
+              </div>`}
           <button class="center-video-play-placeholder" type="button" aria-label="${label} video placeholder" disabled>\u25B6</button>
         </div>
       `}

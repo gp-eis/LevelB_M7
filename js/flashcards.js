@@ -58,11 +58,11 @@
       sentenceTail: ' grow.',
       recordedOnly: true,
       cards: [
-        { id:'plants',file:'plants-flashcard.png',label:'Plants',phrase:'plants',sentence:'Bees help plants grow.',wordAudio:'../assets/audio/week-3/literacy/page-05-word-plants.wav' },
-        { id:'trees',file:'trees-flashcard.png',label:'Trees',phrase:'trees',sentence:'Bees help trees grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-trees.wav' },
-        { id:'flowers',file:'flowers-flashcard.png',label:'Flowers',phrase:'flowers',sentence:'Bees help flowers grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-flowers.wav' },
-        { id:'fruits',file:'fruits-flashcard.png',label:'Fruits',phrase:'fruits',sentence:'Bees help fruits grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-fruits.wav' },
-        { id:'vegetables',file:'vegetables-flashcard.png',label:'Vegetables',phrase:'vegetables',sentence:'Bees help vegetables grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-vegetables.wav' }
+        { id:'plants',file:'plants-flashcard.png',label:'Plants',phrase:'plants',sentence:'Bees help plants grow.',wordAudio:'../assets/audio/week-3/literacy/page-05-word-plants.wav',sentenceAudio:'../assets/audio/week-3/literacy/page-04-intro.mp3',sentenceAudioEnd:2.2 },
+        { id:'trees',file:'trees-flashcard.png',label:'Trees',phrase:'trees',sentence:'Bees help trees grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-trees.wav',sentenceAudio:'../assets/audio/week-3/literacy/page-04-sentence-flowers.wav' },
+        { id:'flowers',file:'flowers-flashcard.png',label:'Flowers',phrase:'flowers',sentence:'Bees help flowers grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-flowers.wav',sentenceAudio:'../assets/audio/week-3/literacy/page-04-sentence-trees.wav' },
+        { id:'fruits',file:'fruits-flashcard.png',label:'Fruits',phrase:'fruits',sentence:'Bees help fruits grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-fruits.wav',sentenceAudio:'../assets/audio/week-3/literacy/page-04-sentence-fruits.wav' },
+        { id:'vegetables',file:'vegetables-flashcard.png',label:'Vegetables',phrase:'vegetables',sentence:'Bees help vegetables grow.',wordAudio:'../assets/audio/week-3/literacy/page-04-word-vegetables.wav',sentenceAudio:'../assets/audio/week-3/literacy/page-04-sentence-vegetables.wav' }
       ]
     },
     4: {
@@ -216,6 +216,33 @@
     return true;
   }
 
+  function playRecordedSentence(card) {
+    if (!card || !card.sentenceAudio) return false;
+    stopRecordedAudio();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const audio = new Audio(card.sentenceAudio);
+    recordedAudio = audio;
+    let settled = false;
+    const sentenceAudioEnd = Number(card.sentenceAudioEnd) || 0;
+    const finish = (failed) => {
+      if (settled) return;
+      settled = true;
+      if (recordedAudio === audio) recordedAudio = null;
+      if (failed && !data.recordedOnly) speakText(card.sentence);
+    };
+    if (sentenceAudioEnd) {
+      audio.addEventListener('timeupdate', () => {
+        if (audio.currentTime < sentenceAudioEnd) return;
+        audio.pause();
+        finish(false);
+      });
+    }
+    audio.addEventListener('ended', () => finish(false), { once: true });
+    audio.addEventListener('error', () => finish(true), { once: true });
+    audio.play().catch(() => finish(true));
+    return true;
+  }
+
   function pickFcVoice() {
     if (!window.speechSynthesis) return null;
     const voices = window.speechSynthesis.getVoices();
@@ -268,6 +295,12 @@
   function speakCardWord(card) {
     if (!card) return;
     if (!playRecordedWord(card) && !data.recordedOnly) speakText(card.label);
+  }
+
+  function speakSentenceCard(card) {
+    if (!card) return;
+    if (playRecordedSentence(card)) return;
+    if (!data.recordedOnly) speakText(card.sentence || (sentenceLead + card.phrase + '.'));
   }
 
   if (window.speechSynthesis) {
@@ -449,7 +482,7 @@
       cardEl.style.display = 'none';
     }
     const card = sentenceCards.find((item) => item.phrase === phrase);
-    if (card) speakFlashcard(card);
+    if (card) speakSentenceCard(card);
   }
 
   function enableDrag(el) {

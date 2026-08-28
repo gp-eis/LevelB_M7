@@ -1,0 +1,78 @@
+@import url('./week-3-pick-the-right-one.css?v=20260827-3');
+
+/* Week 2 uses four-panel sprite sheets while sharing the Week 3/4 framework. */
+.sprite-visual {
+  background-image: var(--sprite);
+  background-repeat: no-repeat;
+  background-size: 200% auto;
+  background-position: var(--sprite-x) var(--sprite-y);
+}
+
+.round-counter {
+  color: var(--purple-d);
+  font: 700 1.05rem/1 var(--font-friendly);
+}
+
+.question-visual,
+.answer-visual,
+.calendar-visual {
+  background-color: #eef8ff;
+}
+
+.pick-board { max-width: 760px; }
+
+.question-box { grid-template-columns: 160px 1fr 52px; }
+
+.question-visual {
+  width: 160px;
+  height: 160px;
+}
+
+.answer-visual {
+  width: min(100%,270px);
+  height: auto;
+  margin-inline: auto;
+  aspect-ratio: var(--tile-aspect,1);
+  background-color: #f4fbff;
+}
+
+.calendar-visual {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: min(100%,270px);
+  height: auto;
+  margin-inline: auto;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: #f4fbff url('../assets/images/week-2/games/pick-right/calendar-choice.png') center/contain no-repeat;
+}
+
+.calendar-date {
+  position: absolute;
+  top: 52%;
+  left: 59%;
+  display: grid;
+  justify-items: center;
+  color: #124fae;
+  font-family: var(--font-friendly);
+  font-weight: 800;
+  line-height: .95;
+  text-shadow: 0 3px 0 #fff;
+  transform: translate(-50%,-50%);
+}
+
+.calendar-date .month {
+  color: #e54b38;
+  font-size: clamp(1.2rem,3vw,1.7rem);
+  letter-spacing: .08em;
+}
+
+.calendar-date .day { font-size: clamp(3.5rem,9vw,6rem); }
+
+@media (max-width: 560px) {
+  .question-box { grid-template-columns: 1fr 52px; }
+  .question-visual { width: min(230px,78vw); height: auto; aspect-ratio: 1; }
+  .answer-visual,
+  .calendar-visual { width: min(230px,78vw); height: auto; }
+}

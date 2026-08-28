@@ -57,6 +57,10 @@
 }
 .week-pick-btn:active { transform: translateY(3px); box-shadow: 0 4px 0 var(--frame-dark), 0 8px 14px rgba(30,58,95,.16); }
 .week-pick-btn:focus-visible { outline: 6px solid var(--yellow); outline-offset: 5px; }
+.week-pick-btn.is-locked,
+.week-pick-btn:disabled { opacity:.58; filter:grayscale(.35); cursor:not-allowed; }
+.week-pick-btn.is-locked:hover,
+.week-pick-btn:disabled:hover { transform:none; filter:grayscale(.35); }
 .week-pick-btn__inner {
   display: flex;
   flex-direction: column;
@@ -254,4 +258,23 @@
   .games-framework-page .floaties span,
   .week-one-game-page .floaties span,
   .week-games-panel { animation: none; }
+}
+.page-title-with-icon,
+.hub-title-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.page-title-icon {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 5px rgba(30,58,95,.2));
+}
+
+@media (max-width:560px) {
+  .page-title-icon { width:48px; height:48px; }
 }

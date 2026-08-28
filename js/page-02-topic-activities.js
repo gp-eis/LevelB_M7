@@ -97,7 +97,7 @@
       },
       fruits: {
         label: 'Fruits', icon: '🍎', sentence: 'Bees help plants make fruits.',
-        instruction: 'Drag only the fruits into the basket.', mode: 'custom',
+        instruction: 'Use the bee cursor to catch the falling fruits.', mode: 'custom',
         items: [
           { symbol: '🍎', label: 'Apple', correct: true },
           { symbol: '🍓', label: 'Strawberry', correct: true },
@@ -219,12 +219,15 @@
       <div class="topic-activity-stage"></div>
       <div class="topic-activity-feedback" role="status" aria-live="polite"></div>
       <div class="topic-activity-footer">
-        <button class="pill-btn blue topic-activity-restart" type="button">↻ Start Again</button>
+        <button class="pill-btn blue topic-activity-restart" type="button">↻ Try Again</button>
       </div>
       <div class="topic-activity-success" hidden>
         <div class="topic-activity-success-card">
           <span aria-hidden="true">⭐</span><h3>Great job!</h3><p></p>
-          <button class="topic-activity-watch" type="button">▶ Watch Video</button>
+          <div class="topic-activity-success-actions">
+            <button class="topic-activity-success-again" type="button">↻ Try Again</button>
+            <button class="topic-activity-watch" type="button">▶ Watch Video</button>
+          </div>
         </div>
       </div>
     </section>`;
@@ -241,7 +244,8 @@
   const skipTopButton = overlay.querySelector('.topic-activity-skip-top');
   const success = overlay.querySelector('.topic-activity-success');
   const successSentence = success.querySelector('p');
-  const watchButton = success.querySelector('button');
+  const successTryAgainButton = success.querySelector('.topic-activity-success-again');
+  const watchButton = success.querySelector('.topic-activity-watch');
 
   let activeKey = '';
   let activeTrigger = null;
@@ -430,6 +434,7 @@
 
   closeButton.addEventListener('click', closeActivity);
   restartButton.addEventListener('click', renderActivity);
+  successTryAgainButton.addEventListener('click', renderActivity);
   skipTopButton.addEventListener('click', playActiveVideo);
   watchButton.addEventListener('click', playActiveVideo);
   overlay.addEventListener('click', (event) => { if (event.target === overlay) closeActivity(); });

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick the Right One — Week 2 — When Can I See Bees?</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/week-2-pick-right.css?v=20260827-3">
+</head>
+<body class="pick-right-page">
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%;left:4%;">✅</span>
+    <span style="top:75%;left:93%;">🐝</span>
+  </div>
+
+  <main class="page">
+    <a class="back-link" href="index.html?week=2">⬅️ All Games</a>
+    <header class="center pick-right-header">
+      <h1 class="big-title page-title-with-icon"><img class="page-title-icon" src="../assets/images/ui/game-pick.webp" alt="">Pick the Right One</h1>
+      <p class="subtitle">Listen to the question, then pick the best answer!</p>
+    </header>
+
+    <div class="game-toolbar">
+      <button class="pill-btn orange" id="new-question" type="button">🔄 New Question</button>
+      <span class="round-counter">Question <span id="round-number">1</span> of 4</span>
+    </div>
+
+    <section class="pick-board" aria-label="Pick the right answer game">
+      <div class="question-box">
+        <div class="question-visual sprite-visual" id="question-visual" role="img"></div>
+        <p class="question-text" id="question-text"></p>
+        <button class="listen-btn" id="question-listen" type="button" aria-label="Listen to the question">🔊</button>
+      </div>
+      <div class="answers-row" id="answers-row"></div>
+    </section>
+  </main>
+
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <h2 class="success-title" id="success-title">Correct! 🎉</h2>
+      <div class="success-review">
+        <p><strong>Question:</strong> <span id="review-question"></span></p>
+        <p><strong>Answer:</strong> <span id="review-answer"></span></p>
+      </div>
+      <button class="pill-btn green" id="continue-btn" type="button">✓ Continue</button>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/week-2-pick-right.js?v=20260827-3"></script>
+</body>
+</html>

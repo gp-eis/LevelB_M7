@@ -1,5 +1,7 @@
 (() => {
-  const app = document.getElementById('week-one-game-app') || document.getElementById('week-two-game-app');
+  const app = document.getElementById('week-one-game-app')
+    || document.getElementById('week-two-game-app')
+    || document.getElementById('week-three-game-app');
   if (!app) return;
 
   const gameWeek = Number(document.body.dataset.gameWeek || 1);
@@ -21,7 +23,16 @@
     { id:'fall', word:'fall', label:'Fall', sentence:'In fall.', color:'#ff8a3d', image:`${weekTwoImageBase}fall.png`, pictureImage:`${weekTwoPictureMatchBase}fall.png` },
     { id:'winter', word:'winter', label:'Winter', sentence:'In winter.', color:'#63b3ff', image:`${weekTwoImageBase}winter.png`, pictureImage:`${weekTwoPictureMatchBase}winter.png` }
   ];
-  const actions = gameWeek === 2 ? weekTwoActions : weekOneActions;
+  const weekThreeImageBase = '../assets/images/week-3/games/vocabulary/';
+  const weekThreeAudioBase = '../assets/audio/week-3/literacy/';
+  const weekThreeActions = [
+    { id:'plants', word:'plants', label:'Plants', sentence:'Bees help plants grow.', color:'#7ed957', image:`${weekThreeImageBase}plants.png?v=20260827-1`, elementAudio:`${weekThreeAudioBase}page-05-word-plants.wav`, sentenceAudio:`${weekThreeAudioBase}page-04-intro.mp3`, sentenceAudioEnd:2.2 },
+    { id:'trees', word:'trees', label:'Trees', sentence:'Bees help trees grow.', color:'#2ec4b6', image:`${weekThreeImageBase}trees.png?v=20260827-1`, elementAudio:`${weekThreeAudioBase}page-04-word-trees.wav`, sentenceAudio:`${weekThreeAudioBase}page-04-sentence-flowers.wav` },
+    { id:'flowers', word:'flowers', label:'Flowers', sentence:'Bees help flowers grow.', color:'#ff6fa5', image:`${weekThreeImageBase}flowers.png?v=20260827-1`, elementAudio:`${weekThreeAudioBase}page-04-word-flowers.wav`, sentenceAudio:`${weekThreeAudioBase}page-04-sentence-trees.wav` },
+    { id:'fruits', word:'fruits', label:'Fruits', sentence:'Bees help fruits grow.', color:'#ffa62b', image:`${weekThreeImageBase}fruits.png?v=20260827-1`, elementAudio:`${weekThreeAudioBase}page-04-word-fruits.wav`, sentenceAudio:`${weekThreeAudioBase}page-04-sentence-fruits.wav` },
+    { id:'vegetables', word:'vegetables', label:'Vegetables', sentence:'Bees help vegetables grow.', color:'#b388ff', image:`${weekThreeImageBase}vegetables.png?v=20260827-1`, elementAudio:`${weekThreeAudioBase}page-04-word-vegetables.wav`, sentenceAudio:`${weekThreeAudioBase}page-04-sentence-vegetables.wav` }
+  ];
+  const actions = gameWeek === 3 ? weekThreeActions : gameWeek === 2 ? weekTwoActions : weekOneActions;
   const gameType = document.body.dataset.gameType || document.body.dataset.weekOneGame;
 
   function shuffle(items) {
@@ -40,6 +51,52 @@
     return Promise.resolve();
   }
 
+  let sharedRecording = null;
+
+  function stopSharedRecording() {
+    if (!sharedRecording) return;
+    sharedRecording.audio.pause();
+    sharedRecording.finish();
+  }
+
+  function playSharedRecording(source, endAt = 0) {
+    if (!source) return Promise.resolve();
+    stopSharedRecording();
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    return new Promise(resolve => {
+      const audio = new Audio(source);
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        if (sharedRecording?.audio === audio) sharedRecording = null;
+        resolve();
+      };
+      sharedRecording = { audio, finish };
+      if (endAt > 0) {
+        audio.addEventListener('timeupdate', () => {
+          if (audio.currentTime < endAt) return;
+          audio.pause();
+          finish();
+        });
+      }
+      audio.addEventListener('ended', finish, { once:true });
+      audio.addEventListener('error', finish, { once:true });
+      audio.play().catch(finish);
+    });
+  }
+
+  function playActionWord(action) {
+    return action?.elementAudio ? playSharedRecording(action.elementAudio) : speak(action?.word || '');
+  }
+
+  function playActionSentence(action) {
+    const sentence = action?.pictureSentence || action?.sentence || '';
+    return action?.sentenceAudio
+      ? playSharedRecording(action.sentenceAudio, Number(action.sentenceAudioEnd) || 0)
+      : speak(sentence);
+  }
+
   function correctSound() {
     if (typeof window.playTone !== 'function') return;
     window.playTone(523,.12,.15,'sine');
@@ -56,7 +113,7 @@
   function pageStart(icon, title, subtitle, floaties) {
     return `
       <div class="floaties" aria-hidden="true"><span style="top:10%;left:4%;">${floaties[0]}</span><span style="top:75%;left:93%;">${floaties[1]}</span></div>
-      <a class="back-link" href="index.html?week=${gameWeek}">⬅️ All Games</a>
+      <div class="game-back-row"><a class="back-link" href="index.html?week=${gameWeek}">⬅️ All Games</a></div>
       <header class="center" style="margin-top:16px;">
         <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/${icon}" alt="">${title}</h1>
         <p class="subtitle">${subtitle}</p>
@@ -103,7 +160,7 @@
       activeRecording.finish();
     }
 
-    function playRecording(source) {
+    function playRecording(source, endAt = 0) {
       if (!source) return Promise.resolve();
       stopRecording();
       return new Promise(resolve => {
@@ -116,6 +173,13 @@
           resolve();
         };
         activeRecording = { audio, finish };
+        if (endAt > 0) {
+          audio.addEventListener('timeupdate', () => {
+            if (audio.currentTime < endAt) return;
+            audio.pause();
+            finish();
+          });
+        }
         audio.addEventListener('ended', finish, { once:true });
         audio.addEventListener('error', finish, { once:true });
         audio.play().catch(finish);
@@ -139,7 +203,7 @@
 
     function playMatchedSentence(action) {
       return action.sentenceAudio
-        ? playRecording(action.sentenceAudio)
+        ? playRecording(action.sentenceAudio, Number(action.sentenceAudioEnd) || 0)
         : speak(action.sentence);
     }
 
@@ -159,6 +223,7 @@
       previewButton.disabled = false;
       previewButton.textContent = '👀 Look for 3 Seconds';
       stopRecording();
+      board.style.gridTemplateColumns = 'repeat(5, 1fr)';
 
       shuffle(actions.flatMap(action => [action,action])).forEach(action => {
         const card = document.createElement('button');
@@ -247,6 +312,9 @@
         speak('Yay! You found all the pairs!');
       }
     });
+    window.addEventListener('load', () => window.setTimeout(() => {
+      board.scrollIntoView({ block:'center' });
+    }, 100), { once:true });
     startGame();
   }
 
@@ -322,7 +390,11 @@
       setFlipped(false);
       selectedArea.hidden = false;
       wordCard.focus();
-      Promise.resolve(speak(action.word)).then(() => window.setTimeout(() => { setFlipped(true); speak(action.sentence); },350));
+      Promise.resolve(playActionWord(action)).then(() => window.setTimeout(() => {
+        if (currentAction !== action) return;
+        setFlipped(true);
+        playActionSentence(action);
+      },350));
     }
 
     function finishSpin() {
@@ -341,6 +413,7 @@
 
     spinButton.addEventListener('click', () => {
       if (spinning) return;
+      stopSharedRecording();
       spinning = true;
       stopping = false;
       lastFrameTime = 0;
@@ -375,11 +448,15 @@
     wordCard.addEventListener('click', () => {
       const flipped = !wordCard.classList.contains('flipped');
       setFlipped(flipped);
-      if (currentAction) speak(flipped ? currentAction.sentence : currentAction.word);
+      if (currentAction) {
+        if (flipped) playActionSentence(currentAction);
+        else playActionWord(currentAction);
+      }
     });
     document.getElementById('return-btn').addEventListener('click', () => {
       selectedArea.hidden = true;
       currentAction = null;
+      stopSharedRecording();
       if ('speechSynthesis' in window) speechSynthesis.cancel();
       spinButton.focus();
     });
@@ -431,7 +508,7 @@
         button.addEventListener('click', () => choosePicture(button,action));
         choices.appendChild(button);
       });
-      if (autoSpeak) speak(sentenceFor(currentRound.correct));
+      if (autoSpeak) playActionSentence(currentRound.correct);
     }
 
     function choosePicture(button, action) {
@@ -459,10 +536,10 @@
       successModal.hidden = false;
       listenButton.disabled = true;
       document.getElementById('continue-btn').focus();
-      speak(sentenceFor(action));
+      playActionSentence(action);
     }
 
-    listenButton.addEventListener('click', () => { if (!locked) speak(sentenceFor(currentRound.correct)); });
+    listenButton.addEventListener('click', () => { if (!locked) playActionSentence(currentRound.correct); });
     document.getElementById('new-round').addEventListener('click', () => renderRound());
     document.getElementById('continue-btn').addEventListener('click', () => renderRound());
     renderRound();

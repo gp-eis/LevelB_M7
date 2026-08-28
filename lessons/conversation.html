@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Conversation — Level B Month 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .conversation-page { max-width: 1120px; }
+    .conversation-card { margin-top: 24px; padding: clamp(16px, 3vw, 30px); }
+    .conversation-video { width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #111827; border-radius: 24px; }
+    .conversation-gallery { margin-top: 24px; padding-top: 22px; border-top: 3px dashed #b9daf0; }
+    .conversation-gallery h2 { margin: 0 0 6px; text-align: center; }
+    .conversation-gallery-note { margin: 0 0 16px; text-align: center; color: #486581; font-weight: 700; }
+    .conversation-thumbnails { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .conversation-thumb { min-height: 132px; padding: 0; overflow: hidden; border: 4px solid #fff; border-radius: 22px; background: linear-gradient(145deg,#dff5ff,#fff4c9); box-shadow: 0 8px 0 #9ec9df,0 12px 24px #42677d2b; color: #24507a; font: 800 1rem/1.25 var(--font-friendly); cursor: pointer; }
+    .conversation-thumb img { display: block; width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+    .conversation-thumb span { display: block; margin-top: 8px; font-size: 2rem; }
+    .conversation-modal[hidden] { display: none; }
+    .conversation-modal { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 18px; background: #17324fb8; }
+    .conversation-dialog { position: relative; box-sizing: border-box; width: min(920px, calc(100vw - 36px)); padding: 24px; border: 6px solid #fff; border-radius: 30px; background: #fff; box-shadow: 0 14px 0 #2b6f9f,0 24px 60px #071f3a66; }
+    .conversation-close { position: absolute; top: 12px; right: 12px; width: 48px; height: 48px; border: 0; border-radius: 50%; background: #ff5d67; color: #fff; font-size: 1.5rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #b82e3b; }
+    .conversation-slide { min-height: min(55vh,440px); display: grid; place-items: center; padding: 20px; border-radius: 22px; background: linear-gradient(145deg,#e6f7ff,#fff5c7); text-align: center; color: #24507a; }
+    .conversation-slide-image { display: block; width: 100%; max-height: min(62vh,610px); object-fit: contain; border-radius: 16px; }
+    .conversation-slide-image[hidden] { display: none; }
+    .conversation-slide-icon { font-size: clamp(4rem,12vw,8rem); }
+    .conversation-slide h3 { margin: 8px 0 4px; font-size: clamp(1.6rem,4vw,2.4rem); }
+    .conversation-slide p { margin: 0; font-weight: 700; }
+    .conversation-modal-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin-top: 18px; }
+    #conversation-previous { width: fit-content; min-width: 0; padding-inline: 16px; justify-self: start; }
+    .conversation-modal-nav button:last-child { justify-self: end; }
+    .conversation-counter { font-weight: 900; color: #315b7d; }
+    @media (max-width: 620px) {
+      .conversation-thumbnails { grid-template-columns: 1fr; }
+      .conversation-thumb { min-height: 92px; }
+      .conversation-dialog { padding: 16px; }
+      .conversation-slide { min-height: 42vh; padding: 18px; }
+      .conversation-modal-nav .pill-btn { min-width: 0; padding-inline: 14px; }
+    }
+  </style>
+</head>
+<body class="lesson-page">
+  <main class="page conversation-page">
+    <a class="back-link" id="conversation-back" href="../week-1.html#card-literacy">⬅️ Back to Literacy</a>
+    <header class="center" style="margin-top:16px">
+      <h1 class="big-title">💬 Conversation</h1>
+      <p class="subtitle" id="conversation-week">Level B · Month 7</p>
+    </header>
+    <section class="card conversation-card" aria-label="Conversation video and picture gallery">
+      <div class="video-play-shell">
+        <video id="conversation-video" class="lesson-video conversation-video" controls playsinline preload="metadata" aria-label="Month 7 Conversation video">
+          <source src="../assets/video/conversation/month-7.mp4" type="video/mp4">
+          Your browser does not support this video.
+        </video>
+        <button id="conversation-play" class="center-video-play" type="button" aria-label="Play the Conversation video">▶</button>
+      </div>
+      <section class="conversation-gallery" aria-labelledby="gallery-title">
+        <h2 id="gallery-title" class="section-title">🖼️ Conversation Picture Gallery</h2>
+        <p id="conversation-gallery-note" class="conversation-gallery-note">Pictures are coming soon. Tap the gallery to preview the slideshow.</p>
+        <div id="conversation-thumbnails" class="conversation-thumbnails"></div>
+      </section>
+    </section>
+  </main>
+  <div id="conversation-modal" class="conversation-modal" role="dialog" aria-modal="true" aria-labelledby="conversation-slide-title" hidden>
+    <div class="conversation-dialog">
+      <button id="conversation-close" class="conversation-close" type="button" aria-label="Close picture gallery">×</button>
+      <div id="conversation-slide" class="conversation-slide">
+        <div>
+          <img id="conversation-slide-image" class="conversation-slide-image" alt="" hidden>
+          <div id="conversation-slide-icon" class="conversation-slide-icon">🖼️</div>
+          <h3 id="conversation-slide-title">Picture 1</h3>
+          <p id="conversation-slide-copy">Your first conversation picture will appear here.</p>
+        </div>
+      </div>
+      <div class="conversation-modal-nav">
+        <button id="conversation-previous" class="pill-btn blue" type="button">⬅️ Previous</button>
+        <span id="conversation-counter" class="conversation-counter">1 of 3</span>
+        <button id="conversation-next" class="pill-btn green" type="button">Next ➡️</button>
+      </div>
+    </div>
+  </div>
+  <script src="../js/main.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      const week = /^[1-4]$/.test(params.get('week') || '') ? params.get('week') : '1';
+      const fallback = { href: '../week-' + week + '.html#card-literacy', text: '⬅️ Back to Week ' + week + ' Literacy' };
+      const resolved = typeof resolveLiteracyToolReturn === 'function'
+        ? resolveLiteracyToolReturn(fallback.href, fallback.text)
+        : fallback;
+      const requestedReturn = params.get('return') || '';
+      const safeReturn = /^week-[1-4](?:-page-\d{2})?\.html(?:#lesson-focus)?$/.test(requestedReturn);
+      const back = document.querySelector('#conversation-back');
+      back.href = resolved.href !== fallback.href ? resolved.href : (safeReturn ? requestedReturn : fallback.href);
+      back.textContent = resolved.text !== fallback.text ? resolved.text : (/^\d+$/.test(params.get('from') || '') ? '⬅️ Back to Page ' + params.get('from') : fallback.text);
+      document.querySelector('#conversation-week').textContent = 'Week ' + week + ' · Beekeeper';
+      document.title = 'Conversation — Week ' + week + ' — Level B Month 7';
+
+      const video = document.querySelector('#conversation-video');
+      const play = document.querySelector('#conversation-play');
+      play.addEventListener('click', () => video.play());
+      video.addEventListener('play', () => { play.hidden = true; });
+      video.addEventListener('pause', () => { play.hidden = video.ended; });
+      video.addEventListener('ended', () => { play.hidden = false; });
+
+      const placeholderSlides = [
+        { title: 'Picture 1', copy: 'Your first conversation picture will appear here.', icon: '🖼️' },
+        { title: 'Picture 2', copy: 'Your second conversation picture will appear here.', icon: '🌟' },
+        { title: 'Picture 3', copy: 'Your third conversation picture will appear here.', icon: '💬' }
+      ];
+      const weekOneSlides = [
+        { title: 'Making a Beautiful Picture', copy: 'Today, we’re going to make something.', src: '../assets/images/conversation/week-1/01-making-a-beautiful-picture.webp', alt: 'A teacher and children prepare to make beautiful pictures in the classroom.' },
+        { title: 'Can I Have Some Paper?', copy: 'Penny politely asks the teacher for paper.', src: '../assets/images/conversation/week-1/02-penny-asks-for-paper.webp', alt: 'Penny asks the teacher for paper and says thank you.' },
+        { title: 'Can I Have Some Colored Pencils?', copy: 'A child asks for blue and red colored pencils.', src: '../assets/images/conversation/week-1/03-asks-for-colored-pencils.webp', alt: 'A child asks the teacher for blue and red colored pencils.' },
+        { title: 'Can I Have Some Scissors?', copy: 'Gerry politely asks the teacher for scissors.', src: '../assets/images/conversation/week-1/04-gerry-asks-for-scissors.webp', alt: 'Gerry asks the teacher for scissors and says thank you.' },
+        { title: 'I’m Making a Flower!', copy: 'Penny shows the flower she is making.', src: '../assets/images/conversation/week-1/05-penny-makes-a-flower.webp', alt: 'Penny shows her flower picture while everyone makes art.' },
+        { title: 'Look at Mine!', copy: 'The children proudly share their finished pictures.', src: '../assets/images/conversation/week-1/06-look-at-mine.webp', alt: 'The children hold up and share their completed pictures.' }
+      ];
+      const weekTwoSlides = [
+        { title: 'Making a Beautiful Picture', copy: 'Today, we’re going to make something.', src: '../assets/images/conversation/week-1/01-making-a-beautiful-picture.webp', alt: 'A teacher and children prepare to make beautiful pictures in the classroom.' },
+        { title: 'Can I Have Some Paper?', copy: 'Penny politely asks the teacher for paper.', src: '../assets/images/conversation/week-1/02-penny-asks-for-paper.webp', alt: 'Penny asks the teacher for paper and says thank you.' },
+        { title: 'Put Your Paper on the Table', copy: 'The teacher asks everyone to put their paper on the table.', src: '../assets/images/conversation/week-2/03-put-paper-on-table.webp', alt: 'The teacher tells the children to put their paper on the table.' },
+        { title: 'Fold the Paper in Half', copy: 'The children follow the teacher and fold their paper in half.', src: '../assets/images/conversation/week-2/04-fold-paper-in-half.webp', alt: 'The teacher demonstrates how to fold paper in half.' },
+        { title: 'I’m Making a Flower!', copy: 'Penny shows the flower she is making.', src: '../assets/images/conversation/week-1/05-penny-makes-a-flower.webp', alt: 'Penny shows her flower picture while everyone makes art.' },
+        { title: 'Look at Mine!', copy: 'The children proudly share their finished pictures.', src: '../assets/images/conversation/week-1/06-look-at-mine.webp', alt: 'The children hold up and share their completed pictures.' }
+      ];
+      const weekThreeSlides = [
+        { title: 'Making a Beautiful Picture', copy: 'Today, we’re going to make something.', src: '../assets/images/conversation/week-1/01-making-a-beautiful-picture.webp', alt: 'A teacher and children prepare to make beautiful pictures in the classroom.' },
+        { title: 'Can I Have Some Colored Pencils?', copy: 'A child asks for blue and red colored pencils.', src: '../assets/images/conversation/week-1/03-asks-for-colored-pencils.webp', alt: 'A child asks the teacher for blue and red colored pencils.' },
+        { title: 'Please Share the Colored Pencils', copy: 'The children share the colored pencils.', src: '../assets/images/conversation/week-3/03-share-colored-pencils.webp', alt: 'The teacher asks the children to share colored pencils, and Gerry offers a red pencil.' },
+        { title: 'Put the Colored Pencils Back', copy: 'The children put the colored pencils back in the cup.', src: '../assets/images/conversation/week-3/04-put-colored-pencils-back.webp', alt: 'The children put the colored pencils back in the cups after finishing.' },
+        { title: 'I’m Making a Flower!', copy: 'Penny shows the flower she is making.', src: '../assets/images/conversation/week-1/05-penny-makes-a-flower.webp', alt: 'Penny shows her flower picture while everyone makes art.' },
+        { title: 'Look at Mine!', copy: 'The children proudly share their finished pictures.', src: '../assets/images/conversation/week-1/06-look-at-mine.webp', alt: 'The children hold up and share their completed pictures.' }
+      ];
+      const weekFourSlides = [
+        { title: 'Making a Beautiful Picture', copy: 'Today, we’re going to make something.', src: '../assets/images/conversation/week-1/01-making-a-beautiful-picture.webp', alt: 'A teacher and children prepare to make beautiful pictures in the classroom.' },
+        { title: 'Can I Have Some Scissors?', copy: 'Gerry politely asks the teacher for scissors.', src: '../assets/images/conversation/week-1/04-gerry-asks-for-scissors.webp', alt: 'Gerry asks the teacher for scissors and says thank you.' },
+        { title: 'Hold the Scissors by the Handles', copy: 'The teacher shows how to hold scissors safely by the handles.', src: '../assets/images/conversation/week-4/03-hold-scissors-by-handles.webp', alt: 'The teacher shows Gerry how to hold scissors by the handles.' },
+        { title: 'Keep Your Fingers Away from the Blades', copy: 'Gerry learns to keep his fingers safely away from the blades.', src: '../assets/images/conversation/week-4/04-keep-fingers-away-from-blades.webp', alt: 'The teacher reminds Gerry to keep his fingers away from the scissors blades.' },
+        { title: 'I’m Making a Flower!', copy: 'Penny shows the flower she is making.', src: '../assets/images/conversation/week-1/05-penny-makes-a-flower.webp', alt: 'Penny shows her flower picture while everyone makes art.' },
+        { title: 'Look at Mine!', copy: 'The children proudly share their finished pictures.', src: '../assets/images/conversation/week-1/06-look-at-mine.webp', alt: 'The children hold up and share their completed pictures.' }
+      ];
+      const weeklySlides = { 1: weekOneSlides, 2: weekTwoSlides, 3: weekThreeSlides, 4: weekFourSlides };
+      const slides = weeklySlides[week] || placeholderSlides;
+      const modal = document.querySelector('#conversation-modal');
+      const title = document.querySelector('#conversation-slide-title');
+      const copy = document.querySelector('#conversation-slide-copy');
+      const icon = document.querySelector('#conversation-slide-icon');
+      const image = document.querySelector('#conversation-slide-image');
+      const counter = document.querySelector('#conversation-counter');
+      const thumbnails = document.querySelector('#conversation-thumbnails');
+      const galleryNote = document.querySelector('#conversation-gallery-note');
+      galleryNote.textContent = weeklySlides[week]
+        ? 'Tap any picture to open the Week ' + week + ' conversation slideshow.'
+        : 'Pictures are coming soon. Tap the gallery to preview the slideshow.';
+      thumbnails.innerHTML = slides.map((slide, index) => slide.src
+        ? `<button class="conversation-thumb" type="button" aria-label="Open the conversation gallery"><img src="${slide.src}" alt="${slide.alt}" loading="lazy"></button>`
+        : `<button class="conversation-thumb" type="button">Picture ${index + 1}<span>${slide.icon}</span></button>`
+      ).join('');
+      let current = 0;
+      const render = () => {
+        const slide = slides[current];
+        title.textContent = slide.title;
+        copy.textContent = slide.copy;
+        if (slide.src) {
+          image.src = slide.src;
+          image.alt = slide.alt;
+          image.hidden = false;
+          icon.hidden = true;
+        } else {
+          image.hidden = true;
+          image.removeAttribute('src');
+          icon.hidden = false;
+          icon.textContent = slide.icon;
+        }
+        counter.textContent = (current + 1) + ' of ' + slides.length;
+      };
+      const openGallery = () => {
+        current = 0;
+        render();
+        modal.hidden = false;
+        document.querySelector('#conversation-close').focus();
+      };
+      const closeGallery = () => { modal.hidden = true; };
+      document.querySelectorAll('.conversation-thumb').forEach(button => button.addEventListener('click', openGallery));
+      document.querySelector('#conversation-close').addEventListener('click', closeGallery);
+      document.querySelector('#conversation-previous').addEventListener('click', () => { current = (current - 1 + slides.length) % slides.length; render(); });
+      document.querySelector('#conversation-next').addEventListener('click', () => { current = (current + 1) % slides.length; render(); });
+      modal.addEventListener('click', event => { if (event.target === modal) closeGallery(); });
+      document.addEventListener('keydown', event => {
+        if (modal.hidden) return;
+        if (event.key === 'Escape') closeGallery();
+        if (event.key === 'ArrowLeft') { current = (current - 1 + slides.length) % slides.length; render(); }
+        if (event.key === 'ArrowRight') { current = (current + 1) % slides.length; render(); }
+      });
+    })();
+  </script>
+</body>
+</html>

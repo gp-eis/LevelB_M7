@@ -167,7 +167,12 @@
       const colors = { flowers: '#f36b72', trees: '#8e62d5', vegetables: '#f39a35', fruits: '#70b744' };
       const wordOrder = ['flowers', 'trees', 'vegetables', 'fruits'];
       const WORD_AUDIO = wordOrder.map((word) => `../assets/audio/week-3/literacy/page-04-word-${word}.wav`);
-      const SENTENCE_AUDIO = wordOrder.map((word) => `../assets/audio/week-3/literacy/page-04-sentence-${word}.wav`);
+      const SENTENCE_AUDIO = {
+        flowers: '../assets/audio/week-3/literacy/page-04-sentence-trees.wav',
+        trees: '../assets/audio/week-3/literacy/page-04-sentence-flowers.wav',
+        vegetables: '../assets/audio/week-3/literacy/page-04-sentence-vegetables.wav',
+        fruits: '../assets/audio/week-3/literacy/page-04-sentence-fruits.wav'
+      };
       let selected = null;
       let dragState = null;
       let suppressClick = false;
@@ -217,7 +222,7 @@
         matched.add(word); selected = null;
         window.requestAnimationFrame(() => drawLine(word));
         correctCue();
-        playRecordedClip(SENTENCE_AUDIO[wordOrder.indexOf(word)], `Bees help ${word} grow.`);
+        playRecordedClip(SENTENCE_AUDIO[word], `Bees help ${word} grow.`);
         if (matched.size === 4) finish('Great job! You matched all four words.', '');
         else setStatus(`${matched.size} of 4 matches complete.`, 'is-correct');
       }

@@ -48,7 +48,7 @@
       <h1>Week ${week} · ${labels[track]}</h1>
       <p>${weekTitles[week]}</p>
     </header>
-    ${track === 'literacy' ? `<nav class="week-tools" aria-label="Week tools"><a class="pill-btn orange" href="tpr.html?week=${week}&return=week-${week}.html%23lesson-focus">🎵 Week Song</a><a class="pill-btn blue" href="flashcards.html?week=${week}&return=week-${week}.html%23lesson-focus">🃏 Flashcards</a></nav>` : ''}
+    ${track === 'literacy' ? `<nav class="week-tools" aria-label="Week tools"><a class="pill-btn orange" href="tpr.html?week=${week}&return=week-${week}.html%23lesson-focus">🎵 Week Song</a><a class="pill-btn blue" href="flashcards.html?week=${week}&return=week-${week}.html%23lesson-focus">🃏 Flashcards</a><a class="pill-btn green" href="conversation.html?week=${week}&return=week-${week}.html%23lesson-focus">💬 Conversation</a></nav>` : ''}
     <section class="lesson-card${hasWeekOneTalkSong ? ' talk-song-card' : ''}" id="lesson-focus">
       ${hasWeekOneTalkSong ? `
         <h2>Where are the Bees?</h2>

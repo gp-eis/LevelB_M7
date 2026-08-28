@@ -12,7 +12,7 @@
     .pick-board { max-width:720px; margin:22px auto 0; padding:28px 24px 32px; border-radius:30px; background:rgba(255,255,255,.88); box-shadow:0 10px 0 rgba(179,136,255,.18),0 16px 30px rgba(74,59,82,.1); }
     .question-box { display:grid; grid-template-columns:150px 1fr 52px; align-items:center; gap:14px; padding:22px 20px; border:6px solid var(--purple); border-radius:26px; background:linear-gradient(180deg,#faf5ff,#fff); }
     .sprite-visual { overflow:hidden; background-repeat:no-repeat; border-radius:18px; filter:drop-shadow(0 7px 6px rgba(74,59,82,.18)); }
-    .question-visual { width:150px; height:130px; }
+    .question-visual { justify-self:center; width:auto; max-width:150px; height:140px; aspect-ratio:var(--tile-aspect,1); }
     .question-text { flex:1; margin:0; color:var(--text); font-family:var(--font-friendly); font-size:clamp(1.25rem,4vw,1.75rem); font-weight:600; line-height:1.35; text-align:center; }
     .listen-btn { flex-shrink:0; display:grid; place-items:center; width:52px; height:52px; padding:0; border:none; border-radius:50%; background:linear-gradient(180deg,var(--blue),var(--blue-d)); box-shadow:0 5px 0 #1b7fae; color:var(--white); font-size:1.5rem; cursor:pointer; transition:transform .12s ease; }
     .listen-btn:hover:not(:disabled) { transform:scale(1.08); }
@@ -25,7 +25,7 @@
     .answer-btn:focus-visible { outline:5px solid var(--yellow); outline-offset:2px; }
     .answer-btn:disabled { cursor:default; }
     .answer-text { flex:1; color:var(--text); font-family:var(--font-friendly); font-size:clamp(1rem,3.2vw,1.25rem); font-weight:600; line-height:1.3; }
-    .answer-visual { width:100%; height:170px; border-radius:18px; filter:drop-shadow(0 7px 6px rgba(74,59,82,.16)); }
+    .answer-visual { align-self:center; width:auto; max-width:100%; height:190px; aspect-ratio:var(--tile-aspect,1); border-radius:18px; filter:drop-shadow(0 7px 6px rgba(74,59,82,.16)); }
     .answer-btn .listen-btn { margin:0 auto; }
     .answer-btn.wrong { border-color:#e04b55; background:#ffe9eb; animation:wrong-shake .55s ease; }
     .answer-btn.correct { border-color:var(--green); background:#eaffdf; }
@@ -43,17 +43,18 @@
       .answers-row { grid-template-columns:1fr; }
       .pick-board { padding:18px 12px 24px; }
       .question-box { grid-template-columns:1fr 52px; }
-      .question-visual { grid-column:1/-1; width:100%; height:150px; }
-      .answer-visual { height:150px; }
+      .question-visual { grid-column:1/-1; width:auto; max-width:100%; height:160px; }
+      .answer-visual { width:auto; max-width:100%; height:170px; }
     }
   </style>
+  <link rel="stylesheet" href="../css/week-1-pick-the-right-one.css?v=20260827-2">
 </head>
-<body>
+<body class="pick-right-page">
   <div class="floaties" aria-hidden="true"><span style="top:10%;left:4%;">✅</span><span style="top:75%;left:93%;">🐝</span></div>
   <div class="page">
     <a class="back-link" href="index.html?week=1">⬅️ All Games</a>
-    <header class="center" style="margin-top:16px;">
-      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/game-pick.webp" alt="">Pick the Right One</h1>
+    <header class="center pick-right-header">
+      <h1 class="big-title page-title-with-icon"><img class="page-title-icon" src="../assets/images/ui/game-pick.webp" alt="">Pick the Right One</h1>
       <p class="subtitle">Listen to the question, then pick the best answer!</p>
     </header>
     <div class="game-toolbar"><button class="pill-btn orange" id="new-question" type="button">🔄 New Question</button></div>
@@ -76,25 +77,31 @@
   <script src="../js/main.js"></script>
   <script>
     const ART_BASE = '../assets/images/week-1/games/pick-right/';
+    const SHEET_ASPECTS = {
+      'beekeeper-choices.png':(1672/3)/941,
+      'bee-actions.png':(1536/3)/(1024/2),
+      'queen-choices.png':(2172/3)/724,
+      'queen-bee-parts.png':(1774/5)/887
+    };
     const VISUALS = {
-      beekeeperQuestion:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'0% 50%',alt:'Gerry dressed as a beekeeper beside a natural hive'},
-      beekeeper:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'50% 50%',alt:'Gerry working as a beekeeper'},
+      beekeeperQuestion:{sheet:'beekeeper-choices.png',size:'300% auto',position:'0% 50%',alt:'Gerry dressed as a beekeeper beside a natural hive'},
+      beekeeper:{sheet:'beekeeper-choices.png',size:'300% auto',position:'50% 50%',alt:'Gerry working as a beekeeper'},
       farmer:{image:'farmer-choice.png',alt:'A cheerful young farmer holding a basket of fresh vegetables'},
-      athlete:{sheet:'beekeeper-choices.png',size:'300% 100%',position:'100% 50%',alt:'Gerry dressed as an athlete'},
-      beesQuestion:{sheet:'bee-actions.png',size:'300% 200%',position:'0% 0%',alt:'Cute bees working near flowers and a natural hive'},
-      makeHoney:{sheet:'bee-actions.png',size:'300% 200%',position:'50% 0%',alt:'Bees making honey'},
-      buildHives:{sheet:'bee-actions.png',size:'300% 200%',position:'100% 0%',alt:'Bees building a natural hive'},
-      protectQueen:{sheet:'bee-actions.png',size:'300% 200%',position:'0% 100%',alt:'Worker bees protecting the queen bee'},
-      findFlowers:{sheet:'bee-actions.png',size:'300% 200%',position:'50% 100%',alt:'A bee finding flowers'},
-      collectNectar:{sheet:'bee-actions.png',size:'300% 200%',position:'100% 100%',alt:'A bee collecting nectar'},
-      queenQuestion:{sheet:'queen-choices.png',size:'300% 100%',position:'0% 50%',alt:'A kind queen wearing a crown and a red dress'},
-      crown:{sheet:'queen-choices.png',size:'300% 100%',position:'50% 50%',alt:'A golden crown'},
-      dress:{sheet:'queen-choices.png',size:'300% 100%',position:'100% 50%',alt:'A red royal dress'},
-      queenBeeQuestion:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'0% 50%',alt:'A cute crowned queen bee'},
-      wings:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'25% 50%',alt:'Bee wings'},
-      antennae:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'50% 50%',alt:'Bee antennae'},
-      abdomen:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'75% 50%',alt:'A striped bee abdomen'},
-      stinger:{sheet:'queen-bee-parts.png',size:'500% 100%',position:'100% 50%',alt:'A small bee stinger'}
+      athlete:{sheet:'beekeeper-choices.png',size:'300% auto',position:'100% 50%',alt:'Gerry dressed as an athlete'},
+      beesQuestion:{sheet:'bee-actions.png',size:'300% auto',position:'0% 0%',alt:'Cute bees working near flowers and a natural hive'},
+      makeHoney:{sheet:'bee-actions.png',size:'300% auto',position:'50% 0%',alt:'Bees making honey'},
+      buildHives:{sheet:'bee-actions.png',size:'300% auto',position:'100% 0%',alt:'Bees building a natural hive'},
+      protectQueen:{sheet:'bee-actions.png',size:'300% auto',position:'0% 100%',alt:'Worker bees protecting the queen bee'},
+      findFlowers:{sheet:'bee-actions.png',size:'300% auto',position:'50% 100%',alt:'A bee finding flowers'},
+      collectNectar:{sheet:'bee-actions.png',size:'300% auto',position:'100% 100%',alt:'A bee collecting nectar'},
+      queenQuestion:{sheet:'queen-choices.png',size:'300% auto',position:'0% 50%',alt:'A kind queen wearing a crown and a red dress'},
+      crown:{sheet:'queen-choices.png',size:'300% auto',position:'50% 50%',alt:'A golden crown'},
+      dress:{sheet:'queen-choices.png',size:'300% auto',position:'100% 50%',alt:'A red royal dress'},
+      queenBeeQuestion:{sheet:'queen-bee-parts.png',size:'500% auto',position:'0% 50%',alt:'A cute crowned queen bee'},
+      wings:{sheet:'queen-bee-parts.png',size:'500% auto',position:'25% 50%',alt:'Bee wings'},
+      antennae:{sheet:'queen-bee-parts.png',size:'500% auto',position:'50% 50%',alt:'Bee antennae'},
+      abdomen:{sheet:'queen-bee-parts.png',size:'500% auto',position:'75% 50%',alt:'A striped bee abdomen'},
+      stinger:{sheet:'queen-bee-parts.png',size:'500% auto',position:'100% 50%',alt:'A small bee stinger'}
     };
     const ANSWERS = {
       beekeeper:{text:'Yes, I do. I am a beekeeper.',visual:'beekeeper'},
@@ -132,7 +139,7 @@
     function speak(text){if(typeof window.speakAmericanEnglish==='function')return window.speakAmericanEnglish(text,{rate:.88});if(!('speechSynthesis'in window))return Promise.resolve();speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='en-US';utterance.rate=.88;return new Promise(resolve=>{utterance.onend=resolve;utterance.onerror=resolve;speechSynthesis.speak(utterance)})}
     function correctSound(){if(typeof window.playTone!=='function')return;window.playTone(523,.12,.15,'sine');window.playTone(659,.12,.15,'sine',.08);window.playTone(784,.2,.17,'sine',.16)}
     function wrongSound(){if(typeof window.playTone!=='function')return;window.playTone(220,.14,.075,'sawtooth');window.playTone(165,.2,.065,'sawtooth',.11)}
-    function applyVisual(element,key){const art=VISUALS[key];element.style.backgroundImage=`url('${ART_BASE}${art.image||art.sheet}')`;element.style.backgroundSize=art.image?'contain':art.size;element.style.backgroundPosition=art.image?'center':art.position;element.setAttribute('aria-label',art.alt)}
+    function applyVisual(element,key){const art=VISUALS[key];element.style.backgroundImage=`url('${ART_BASE}${art.image||art.sheet}')`;element.style.backgroundSize=art.image?'contain':art.size;element.style.backgroundPosition=art.image?'center':art.position;element.style.setProperty('--tile-aspect',String(art.image?1:SHEET_ASPECTS[art.sheet]));element.setAttribute('aria-label',art.alt)}
     function nextQuestion(){let item;do{item=randomFrom(QUESTIONS)}while(QUESTIONS.length>1&&item.question===lastQuestionKey);lastQuestionKey=item.question;const correctKey=randomFrom(item.correct);const otherAnswerPool=QUESTIONS.filter(question=>question.id!==item.id).flatMap(question=>question.correct);return {...item,correctKey,wrongKey:randomFrom(otherAnswerPool)}}
     function makeSpeaker(text,label){const button=document.createElement('button');button.type='button';button.className='listen-btn';button.textContent='🔊';button.setAttribute('aria-label',label);button.addEventListener('click',event=>{event.stopPropagation();if(!locked)speak(text)});return button}
     function renderRound(){locked=false;successModal.hidden=true;questionListen.disabled=false;currentRound=nextQuestion();questionText.textContent=currentRound.question;applyVisual(questionVisual,currentRound.visual);answersRow.innerHTML='';questionListen.onclick=()=>{if(!locked)speak(currentRound.question)};shuffle([currentRound.correctKey,currentRound.wrongKey]).forEach(key=>{const answer=ANSWERS[key];const button=document.createElement('button');button.type='button';button.className='answer-btn';button.dataset.answer=key;const visual=document.createElement('div');visual.className='sprite-visual answer-visual';visual.setAttribute('role','img');applyVisual(visual,answer.visual);const text=document.createElement('span');text.className='answer-text';text.textContent=answer.text;button.append(visual,text,makeSpeaker(answer.text,`Listen to answer: ${answer.text}`));button.addEventListener('click',()=>chooseAnswer(button,key));answersRow.appendChild(button)})}

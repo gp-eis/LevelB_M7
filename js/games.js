@@ -1,4 +1,5 @@
 (() => {
+  const OPEN_GAME_WEEKS = [1];
   const params = new URLSearchParams(location.search);
   const requestedWeek = Math.max(1, Math.min(4, Number(params.get('week')) || 1));
   const weekTitles = {
@@ -33,6 +34,12 @@
     matching: 'week-2-picture-match.html',
     'pick-the-right-one': 'week-2-pick-the-right-one.html'
   };
+  const weekThreeGamePages = {
+    memory: 'week-3-memory.html',
+    'spin-the-wheel': 'week-3-spin-the-wheel.html',
+    matching: 'week-3-picture-match.html',
+    'pick-the-right-one': 'week-3/pick-the-right-one.html'
+  };
   const weekFourGamePages = {
     memory: 'week-4/memory.html',
     'spin-the-wheel': 'week-4/spin-the-wheel.html',
@@ -46,6 +53,7 @@
     }
     if (week === 1 && weekOneGamePages[game.key]) return weekOneGamePages[game.key];
     if (week === 2 && weekTwoGamePages[game.key]) return weekTwoGamePages[game.key];
+    if (week === 3 && weekThreeGamePages[game.key]) return weekThreeGamePages[game.key];
     if (week === 4 && weekFourGamePages[game.key]) return weekFourGamePages[game.key];
     return `placeholder.html?week=${week}&game=${game.key}`;
   }
@@ -74,11 +82,11 @@
       <section id="week-picker" aria-label="Choose a week">
         <div class="week-picker">
           ${[1,2,3,4].map(week => `
-            <button class="week-pick-btn ${weekColors[week]}" type="button" data-week="${week}" aria-label="Week ${week} — ${weekTitles[week]}">
+            <button class="week-pick-btn ${weekColors[week]}${OPEN_GAME_WEEKS.includes(week) ? '' : ' is-locked'}" type="button" data-week="${week}" aria-label="Week ${week} — ${weekTitles[week]}" ${OPEN_GAME_WEEKS.includes(week) ? '' : 'disabled aria-disabled="true"'}>
               <span class="week-pick-btn__inner">
                 <span class="week-pick-btn__icon" aria-hidden="true"><img class="week-pick-btn__icon-img" src="../assets/images/ui/weekly/${weekImages[week]}" alt=""></span>
                 <span class="week-pick-btn__label">Week ${week}</span>
-                <span class="week-pick-btn__hint">${weekTitles[week]}</span>
+                <span class="week-pick-btn__hint">${OPEN_GAME_WEEKS.includes(week) ? weekTitles[week] : '🔒 Coming soon'}</span>
               </span>
             </button>`).join('')}
         </div>
@@ -100,6 +108,10 @@
     const weekHome = document.getElementById('games-week-home');
 
     function showWeek(week, updateUrl = true) {
+      if (!OPEN_GAME_WEEKS.includes(Number(week))) {
+        showWeekPicker(updateUrl);
+        return;
+      }
       weekPicker.hidden = true;
       weekPanels.forEach(panel => { panel.hidden = panel.dataset.week !== String(week); });
       subtitle.textContent = `Week ${week} — ${weekTitles[week]}`;
@@ -127,7 +139,7 @@
       button.addEventListener('click', () => showWeek(Number(button.dataset.week)));
     });
     document.querySelectorAll('.back-weeks').forEach(button => button.addEventListener('click', () => showWeekPicker()));
-    if (params.has('week')) showWeek(requestedWeek, false);
+    if (params.has('week') && OPEN_GAME_WEEKS.includes(requestedWeek)) showWeek(requestedWeek, false);
     else showWeekPicker(false);
   }
 
