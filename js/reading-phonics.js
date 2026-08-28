@@ -46,7 +46,7 @@
       <p class="subtitle">${isReading ? titles[week] : 'Watch, listen, and then show what you learned!'}</p>
     </header>
     <section id="lesson-focus" class="track-card" aria-label="Week ${week} ${label} video">
-      <h2 class="section-title">\u{1F3AC} ${label} Video</h2>
+      ${isReading ? `<h2 class="section-title">\u{1F3AC} ${label} Video</h2>` : ''}
       ${phonicsVideo ? `
         <div class="video-play-shell track-video-shell">
           <video

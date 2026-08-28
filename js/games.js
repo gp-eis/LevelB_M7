@@ -1,10 +1,10 @@
 (() => {
-  const OPEN_GAME_WEEKS = [1];
+  const OPEN_GAME_WEEKS = [1, 2, 3, 4];
   const params = new URLSearchParams(location.search);
   const requestedWeek = Math.max(1, Math.min(4, Number(params.get('week')) || 1));
   const weekTitles = {
     1: 'Do you keep bees?',
-    2: 'When can I see bees?',
+    2: 'What do bees do?',
     3: 'Why do we need bees?',
     4: 'I am Lorenzo Langstroth.'
   };

@@ -10,9 +10,9 @@
   <style>
     .board {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
-      max-width: 500px;
+      max-width: 900px;
       margin: 24px auto 0;
     }
 
@@ -146,7 +146,7 @@
       .confetti-piece { animation: none; top: var(--rest-top); }
     }
     @media (max-width: 480px) {
-      .board { grid-template-columns: repeat(4, minmax(62px, 1fr)); gap: 8px; }
+      .board { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
       .mem-card { border-radius: 15px; padding: 6px; }
       .card-picture { border-radius: 10px; }
     }
@@ -157,7 +157,7 @@
     .memory-viewport .back-link { position:fixed; z-index:20; top:max(10px,env(safe-area-inset-top)); left:max(10px,env(safe-area-inset-left)); }
     .memory-viewport header{margin-top:0!important}.memory-viewport .big-title{font-size:clamp(1.55rem,4vh,2.4rem)!important}.memory-viewport .subtitle{margin-top:2px;font-size:clamp(.85rem,2vh,1.05rem)}
     .memory-viewport .game-actions{margin-top:clamp(5px,1.2vh,10px);gap:8px}.memory-viewport .game-actions .pill-btn{padding:clamp(7px,1.4vh,11px) clamp(11px,2vw,18px);font-size:clamp(.78rem,1.8vh,1rem)}
-    .memory-viewport .board{width:min(700px,92vw,calc(52svh * 1.333));margin:clamp(6px,1.2vh,10px) auto 0;gap:clamp(5px,1.2vh,9px)}.memory-viewport .status-row{margin-top:clamp(5px,1vh,9px);font-size:clamp(.86rem,1.8vh,1rem)}
+    .memory-viewport .board{grid-template-columns:repeat(5,1fr);width:min(900px,94vw);max-width:900px;margin:clamp(6px,1.2vh,10px) auto 0;gap:clamp(5px,1.2vh,9px)}.memory-viewport .status-row{margin-top:clamp(5px,1vh,9px);font-size:clamp(.86rem,1.8vh,1rem)}
     @media(max-width:600px){.memory-viewport .page{padding-inline:6px}.memory-viewport .back-link{font-size:.78rem;padding:7px 9px}.memory-viewport .board{grid-template-columns:repeat(5,1fr);width:min(96vw,calc(52svh * 2.5));gap:5px}.memory-viewport .mem-card{padding:4px;border-radius:12px}.memory-viewport .card-picture{border-radius:9px}.memory-viewport .floaties{display:none}}
   </style>
 </head>
@@ -173,7 +173,7 @@
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-memory.webp" alt="">Memory Game</h1>
-      <p class="subtitle">Look carefully, then find the 6 matching pairs!</p>
+      <p class="subtitle">Look carefully, then find the 5 matching pairs!</p>
     </header>
 
     <div class="game-actions">
@@ -185,7 +185,7 @@
 
     <div class="status-row">
       <span>Moves: <span id="moves">0</span></span>
-      <span>Pairs: <span id="pairs">0</span> / 6</span>
+      <span>Pairs: <span id="pairs">0</span> / 5</span>
     </div>
   </div>
 
@@ -268,6 +268,7 @@
     let matchedCount = 0;
     let gameNumber = 0;
     let activePictures = [];
+    let lastPoolSignature = '';
     let lastDeckSignature = '';
     let previewInterval = null;
     let previewTimeout = null;
@@ -342,7 +343,12 @@
       clearTimeout(previewTimeout);
       celebration.hidden = true;
       confetti.innerHTML = '';
-      activePictures = shuffle(PICTURES).slice(0, PICTURES.length >= 6 ? 6 : PICTURES.length);
+      let poolSignature;
+      do {
+        activePictures = shuffle(PICTURES).slice(0, Math.min(5, PICTURES.length));
+        poolSignature = activePictures.map(picture => picture.id).sort().join(',');
+      } while (PICTURES.length > 5 && poolSignature === lastPoolSignature);
+      lastPoolSignature = poolSignature;
       let deck;
       let deckSignature;
       do {
@@ -351,7 +357,7 @@
       } while (deckSignature === lastDeckSignature);
       lastDeckSignature = deckSignature;
       board.innerHTML = '';
-      board.style.gridTemplateColumns = activePictures.length === 5 ? 'repeat(5, 1fr)' : 'repeat(4, 1fr)';
+      board.style.gridTemplateColumns = 'repeat(5, minmax(0, 1fr))';
       first = null;
       lock = false;
       moves = 0;

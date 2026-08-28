@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find the Word — Beekeeper</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .game-toolbar { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:18px; }
+    .find-instruction-row { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:22px; }
+    .find-instruction { margin:0; text-align:center; color:var(--text); font-size:clamp(1.35rem,4.5vw,2rem); font-weight:800; }
+    .target-chunk { display:inline-grid; place-items:center; min-width:64px; padding:4px 12px; border-radius:16px; background:linear-gradient(180deg,var(--yellow),var(--yellow-d)); color:var(--blue-d); box-shadow:0 4px 0 #c9a000; }
+    .target-listen { display:grid; place-items:center; width:52px; height:52px; border:none; border-radius:50%; background:linear-gradient(180deg,var(--blue),var(--blue-d)); box-shadow:0 5px 0 #1b7fae; color:var(--white); font-size:1.45rem; cursor:pointer; transition:transform .12s ease; }
+    .target-listen:hover { transform:scale(1.08); }
+    .target-listen:active { transform:translateY(2px); }
+    .target-listen:focus-visible { outline:4px solid var(--yellow); outline-offset:2px; }
+    .find-board { width:min(560px,100%); margin:20px auto 0; padding:clamp(18px,4vw,34px); border:8px solid #e86a5a; border-radius:28px; background:var(--white); box-shadow:0 10px 0 rgba(232,106,90,.2),0 16px 30px rgba(74,59,82,.1); }
+    .word-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,2.5vw,18px); }
+    .word-btn { position:relative; min-height:78px; padding:12px 8px; border:4px solid #cae4f4; border-radius:20px; background:linear-gradient(180deg,#fff,#f4fbff); box-shadow:0 5px 0 #a9cfe7; color:#243a55; font-family:var(--font-literacy); font-size:clamp(1.45rem,5vw,2.15rem); font-weight:800; text-transform:lowercase; cursor:pointer; transition:transform .12s ease,border-color .15s ease,background .15s ease; }
+    .word-btn:hover:not(:disabled) { transform:translateY(-3px) scale(1.025); }
+    .word-btn:active:not(:disabled) { transform:translateY(2px); }
+    .word-btn:focus-visible { outline:4px solid var(--yellow); outline-offset:3px; }
+    .word-btn.correct { border-color:var(--green); background:#eaffdf; box-shadow:0 5px 0 var(--green-d); color:#245d18; animation:word-pop .38s cubic-bezier(.34,1.56,.64,1); }
+    .word-btn.correct .matched-chunk { padding:0 .08em; border-radius:.25em; background:var(--yellow); color:var(--blue-d); }
+    .word-btn.wrong { border-color:#d92332; background:#ffd9dd; box-shadow:0 5px 0 #a71925; color:#a71925; animation:wrong-shake .55s ease; }
+    .word-btn.wrong::after { content:'✕'; position:absolute; top:-15px; right:-13px; display:grid; place-items:center; width:34px; height:34px; border:3px solid #fff; border-radius:50%; background:#e32e3d; color:#fff; font:900 1.25rem/1 var(--font-display); box-shadow:0 4px 0 #a71925; animation:word-pop .28s ease; }
+    .word-btn:disabled { cursor:default; }
+    .status-text { margin-top:16px; min-height:1.5rem; text-align:center; font-size:1.15rem; font-weight:800; color:var(--purple-d); }
+    .success-modal { position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px; background:rgba(30,58,95,.35); }
+    .success-modal[hidden] { display:none; }
+    .success-card { width:min(440px,100%); padding:28px 24px; border:7px solid var(--yellow); border-radius:30px; background:var(--white); box-shadow:0 14px 0 rgba(30,111,217,.2); text-align:center; animation:pop-in .45s cubic-bezier(.34,1.56,.64,1); }
+    .success-emoji { font-size:4rem; line-height:1; }
+    .success-title { margin:10px 0 8px; color:var(--pink-d); font-size:clamp(1.4rem,4.5vw,2rem); line-height:1.25; }
+    .success-copy { margin:0 0 18px; color:var(--blue-d); font-size:1.15rem; font-weight:800; }
+    @keyframes word-pop { from{transform:scale(.78)} to{transform:scale(1)} }
+    @keyframes pop-in { from{opacity:0;transform:scale(.6)} to{opacity:1;transform:scale(1)} }
+    @keyframes wrong-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+    @media (max-width:520px) {
+      .find-board { padding:16px 12px; border-width:6px; }
+      .word-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+      .word-btn { min-height:66px; border-width:3px; border-radius:16px; }
+    }
+  </style>
+</head>
+<body class="phonics-activity-page">
+  <div class="page">
+    <a class="back-link" id="back-link" href="phonics.html">⬅️ Phonics Games</a>
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/phonics-games/find-letter-3d.png" alt="">Find the Word</h1>
+      <p class="subtitle" id="week-subtitle">Review the -og, -op, and -ot word families!</p>
+    </header>
+    <div class="game-toolbar"><button class="pill-btn orange" id="new-board" type="button">🔄 New Board</button></div>
+    <div class="find-instruction-row">
+      <h2 class="find-instruction">Tap every word with <span class="target-chunk" id="target-chunk">og</span></h2>
+      <button class="target-listen" id="target-listen" type="button" data-no-click-sound aria-label="Hear the instruction">🔊</button>
+    </div>
+    <section class="find-board" aria-label="Find the words containing og">
+      <div class="word-grid" id="word-grid"></div>
+    </section>
+    <p class="status-text" id="status-text" role="status" aria-live="polite">Round 1 of 6 · Found 0 / 3</p>
+  </div>
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <div class="success-emoji" aria-hidden="true">🎉</div>
+      <h2 class="success-title" id="success-title">You found the review words!</h2>
+      <p class="success-copy" id="success-copy">-og • -op • -ot</p>
+      <button class="pill-btn green" id="continue-btn" type="button">Next Round ➡️</button>
+    </div>
+  </div>
+  <script src="../../js/main.js"></script>
+  <script src="../../js/week-4-phonics-data.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const { words: WORDS, shuffle } = window.WEEK4_PHONICS;
+    const wordGrid = document.getElementById('word-grid');
+    const statusText = document.getElementById('status-text');
+    const successModal = document.getElementById('success-modal');
+    const continueBtn = document.getElementById('continue-btn');
+    const targetChunk = document.getElementById('target-chunk');
+    let roundFamilies = [];
+    let roundIndex = 0;
+    let target = 'og';
+    let targetWords = [];
+    let found = 0;
+    let locked = false;
+
+    const origin = params.get('from') === 'phonics' ? 'phonics' : 'games';
+    document.getElementById('back-link').href = `phonics.html?from=${origin}`;
+    document.title = 'Find the Word — Week 4 — Beekeeper';
+
+    const sounds = (() => {
+      let ctx;
+      const audio = () => { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); return ctx; };
+      const tone = (frequency,start,duration,volume=.12) => { const c=audio(),o=c.createOscillator(),g=c.createGain(); o.frequency.value=frequency; g.gain.setValueAtTime(.0001,start); g.gain.exponentialRampToValueAtTime(volume,start+.012); g.gain.exponentialRampToValueAtTime(.0001,start+duration); o.connect(g); g.connect(c.destination); o.start(start); o.stop(start+duration+.02); };
+      return {
+        correct(){ const now=audio().currentTime; tone(523,now,.1); tone(659,now+.07,.16); },
+        wrong(){ const now=audio().currentTime; tone(205,now,.17,.18); tone(135,now+.11,.25,.17); tone(95,now+.25,.23,.14); },
+        win(){ const now=audio().currentTime; tone(523,now,.12); tone(659,now+.08,.12); tone(784,now+.16,.24,.15); }
+      };
+    })();
+
+    function speak(text){ if(typeof window.speakAmericanEnglish === 'function') window.speakAmericanEnglish(text,{rate:.82,pitch:1.02}); }
+    function highlightedWord(word){
+      const index=word.indexOf(target);
+      return `${word.slice(0,index)}<span class="matched-chunk">${target}</span>${word.slice(index+target.length)}`;
+    }
+
+    function startGame(){
+      roundFamilies = [...shuffle(['og','op','ot']), ...shuffle(['og','op','ot'])];
+      roundIndex = 0;
+      startRound();
+    }
+
+    function startRound(){
+      target = roundFamilies[roundIndex];
+      targetWords = WORDS.filter(item => item.family === target).map(item => item.id);
+      const distractors = WORDS.filter(item => item.family !== target).map(item => item.id);
+      found=0;
+      locked=false;
+      successModal.hidden=true;
+      wordGrid.innerHTML='';
+      targetChunk.textContent=target;
+      document.querySelector('.find-board').setAttribute('aria-label',`Find the words containing ${target}`);
+      statusText.textContent=`Round ${roundIndex + 1} of ${roundFamilies.length} · Found 0 / 3`;
+
+      shuffle([...targetWords,...distractors]).forEach(word => {
+        const button=document.createElement('button');
+        button.type='button';
+        button.className='word-btn';
+        button.textContent=word;
+        button.dataset.word=word;
+        button.setAttribute('data-no-click-sound','');
+        button.setAttribute('aria-label',word);
+        button.addEventListener('click',()=>chooseWord(button));
+        wordGrid.appendChild(button);
+      });
+    }
+
+    function chooseWord(button){
+      if(locked || button.disabled) return;
+      const word=button.dataset.word;
+      if(!word.endsWith(target)){
+        sounds.wrong();
+        button.classList.remove('wrong');
+        void button.offsetWidth;
+        button.classList.add('wrong');
+        statusText.textContent=`Try again. Look for ${target}.`;
+        setTimeout(()=>speak(word),220);
+        setTimeout(()=>button.classList.remove('wrong'),720);
+        return;
+      }
+
+      sounds.correct();
+      button.classList.add('correct');
+      button.innerHTML=highlightedWord(word);
+      button.disabled=true;
+      found+=1;
+      statusText.textContent=`Round ${roundIndex + 1} of ${roundFamilies.length} · Found ${found} / 3`;
+      setTimeout(()=>speak(word),180);
+
+      if(found===targetWords.length){
+        locked=true;
+        const isFinal=roundIndex===roundFamilies.length-1;
+        document.getElementById('success-title').textContent=isFinal
+          ? 'All three word families reviewed!'
+          : `You found all the ${target} words!`;
+        document.getElementById('success-copy').textContent=isFinal
+          ? '-og • -op • -ot'
+          : targetWords.join(' • ');
+        continueBtn.textContent=isFinal ? '🔄 Play Again' : 'Next Round ➡️';
+        setTimeout(()=>{ successModal.hidden=false; continueBtn.focus(); sounds.win(); },750);
+      }
+    }
+
+    document.getElementById('target-listen').addEventListener('click',()=>speak(`Tap every word with ${target}.`));
+    document.getElementById('new-board').addEventListener('click',startRound);
+    continueBtn.addEventListener('click',()=>{
+      if(roundIndex===roundFamilies.length-1) startGame();
+      else { roundIndex+=1; startRound(); }
+    });
+    startGame();
+  </script>
+</body>
+</html>

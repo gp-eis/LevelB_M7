@@ -20,11 +20,10 @@
   const findWordHints = {
     1: 'Find dog, log, and fog.',
     2: 'Find cop, mop, and shop.',
-    3: 'Find cot, dot, and pot.'
+    3: 'Find cot, dot, and pot.',
+    4: 'Find -og, -op, and -ot words.'
   };
-  const findGame = week <= 3
-    ? { key:'find-word', label:'Find the Word', icon:'\u{1F50E}', iconImage:'find-letter-3d.png', hint:findWordHints[week] }
-    : { key:'find-letter', label:'Find the Letter', icon:'\u{1F50E}', iconImage:'find-letter-3d.png', hint:'Find every target letter.' };
+  const findGame = { key:'find-word', label:'Find the Word', icon:'\u{1F50E}', iconImage:'find-letter-3d.png', hint:findWordHints[week] };
   const games = [
     findGame,
     { key:'build-word', label:'Build the Word', icon:'\u{1F9F1}', iconImage:'build-word-3d.png', hint:'Use letter tiles to build the Week words.' },
@@ -45,6 +44,13 @@
     'picture-match': 'Match cot, dot, and pot.'
   };
   if (week === 3) games.forEach(game => { game.hint = weekThreeHints[game.key]; });
+  const weekFourHints = {
+    'find-word': 'Find -og, -op, and -ot words.',
+    'build-word': 'Build words from all three families.',
+    'letter-maze': 'Guide -og, -op, and -ot through the maze.',
+    'picture-match': 'Match all nine review words.'
+  };
+  if (week === 4) games.forEach(game => { game.hint = weekFourHints[game.key]; });
   const iconMarkup=game=>`<img class="icon-img" src="${phonicsIconBase}${game.iconImage}" alt="">`;
   const weekGamePages = {
     1: {
@@ -61,6 +67,12 @@
     },
     3: {
       'find-word': '../phonics-find-word.html?week=3',
+      'build-word': 'phonics-build.html',
+      'letter-maze': 'phonics-maze.html',
+      'picture-match': 'phonics-picture-match.html'
+    },
+    4: {
+      'find-word': 'phonics-find-word.html',
       'build-word': 'phonics-build.html',
       'letter-maze': 'phonics-maze.html',
       'picture-match': 'phonics-picture-match.html'

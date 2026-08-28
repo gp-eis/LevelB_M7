@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 4 Build the Word — Beekeeper</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .game-toolbar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .phonics-board {
+      max-width: 680px;
+      margin: 22px auto 0;
+      padding: 28px 22px 32px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 10px 0 rgba(30,111,217,.12), 0 16px 30px rgba(74,59,82,.1);
+    }
+
+    .word-prompt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 16px;
+      border: 6px solid var(--blue);
+      border-radius: 26px;
+      background: linear-gradient(180deg, #eef8ff, #fff);
+    }
+
+    .word-spelling {
+      color: var(--blue-d);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: .18em;
+      line-height: 1.1;
+      text-align: center;
+    }
+
+    .word-emoji {
+      font-size: clamp(4rem, 14vw, 6rem);
+      line-height: 1;
+      filter: drop-shadow(0 6px 4px rgba(30,58,95,.14));
+    }
+
+    .word-picture {
+      width: clamp(110px, 28vw, 150px);
+      height: clamp(110px, 28vw, 150px);
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 6px 4px rgba(30,58,95,.14));
+    }
+
+    .word-picture svg {
+      width: 100%;
+      height: 100%;
+    }
+    .word-picture img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .word-hint {
+      font-family: var(--font-friendly);
+      font-size: clamp(1.1rem, 3.2vw, 1.4rem);
+      font-weight: 600;
+      color: var(--purple-d);
+      text-align: center;
+    }
+
+    .prompt-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .slots-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      min-height: 86px;
+    }
+
+    .letter-slot {
+      width: clamp(58px, 14vw, 78px);
+      height: clamp(68px, 16vw, 88px);
+      display: grid;
+      place-items: center;
+      border: 4px dashed rgba(30,111,217,.35);
+      border-radius: 18px;
+      background: #f4fbff;
+      color: var(--blue-d);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+
+    .letter-slot.filled {
+      border-style: solid;
+      border-color: var(--blue);
+      background: var(--white);
+      box-shadow: 0 5px 0 rgba(30,111,217,.18);
+      cursor: pointer;
+    }
+
+    .letter-slot.filled:hover { transform: translateY(-2px); }
+    .letter-slot.filled:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
+
+    .letter-slot.correct {
+      border-color: var(--green);
+      background: #eaffdf;
+      box-shadow: 0 5px 0 var(--green-d);
+      animation: slot-pop .4s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .slots-row.wrong .letter-slot.filled {
+      border-color: #e04b55;
+      background: #ffe9eb;
+      animation: wrong-shake .5s ease;
+    }
+
+    .bank-label {
+      margin: 26px 0 12px;
+      text-align: center;
+      color: var(--text);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .letters-bank {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-height: 86px;
+    }
+
+    .letter-tile {
+      width: clamp(58px, 14vw, 78px);
+      height: clamp(68px, 16vw, 88px);
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--yellow), var(--yellow-d));
+      box-shadow: 0 5px 0 #c9a000;
+      color: var(--text);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      cursor: grab;
+      transition: transform .12s ease, filter .12s ease;
+      touch-action: none;
+    }
+    .letter-tile.dragging {
+      opacity: .45;
+      cursor: grabbing;
+    }
+    .letter-slot.drop-target {
+      border-color: var(--yellow);
+      background: #fff8d6;
+      transform: scale(1.04);
+    }
+
+    .letter-tile:nth-child(3n+2) {
+      background: linear-gradient(180deg, var(--pink), var(--pink-d));
+      box-shadow: 0 5px 0 #b83232;
+      color: var(--white);
+    }
+    .letter-tile:nth-child(3n+3) {
+      background: linear-gradient(180deg, var(--green), var(--green-d));
+      box-shadow: 0 5px 0 #3d8c1e;
+      color: var(--white);
+    }
+    .letter-tile:nth-child(3n+1) {
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
+      color: var(--white);
+    }
+
+    .letter-tile:hover:not(:disabled) { transform: translateY(-4px) scale(1.04); }
+    .letter-tile:active:not(:disabled) { transform: translateY(2px); }
+    .letter-tile:focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
+    .letter-tile:disabled,
+    .letter-tile.used {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .status-text {
+      margin-top: 18px;
+      min-height: 1.5rem;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--purple-d);
+    }
+
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(30, 58, 95, .35);
+    }
+    .success-modal[hidden] { display: none; }
+    .success-card {
+      width: min(420px, 100%);
+      padding: 28px 24px;
+      border: 7px solid var(--yellow);
+      border-radius: 30px;
+      background: var(--white);
+      box-shadow: 0 14px 0 rgba(30,111,217,.2);
+      text-align: center;
+      animation: slot-pop .45s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .success-card .pill-btn:focus-visible {
+      outline: none;
+      outline-offset: 0;
+    }
+    .success-emoji { font-size: 4rem; line-height: 1; }
+    .success-title {
+      margin: 10px 0 6px;
+      color: var(--pink-d);
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+    }
+    .success-word {
+      margin-bottom: 18px;
+      color: var(--blue-d);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    @keyframes slot-pop {
+      from { opacity: 0; transform: scale(.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    @media (max-width: 480px) {
+      .phonics-board { padding: 18px 12px 22px; }
+      .slots-row, .letters-bank { gap: 8px; }
+    }
+  </style>
+</head>
+<body class="phonics-activity-page">
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">🔤</span>
+    <span style="top:72%; left:92%;">✨</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" id="back-link" href="phonics.html">⬅️ Phonics Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/phonics-games/build-word-3d.png" alt="">Build the Word</h1>
+      <p class="subtitle">Drag or tap the letters to build the word!</p>
+    </header>
+
+    <div class="game-toolbar">
+      <button class="pill-btn orange" id="new-word" type="button">🔄 New Game</button>
+      <button class="pill-btn blue" id="clear-word" type="button">🧹 Clear</button>
+    </div>
+
+    <section class="phonics-board" aria-label="Build the word game">
+      <div class="word-prompt">
+        <p class="word-spelling" id="word-spelling" aria-live="polite">dog</p>
+        <div class="word-picture" id="word-picture" aria-hidden="true"></div>
+        <p class="word-hint" id="word-hint">Build this word</p>
+        <div class="prompt-actions">
+          <button class="pill-btn" id="hear-word" type="button">🔊 Hear the Word</button>
+        </div>
+      </div>
+
+      <div class="slots-row" id="slots-row" aria-label="Letter spaces"></div>
+
+      <p class="bank-label">Letter bank</p>
+      <div class="letters-bank" id="letters-bank" aria-label="Letter bank"></div>
+
+      <p class="status-text" id="status-text" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true"
+       aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <div class="success-emoji" aria-hidden="true">🎉</div>
+      <h2 class="success-title" id="success-title">Great job!</h2>
+      <p class="success-word" id="success-word">dog</p>
+      <button class="pill-btn green" id="continue-btn" type="button">➡️ Next Word</button>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/week-4-phonics-data.js"></script>
+  <script src="../../js/letter-phonemes.js"></script>
+  <script>
+    const origin = new URLSearchParams(location.search).get('from') === 'phonics' ? 'phonics' : 'games';
+    document.getElementById('back-link').href = `phonics.html?from=${origin}`;
+
+    const WORDS = window.WEEK4_PHONICS.words.map(item => ({
+      ...item,
+      picture: `<img src="${item.image}" alt="${item.label}">`,
+      hint: `Build an -${item.family} word`
+    }));
+
+    const wordSpelling = document.getElementById('word-spelling');
+    const wordPicture = document.getElementById('word-picture');
+    const wordHint = document.getElementById('word-hint');
+    const slotsRow = document.getElementById('slots-row');
+    const lettersBank = document.getElementById('letters-bank');
+    const statusText = document.getElementById('status-text');
+    const successModal = document.getElementById('success-modal');
+    const successWord = document.getElementById('success-word');
+    const continueBtn = document.getElementById('continue-btn');
+    const hearWordBtn = document.getElementById('hear-word');
+    const newWordBtn = document.getElementById('new-word');
+    const clearWordBtn = document.getElementById('clear-word');
+
+    let current = null;
+    let rounds = [];
+    let roundIndex = 0;
+    let locked = false;
+    let placed = [];
+    let usVoice = null;
+    let dragTile = null;
+
+    const sounds = (() => {
+      let ctx = null;
+      function audio() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
+      }
+      function tone(frequency, start, duration, type = 'sine', volume = .14) {
+        const osc = audio().createOscillator();
+        const gain = audio().createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(audio().destination);
+        osc.start(start);
+        osc.stop(start + duration + .02);
+      }
+      return {
+        place() {
+          const now = audio().currentTime;
+          tone(520, now, .08, 'triangle', .1);
+        },
+        correct() {
+          const now = audio().currentTime;
+          tone(523, now, .12, 'sine', .15);
+          tone(659, now + .08, .12, 'sine', .15);
+          tone(784, now + .16, .2, 'sine', .17);
+        },
+        wrong() {
+          const now = audio().currentTime;
+          tone(220, now, .14, 'sawtooth', .07);
+          tone(175, now + .1, .18, 'sawtooth', .065);
+        }
+      };
+    })();
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function displayWord(word) {
+      return word.toLowerCase();
+    }
+
+    function displayLetter(letter) { return letter.toLowerCase(); }
+
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+      usVoice = voices.find(v => /^en[-_]US$/i.test(v.lang || '') && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => /^en[-_]US$/i.test(v.lang || ''))
+        || null;
+    }
+
+    if ('speechSynthesis' in window) {
+      pickVoice();
+      speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    }
+
+    function speak(text) {
+      return new Promise(resolve => {
+        if (!('speechSynthesis' in window)) {
+          resolve();
+          return;
+        }
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = .88;
+        if (usVoice) utterance.voice = usVoice;
+        utterance.onend = () => resolve();
+        utterance.onerror = () => resolve();
+        speechSynthesis.speak(utterance);
+      });
+    }
+
+    function pickWord() {
+      current = rounds[roundIndex];
+    }
+
+    function renderSlots() {
+      slotsRow.innerHTML = '';
+      slotsRow.classList.remove('wrong');
+      placed = Array(current.word.length).fill(null);
+
+      for (let i = 0; i < current.word.length; i++) {
+        const slot = document.createElement('button');
+        slot.type = 'button';
+        slot.className = 'letter-slot';
+        slot.dataset.index = String(i);
+        slot.setAttribute('aria-label', `Letter space ${i + 1}`);
+        slot.addEventListener('click', () => removeFromSlot(i));
+        slot.addEventListener('dragover', event => {
+          if (locked || placed[i]) return;
+          event.preventDefault();
+          slot.classList.add('drop-target');
+        });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drop-target'));
+        slot.addEventListener('drop', event => {
+          event.preventDefault();
+          slot.classList.remove('drop-target');
+          if (locked || placed[i] || !dragTile) return;
+          placeLetter(dragTile, i);
+          dragTile = null;
+        });
+        slotsRow.appendChild(slot);
+      }
+    }
+
+    function renderBank() {
+      lettersBank.innerHTML = '';
+      const letters = shuffle(current.word.split('').map((letter, index) => ({
+        id: `${letter}-${index}-${Math.random().toString(36).slice(2, 6)}`,
+        letter
+      })));
+
+      letters.forEach(item => {
+        const tile = document.createElement('button');
+        tile.type = 'button';
+        tile.className = 'letter-tile';
+        tile.textContent = displayLetter(item.letter);
+        tile.dataset.id = item.id;
+        tile.dataset.letter = item.letter;
+        tile.setAttribute('data-no-click-sound', '');
+        tile.draggable = true;
+        tile.setAttribute('aria-label', `Letter ${displayLetter(item.letter)}`);
+        tile.addEventListener('click', () => placeLetter(tile));
+        tile.addEventListener('dragstart', event => {
+          if (locked || tile.classList.contains('used')) {
+            event.preventDefault();
+            return;
+          }
+          dragTile = tile;
+          tile.classList.add('dragging');
+          event.dataTransfer.setData('text/plain', item.letter);
+          event.dataTransfer.effectAllowed = 'move';
+        });
+        tile.addEventListener('dragend', () => {
+          tile.classList.remove('dragging');
+          dragTile = null;
+          slotsRow.querySelectorAll('.drop-target').forEach(slot => slot.classList.remove('drop-target'));
+        });
+        lettersBank.appendChild(tile);
+      });
+    }
+
+    function nextEmptyIndex() {
+      return placed.findIndex(value => value === null);
+    }
+
+    function updateSlot(index) {
+      const slot = slotsRow.children[index];
+      const entry = placed[index];
+      if (!slot) return;
+
+      if (entry) {
+        slot.textContent = displayLetter(entry.letter);
+        slot.classList.add('filled');
+        slot.classList.remove('correct');
+        slot.setAttribute('aria-label', `Remove letter ${displayLetter(entry.letter)}`);
+      } else {
+        slot.textContent = '';
+        slot.classList.remove('filled', 'correct');
+        slot.setAttribute('aria-label', `Letter space ${index + 1}`);
+      }
+    }
+
+    function placeLetter(tile, targetIndex = null) {
+      if (locked || tile.classList.contains('used')) return;
+      const index = targetIndex == null ? nextEmptyIndex() : targetIndex;
+      if (index === -1 || placed[index]) return;
+
+      const letter = tile.dataset.letter;
+      placed[index] = {
+        letter,
+        tileId: tile.dataset.id
+      };
+      tile.classList.add('used');
+      tile.disabled = true;
+      tile.draggable = false;
+      updateSlot(index);
+      sounds.place();
+      statusText.textContent = '';
+
+      if (placed.every(Boolean)) {
+        locked = true;
+        window.setTimeout(() => {
+          Promise.resolve(playLetterPhoneme(letter)).then(checkWord);
+        }, 90);
+      } else {
+        window.setTimeout(() => playLetterPhoneme(letter), 90);
+      }
+    }
+
+    function removeFromSlot(index) {
+      if (locked) return;
+      const entry = placed[index];
+      if (!entry) return;
+
+      placed[index] = null;
+      updateSlot(index);
+
+      const tile = lettersBank.querySelector(`[data-id="${entry.tileId}"]`);
+      if (tile) {
+        tile.classList.remove('used');
+        tile.disabled = false;
+        tile.draggable = true;
+      }
+      statusText.textContent = '';
+    }
+
+    function clearWord() {
+      if (locked) return;
+      placed.forEach((_, index) => {
+        placed[index] = null;
+        updateSlot(index);
+      });
+      lettersBank.querySelectorAll('.letter-tile').forEach(tile => {
+        tile.classList.remove('used');
+        tile.disabled = false;
+        tile.draggable = true;
+      });
+      slotsRow.classList.remove('wrong');
+      statusText.textContent = '';
+    }
+
+    async function checkWord() {
+      const built = placed.map(entry => entry.letter).join('');
+      locked = true;
+
+      if (built === current.word) {
+        [...slotsRow.children].forEach(slot => slot.classList.add('correct'));
+        statusText.textContent = `You built ${displayWord(current.word)}!`;
+        await speak(current.word.toLowerCase());
+        sounds.correct();
+        successWord.textContent = displayWord(current.word);
+        const isFinal = roundIndex === rounds.length - 1;
+        document.getElementById('success-title').textContent = isFinal ? 'Review complete!' : 'Great job!';
+        continueBtn.textContent = isFinal ? '🔄 Play Again' : '➡️ Next Word';
+        successModal.hidden = false;
+        continueBtn.focus();
+        return;
+      }
+
+      sounds.wrong();
+      slotsRow.classList.add('wrong');
+      statusText.textContent = 'Almost! Try again.';
+      setTimeout(() => {
+        slotsRow.classList.remove('wrong');
+        locked = false;
+        clearWord();
+      }, 650);
+    }
+
+    function startRound() {
+      locked = false;
+      successModal.hidden = true;
+      statusText.textContent = '';
+      pickWord();
+      wordSpelling.textContent = current.word.toLowerCase();
+      wordPicture.innerHTML = current.picture;
+      wordHint.textContent = `Round ${roundIndex + 1} of ${rounds.length} · ${current.hint}`;
+      renderSlots();
+      renderBank();
+    }
+
+    function startGame() {
+      rounds = window.WEEK4_PHONICS.balancedRounds().map(item => WORDS.find(word => word.id === item.id));
+      roundIndex = 0;
+      startRound();
+    }
+
+    hearWordBtn.addEventListener('click', () => {
+      if (!current) return;
+      speak(current.word.toLowerCase());
+    });
+
+    newWordBtn.addEventListener('click', startGame);
+    clearWordBtn.addEventListener('click', clearWord);
+    continueBtn.addEventListener('click', () => {
+      if (roundIndex === rounds.length - 1) startGame();
+      else { roundIndex += 1; startRound(); }
+    });
+
+    startGame();
+  </script>
+</body>
+</html>

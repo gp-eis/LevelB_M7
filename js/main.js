@@ -253,24 +253,8 @@ function resolveLiteracyToolReturn(fallbackHref, fallbackText) {
 
 window.resolveLiteracyToolReturn = resolveLiteracyToolReturn;
 
-function guardClosedWeeks() {
-  const path = window.location.pathname.replace(/\\/g, '/');
-  const pathWeek = path.match(/(?:^|\/)week-([2-4])(?:[\/-][^/]*)?\.html$/i)
-    || path.match(/(?:^|\/)week-([2-4])(?:\/|$)/i);
-  const params = new URLSearchParams(window.location.search);
-  const queryWeek = Number(params.get('week'));
-  const sharedWeekTool = /\/(?:flashcards|tpr|conversation)\.html$/i.test(path);
-  if (!pathWeek && !(sharedWeekTool && queryWeek >= 2 && queryWeek <= 4)) return false;
-
-  const script = document.querySelector('script[src*="main.js"]');
-  const siteRoot = script ? new URL('../', script.src) : new URL('./', window.location.href);
-  window.location.replace(new URL('index.html', siteRoot).href);
-  return true;
-}
-
 (() => {
   document.documentElement.classList.add('js-ready');
-  if (guardClosedWeeks()) return;
   setupSiteSounds();
   setupLiteracyToolReturnLinks();
 

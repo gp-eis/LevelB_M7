@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 4 Letter Maze — Beekeeper</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .game-toolbar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .maze-board {
+      max-width: 760px;
+      margin: 20px auto 0;
+      padding: 22px 18px 26px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 10px 0 rgba(30,111,217,.12), 0 16px 30px rgba(74,59,82,.1);
+    }
+
+    .prompt-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .word-picture {
+      width: clamp(96px, 22vw, 130px);
+      height: clamp(96px, 22vw, 130px);
+      display: grid;
+      place-items: center;
+      border: 6px solid var(--blue);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #eef8ff, #fff);
+      font-size: clamp(3.4rem, 12vw, 5rem);
+      line-height: 1;
+      filter: drop-shadow(0 6px 4px rgba(30,58,95,.12));
+    }
+
+    .word-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+    }
+
+    .prompt-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prompt-hint {
+      color: var(--purple-d);
+      font-family: var(--font-friendly);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .maze-stage {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 640 / 340;
+      margin: 22px auto 0;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,217,61,.22), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(61,181,255,.18), transparent 42%),
+        #f7fcff;
+      border: 4px solid rgba(30,111,217,.15);
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .maze-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .path-line {
+      fill: none;
+      stroke: #c9dff5;
+      stroke-width: 18;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .path-line-inner {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 10 12;
+    }
+
+    .star-node {
+      font-size: 22px;
+      dominant-baseline: central;
+      text-anchor: middle;
+      opacity: .35;
+      transition: opacity .2s ease, transform .2s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .star-node.hit {
+      opacity: 1;
+      filter: drop-shadow(0 0 6px rgba(255, 200, 40, .9));
+    }
+
+    .letter-tile {
+      position: absolute;
+      width: 76px;
+      height: 58px;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(180deg, var(--pink), var(--pink-d));
+      box-shadow: 0 5px 0 #b83232;
+      color: var(--white);
+      font-family: var(--font-literacy);
+      font-size: 2rem;
+      font-weight: 800;
+      cursor: grab;
+      z-index: 3;
+      touch-action: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .letter-tile:active { cursor: grabbing; }
+    .letter-tile[hidden] { display: none; }
+    .letter-tile.dragging {
+      transform: translate(-50%, -50%) scale(1.08);
+      box-shadow: 0 8px 0 #b83232, 0 12px 20px rgba(74,59,82,.25);
+      z-index: 5;
+    }
+    .letter-tile.done {
+      cursor: default;
+      background: linear-gradient(180deg, var(--green), var(--green-d));
+      box-shadow: 0 5px 0 #3d8c1e;
+    }
+    .letter-tile:focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
+
+    .goal-slot {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      /* Keep the end of the path centered on the two-letter blank. */
+      transform: translate(calc(-100% + 38px), -50%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .blank-slot {
+      width: 76px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border: 4px dashed rgba(30,111,217,.4);
+      border-radius: 16px;
+      background: rgba(255,255,255,.85);
+      color: var(--blue-d);
+      font-family: var(--font-literacy);
+      font-size: 2rem;
+      font-weight: 800;
+      transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .blank-slot.ready {
+      border-style: solid;
+      border-color: var(--yellow);
+      background: #fff8d6;
+      box-shadow: 0 0 0 4px rgba(255,217,61,.35);
+    }
+
+    .blank-slot.filled {
+      border-style: solid;
+      border-color: var(--green);
+      background: #eaffdf;
+      box-shadow: 0 5px 0 var(--green-d);
+    }
+
+    .suffix-letters {
+      color: var(--text);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: .04em;
+      line-height: 1;
+    }
+
+    .status-text {
+      margin-top: 14px;
+      min-height: 1.4rem;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--purple-d);
+    }
+
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(30, 58, 95, .35);
+    }
+    .success-modal[hidden] { display: none; }
+    .success-card {
+      width: min(420px, 100%);
+      padding: 28px 24px;
+      border: 7px solid var(--yellow);
+      border-radius: 30px;
+      background: var(--white);
+      box-shadow: 0 14px 0 rgba(30,111,217,.2);
+      text-align: center;
+      animation: pop-in .45s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .success-emoji { font-size: 4rem; line-height: 1; }
+    .success-title {
+      margin: 10px 0 6px;
+      color: var(--pink-d);
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+    }
+    .success-word {
+      margin-bottom: 18px;
+      color: var(--blue-d);
+      font-family: var(--font-literacy);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 560px) {
+      .maze-board { padding: 16px 10px 20px; }
+      .letter-tile, .blank-slot { width: 68px; height: 48px; font-size: 1.6rem; }
+      .goal-slot { transform: translate(calc(-100% + 34px), -50%); }
+      .suffix-letters { font-size: 1.6rem; }
+      .path-line { stroke-width: 14; }
+    }
+  </style>
+</head>
+<body class="phonics-activity-page">
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">⭐</span>
+    <span style="top:72%; left:92%;">🔤</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" id="back-link" href="phonics.html">⬅️ Phonics Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/phonics-games/letter-maze-3d.png" alt="">Letter Maze</h1>
+      <p class="subtitle">Guide -og, -op, or -ot along the path to finish the word!</p>
+    </header>
+
+    <div class="game-toolbar">
+      <button class="pill-btn orange" id="new-word" type="button">🔄 New Game</button>
+    </div>
+
+    <section class="maze-board" aria-label="Letter maze game">
+      <div class="prompt-row">
+        <div class="word-picture" id="word-picture" aria-hidden="true">🥛</div>
+        <div class="prompt-actions">
+          <button class="pill-btn" id="hear-word" type="button">🔊 Hear the Word</button>
+          <p class="prompt-hint">Follow the path and collect the stars!</p>
+        </div>
+      </div>
+
+      <div class="maze-stage" id="maze-stage">
+        <svg class="maze-svg" id="maze-svg" viewBox="0 0 640 340" aria-hidden="true">
+          <path class="path-line" id="path-line" d=""></path>
+          <path class="path-line-inner" id="path-line-inner" d=""></path>
+          <g id="stars-layer"></g>
+        </svg>
+
+        <div class="goal-slot" id="goal-slot">
+          <span class="suffix-letters" id="initial-letter">c</span>
+          <div class="blank-slot" id="blank-slot" aria-label="Missing ot sound"></div>
+        </div>
+
+        <button class="letter-tile" id="letter-tile" type="button" aria-label="Drag ot">ot</button>
+      </div>
+
+      <p class="status-text" id="status-text" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true"
+       aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <div class="success-emoji" aria-hidden="true">🎉</div>
+      <h2 class="success-title" id="success-title">You made the word!</h2>
+      <p class="success-word" id="success-word">dog</p>
+      <button class="pill-btn green" id="continue-btn" type="button">➡️ Next Word</button>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/week-4-phonics-data.js"></script>
+  <script>
+    const origin = new URLSearchParams(location.search).get('from') === 'phonics' ? 'phonics' : 'games';
+    document.getElementById('back-link').href = `phonics.html?from=${origin}`;
+
+    const WORDS = window.WEEK4_PHONICS.words;
+
+    const PATH_LAYOUTS = [
+      // Zigzag mountain
+      [
+        { x: 70, y: 250 }, { x: 180, y: 80 }, { x: 320, y: 250 },
+        { x: 460, y: 80 }, { x: 560, y: 170 }
+      ],
+      // Zigzag valley
+      [
+        { x: 70, y: 90 }, { x: 180, y: 260 }, { x: 320, y: 80 },
+        { x: 460, y: 260 }, { x: 560, y: 170 }
+      ],
+      // Wide S-curve
+      [
+        { x: 60, y: 80 }, { x: 200, y: 80 }, { x: 320, y: 260 },
+        { x: 460, y: 260 }, { x: 560, y: 170 }
+      ],
+      // Reverse S-curve
+      [
+        { x: 60, y: 260 }, { x: 200, y: 260 }, { x: 320, y: 80 },
+        { x: 460, y: 80 }, { x: 560, y: 170 }
+      ],
+      // Horseshoe / U-turn
+      [
+        { x: 90, y: 70 }, { x: 90, y: 260 }, { x: 320, y: 280 },
+        { x: 520, y: 180 }, { x: 560, y: 100 }
+      ],
+      // Upside-down U
+      [
+        { x: 80, y: 280 }, { x: 80, y: 100 }, { x: 320, y: 60 },
+        { x: 520, y: 140 }, { x: 560, y: 240 }
+      ],
+      // Stair steps climbing
+      [
+        { x: 60, y: 280 }, { x: 180, y: 280 }, { x: 180, y: 160 },
+        { x: 360, y: 160 }, { x: 360, y: 70 }, { x: 560, y: 70 }
+      ],
+      // Stair steps descending
+      [
+        { x: 60, y: 70 }, { x: 180, y: 70 }, { x: 180, y: 180 },
+        { x: 360, y: 180 }, { x: 360, y: 280 }, { x: 560, y: 280 }
+      ],
+      // Border loop then finish right
+      [
+        { x: 70, y: 70 }, { x: 540, y: 70 }, { x: 540, y: 260 },
+        { x: 120, y: 260 }, { x: 120, y: 160 }, { x: 560, y: 160 }
+      ],
+      // Spiral-ish swirl into the goal
+      [
+        { x: 90, y: 170 }, { x: 90, y: 70 }, { x: 500, y: 70 },
+        { x: 500, y: 250 }, { x: 220, y: 250 }, { x: 560, y: 160 }
+      ],
+      // Diagonal sweep down-right then up
+      [
+        { x: 70, y: 60 }, { x: 220, y: 160 }, { x: 360, y: 280 },
+        { x: 500, y: 180 }, { x: 560, y: 110 }
+      ],
+      // Diagonal sweep up-right then down
+      [
+        { x: 70, y: 290 }, { x: 220, y: 190 }, { x: 360, y: 70 },
+        { x: 500, y: 160 }, { x: 560, y: 240 }
+      ],
+      // Sideways C opening right
+      [
+        { x: 220, y: 70 }, { x: 80, y: 70 }, { x: 80, y: 270 },
+        { x: 240, y: 270 }, { x: 560, y: 170 }
+      ],
+      // Lightning bolt
+      [
+        { x: 100, y: 60 }, { x: 260, y: 60 }, { x: 160, y: 180 },
+        { x: 340, y: 180 }, { x: 240, y: 290 }, { x: 560, y: 170 }
+      ],
+      // Soft wave across the middle
+      [
+        { x: 60, y: 170 }, { x: 180, y: 80 }, { x: 320, y: 260 },
+        { x: 450, y: 90 }, { x: 560, y: 170 }
+      ],
+      // Bottom runway then sharp climb
+      [
+        { x: 60, y: 280 }, { x: 220, y: 280 }, { x: 380, y: 280 },
+        { x: 480, y: 140 }, { x: 560, y: 80 }
+      ],
+      // Top runway then drop to goal
+      [
+        { x: 60, y: 70 }, { x: 220, y: 70 }, { x: 380, y: 70 },
+        { x: 480, y: 180 }, { x: 560, y: 260 }
+      ],
+      // Arc bow from bottom-left to right
+      [
+        { x: 70, y: 280 }, { x: 170, y: 120 }, { x: 320, y: 60 },
+        { x: 470, y: 120 }, { x: 560, y: 250 }
+      ]
+    ];
+
+    function chooseStarIndexes(points) {
+      const intermediates = [];
+      for (let i = 1; i < points.length - 1; i++) intermediates.push(i);
+      if (intermediates.length <= 3) return intermediates;
+
+      const first = intermediates[0];
+      const middle = intermediates[Math.floor((intermediates.length - 1) / 2)];
+      const last = intermediates[intermediates.length - 1];
+      return [...new Set([first, middle, last])];
+    }
+
+    const wordPicture = document.getElementById('word-picture');
+    const mazeStage = document.getElementById('maze-stage');
+    const pathLine = document.getElementById('path-line');
+    const pathLineInner = document.getElementById('path-line-inner');
+    const starsLayer = document.getElementById('stars-layer');
+    const letterTile = document.getElementById('letter-tile');
+    const goalSlot = document.getElementById('goal-slot');
+    const blankSlot = document.getElementById('blank-slot');
+    const initialLetter = document.getElementById('initial-letter');
+    const statusText = document.getElementById('status-text');
+    const successModal = document.getElementById('success-modal');
+    const successWord = document.getElementById('success-word');
+    const continueBtn = document.getElementById('continue-btn');
+    const hearWordBtn = document.getElementById('hear-word');
+    const newWordBtn = document.getElementById('new-word');
+
+    const VIEW_W = 640;
+    const VIEW_H = 340;
+    const HIT_RADIUS = 42;
+
+    let current = null;
+    let rounds = [];
+    let roundIndex = 0;
+    let lastPathIndex = -1;
+    let pathPoints = [];
+    let starIndexes = [];
+    let hitStars = new Set();
+    let progressIndex = 0;
+    let dragging = false;
+    let completed = false;
+    let usVoice = null;
+    let activePointerId = null;
+
+    const sounds = (() => {
+      let ctx = null;
+      function audio() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
+      }
+      function tone(frequency, start, duration, type = 'sine', volume = .14) {
+        const osc = audio().createOscillator();
+        const gain = audio().createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(audio().destination);
+        osc.start(start);
+        osc.stop(start + duration + .02);
+      }
+      return {
+        star() {
+          const now = audio().currentTime;
+          tone(740, now, .1, 'sine', .12);
+          tone(980, now + .06, .12, 'sine', .12);
+        },
+        correct() {
+          const now = audio().currentTime;
+          tone(523, now, .12, 'sine', .15);
+          tone(659, now + .08, .12, 'sine', .15);
+          tone(784, now + .16, .2, 'sine', .17);
+        }
+      };
+    })();
+
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+      usVoice = voices.find(v => /^en[-_]US$/i.test(v.lang || '') && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => /^en[-_]US$/i.test(v.lang || ''))
+        || null;
+    }
+
+    if ('speechSynthesis' in window) {
+      pickVoice();
+      speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    }
+
+    function speak(text) {
+      return new Promise(resolve => {
+        if (!('speechSynthesis' in window)) {
+          resolve();
+          return;
+        }
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = .9;
+        if (usVoice) utterance.voice = usVoice;
+        utterance.onend = () => resolve();
+        utterance.onerror = () => resolve();
+        speechSynthesis.speak(utterance);
+      });
+    }
+
+    function displayWord(word) {
+      return word.toLowerCase();
+    }
+
+    function pathToD(points) {
+      return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
+    }
+
+    function distance(a, b) {
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      return Math.hypot(dx, dy);
+    }
+
+    function stageToView(clientX, clientY) {
+      const rect = mazeStage.getBoundingClientRect();
+      return {
+        x: ((clientX - rect.left) / rect.width) * VIEW_W,
+        y: ((clientY - rect.top) / rect.height) * VIEW_H
+      };
+    }
+
+    function setTilePosition(point) {
+      letterTile.style.left = `${(point.x / VIEW_W) * 100}%`;
+      letterTile.style.top = `${(point.y / VIEW_H) * 100}%`;
+    }
+
+    function setGoalPosition(point) {
+      goalSlot.style.left = `${(point.x / VIEW_W) * 100}%`;
+      goalSlot.style.top = `${(point.y / VIEW_H) * 100}%`;
+    }
+
+    function fitFinishPoint(point) {
+      const stageWidth = mazeStage.clientWidth || VIEW_W;
+      const spaceAfterBlankCenter = goalSlot.offsetWidth - (blankSlot.offsetWidth / 2);
+      const safePixelX = stageWidth - spaceAfterBlankCenter - 12;
+      point.x = Math.min(point.x, Math.max(80, (safePixelX / stageWidth) * VIEW_W));
+    }
+
+    function nearestPointOnSegment(point, a, b) {
+      const abx = b.x - a.x;
+      const aby = b.y - a.y;
+      const lengthSq = abx * abx + aby * aby || 1;
+      let t = ((point.x - a.x) * abx + (point.y - a.y) * aby) / lengthSq;
+      t = Math.max(0, Math.min(1, t));
+      return { x: a.x + abx * t, y: a.y + aby * t, t };
+    }
+
+    function projectOntoPath(point) {
+      let best = null;
+      for (let i = 0; i < pathPoints.length - 1; i++) {
+        const projected = nearestPointOnSegment(point, pathPoints[i], pathPoints[i + 1]);
+        const dist = distance(point, projected);
+        if (!best || dist < best.dist) {
+          best = { ...projected, segment: i, dist };
+        }
+      }
+      return best;
+    }
+
+    function renderPath() {
+      const d = pathToD(pathPoints);
+      pathLine.setAttribute('d', d);
+      pathLineInner.setAttribute('d', d);
+      starsLayer.innerHTML = '';
+
+      starIndexes.forEach((index, starNumber) => {
+        const point = pathPoints[index];
+        const star = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        star.classList.add('star-node');
+        star.dataset.starIndex = String(index);
+        star.setAttribute('x', point.x);
+        star.setAttribute('y', point.y);
+        star.textContent = '⭐';
+        star.setAttribute('aria-label', `Star ${starNumber + 1}`);
+        starsLayer.appendChild(star);
+      });
+    }
+
+    function updateStars() {
+      starsLayer.querySelectorAll('.star-node').forEach(star => {
+        const index = Number(star.dataset.starIndex);
+        star.classList.toggle('hit', hitStars.has(index));
+      });
+    }
+
+    function setPicture(item) {
+      wordPicture.innerHTML = '';
+      const img = document.createElement('img');
+      img.alt = item.word.toLowerCase();
+      img.onerror = () => {
+        wordPicture.textContent = item.emoji;
+      };
+      img.src = item.image;
+      wordPicture.appendChild(img);
+    }
+
+    function pickWord() {
+      current = rounds[roundIndex];
+    }
+
+    function startRound() {
+      completed = false;
+      dragging = false;
+      activePointerId = null;
+      hitStars = new Set();
+      progressIndex = 0;
+      successModal.hidden = true;
+      blankSlot.textContent = '';
+      blankSlot.classList.remove('filled', 'ready');
+      letterTile.classList.remove('done', 'dragging');
+      letterTile.hidden = false;
+      statusText.textContent = `Round ${roundIndex + 1} of ${rounds.length} · Follow the path and collect 3 stars!`;
+
+      pickWord();
+      setPicture(current);
+      initialLetter.textContent = current.initial.toLowerCase();
+      letterTile.textContent = current.suffix;
+      letterTile.setAttribute('aria-label', `Drag ${current.suffix}`);
+      blankSlot.setAttribute('aria-label', `Missing ${current.suffix} sound`);
+
+      let pathIndex;
+      do {
+        pathIndex = Math.floor(Math.random() * PATH_LAYOUTS.length);
+      } while (PATH_LAYOUTS.length > 1 && pathIndex === lastPathIndex);
+      lastPathIndex = pathIndex;
+      pathPoints = PATH_LAYOUTS[pathIndex].map(point => ({ ...point }));
+      /* Leave room for the full word while keeping the final tile centered in its box. */
+      fitFinishPoint(pathPoints[pathPoints.length - 1]);
+      starIndexes = chooseStarIndexes(pathPoints);
+
+      renderPath();
+      updateStars();
+      setTilePosition(pathPoints[0]);
+      setGoalPosition(pathPoints[pathPoints.length - 1]);
+    }
+
+    function nextRequiredStar() {
+      return starIndexes.find(index => !hitStars.has(index));
+    }
+
+    function tryHitStars(point) {
+      const nextStar = nextRequiredStar();
+      if (nextStar == null) {
+        blankSlot.classList.toggle('ready', !completed);
+        return true;
+      }
+
+      if (distance(point, pathPoints[nextStar]) <= HIT_RADIUS) {
+        hitStars.add(nextStar);
+        progressIndex = nextStar;
+        sounds.star();
+        updateStars();
+        statusText.textContent = `Stars: ${hitStars.size} / 3`;
+      }
+
+      const allHit = hitStars.size === 3;
+      blankSlot.classList.toggle('ready', allHit && !completed);
+      return allHit;
+    }
+
+    function completeWord() {
+      if (completed) return;
+      completed = true;
+      dragging = false;
+      letterTile.classList.remove('dragging');
+      letterTile.classList.add('done');
+      letterTile.hidden = true;
+      blankSlot.textContent = current.suffix;
+      blankSlot.classList.add('filled');
+      blankSlot.classList.remove('ready');
+      sounds.correct();
+      statusText.textContent = `You built ${displayWord(current.word)}!`;
+      successWord.textContent = displayWord(current.word);
+      const isFinal = roundIndex === rounds.length - 1;
+      document.getElementById('success-title').textContent = isFinal ? 'Review complete!' : 'You made the word!';
+      continueBtn.textContent = isFinal ? '🔄 Play Again' : '➡️ Next Word';
+      successModal.hidden = false;
+      continueBtn.focus();
+      speak(current.word.toLowerCase());
+    }
+
+    function onPointerDown(event) {
+      if (completed) return;
+      activePointerId = event.pointerId;
+      dragging = true;
+      letterTile.classList.add('dragging');
+      letterTile.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    }
+
+    function onPointerMove(event) {
+      if (!dragging || completed || event.pointerId !== activePointerId) return;
+
+      const pointer = stageToView(event.clientX, event.clientY);
+      const projected = projectOntoPath(pointer);
+      if (!projected) return;
+
+      // Keep the tile on the path and only as far as the next star (or the goal).
+      const nextStar = nextRequiredStar();
+      const maxSegment = nextStar == null
+        ? pathPoints.length - 2
+        : Math.min(pathPoints.length - 2, nextStar);
+      let nextPoint = projected;
+      if (projected.segment > maxSegment) {
+        nextPoint = pathPoints[Math.min(maxSegment + 1, pathPoints.length - 1)];
+      }
+
+      const point = typeof nextPoint.x === 'number'
+        ? { x: nextPoint.x, y: nextPoint.y }
+        : nextPoint;
+
+      setTilePosition(point);
+      const allHit = tryHitStars(point);
+      const end = pathPoints[pathPoints.length - 1];
+      if (allHit && distance(point, end) <= HIT_RADIUS) completeWord();
+    }
+
+    function onPointerUp(event) {
+      if (event.pointerId !== activePointerId) return;
+      dragging = false;
+      activePointerId = null;
+      letterTile.classList.remove('dragging');
+      try {
+        letterTile.releasePointerCapture(event.pointerId);
+      } catch (_) {}
+    }
+
+    letterTile.addEventListener('pointerdown', onPointerDown);
+    letterTile.addEventListener('pointermove', onPointerMove);
+    letterTile.addEventListener('pointerup', onPointerUp);
+    letterTile.addEventListener('pointercancel', onPointerUp);
+
+    hearWordBtn.addEventListener('click', () => {
+      if (!current) return;
+      speak(current.word.toLowerCase());
+    });
+
+    function startGame() {
+      rounds = window.WEEK4_PHONICS.balancedRounds();
+      roundIndex = 0;
+      startRound();
+    }
+
+    newWordBtn.addEventListener('click', startGame);
+    continueBtn.addEventListener('click', () => {
+      if (roundIndex === rounds.length - 1) startGame();
+      else { roundIndex += 1; startRound(); }
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
