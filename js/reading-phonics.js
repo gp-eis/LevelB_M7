@@ -27,7 +27,7 @@
   };
   const phonicsVideo = isReading ? null : phonicsVideos[week];
   const readingThumbnails = {
-    1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.png'
+    1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.webp'
   };
   const readingThumbnail = isReading ? readingThumbnails[week] : null;
   const phonicsGamesHref = week === 1
