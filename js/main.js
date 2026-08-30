@@ -253,10 +253,35 @@ function resolveLiteracyToolReturn(fallbackHref, fallbackText) {
 
 window.resolveLiteracyToolReturn = resolveLiteracyToolReturn;
 
+function setupGameWeekHomeButton() {
+  const path = window.location.pathname.replace(/\\/g, '/');
+  if (!/\/games\//i.test(path) || document.querySelector('.game-week-home-link')) return;
+
+  const fileName = (path.split('/').pop() || '').toLowerCase();
+  const nonActivityPages = new Set(['', 'index.html', 'phonics.html', 'placeholder.html', 'phonics-placeholder.html']);
+  if (nonActivityPages.has(fileName)) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const queryWeek = Number(params.get('week'));
+  const folderWeek = Number(path.match(/\/games\/week-([1-4])\//i)?.[1]);
+  const fileWeek = Number(fileName.match(/^week-([1-4])-/i)?.[1]);
+  const bodyWeek = Number(document.body.dataset.gameWeek || document.body.dataset.week);
+  const week = [queryWeek, bodyWeek, folderWeek, fileWeek].find((value) => value >= 1 && value <= 4) || 1;
+  const isNestedWeekFolder = /\/games\/week-[1-4]\//i.test(path);
+
+  const homeLink = document.createElement('a');
+  homeLink.className = 'back-link game-week-home-link';
+  homeLink.href = `${isNestedWeekFolder ? '../../' : '../'}week-${week}.html#card-games`;
+  homeLink.setAttribute('aria-label', `Return to Week ${week} lesson selection`);
+  homeLink.innerHTML = '<span aria-hidden="true">🏠</span><span>Home</span>';
+  document.body.appendChild(homeLink);
+}
+
 (() => {
   document.documentElement.classList.add('js-ready');
   setupSiteSounds();
   setupLiteracyToolReturnLinks();
+  setupGameWeekHomeButton();
 
   const script = document.querySelector('script[src*="main.js"]');
   const assetsBase = script
