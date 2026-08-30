@@ -11,13 +11,16 @@
     4: 'I am Lorenzo Langstroth.'
   };
   const isReading = track === 'reading';
+  const readingVideoTemporarilyDisabled = isReading && week >= 2 && week <= 4;
   const label = isReading ? 'Reading' : 'Phonics';
   const heading = isReading ? `Reading \u2014 Week ${week}` : `Week ${week} \u2014 Phonics`;
   const titleIcon = isReading ? '\u{1F4D6}' : '\u{1F524}';
   const activityIcon = isReading ? '\u{1F3C5}' : '\u{1F524}';
   const activityHeading = isReading ? 'Watch and Play!' : 'Check What You Learned';
   const activityCopy = isReading
-    ? 'After watching the story, continue to the reading activity.'
+    ? (readingVideoTemporarilyDisabled
+      ? 'The reading activity remains available while the video is being updated.'
+      : 'After watching the story, continue to the reading activity.')
     : 'After watching the lesson, try a short phonics activity.';
   const phonicsVideos = {
     1: '../assets/video/week-1/phonics/week-1.mp4',
@@ -26,11 +29,14 @@
     4: '../assets/video/week-4/phonics/week-4.mp4'
   };
   const readingVideos = {
+    1: '../assets/video/week-1/reading/who-is-the-queen.mp4',
     2: '../assets/video/week-2/reading/world-bee-day.mp4',
     3: '../assets/video/week-3/reading/zoom-to-space.mp4',
     4: '../assets/video/week-4/reading/week-4-reading.mp4'
   };
-  const activeVideo = isReading ? readingVideos[week] : phonicsVideos[week];
+  const activeVideo = isReading
+    ? (readingVideoTemporarilyDisabled ? null : readingVideos[week])
+    : phonicsVideos[week];
   const readingThumbnails = {
     1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.webp',
     2: '../assets/images/week-2/reading/world-bee-day-thumbnail.png',
@@ -44,10 +50,6 @@
     4: 'The Story of Lorenzo Langstroth reading thumbnail'
   };
   const readingThumbnail = isReading ? readingThumbnails[week] : null;
-  const readingActivityHrefs = {
-    2: 'week-2-activity.html',
-    3: 'week-3-activity.html'
-  };
   const phonicsGamesHref = week === 1
     ? '../games/phonics.html?from=phonics'
     : `../games/week-${week}/phonics.html?from=phonics`;
@@ -92,17 +94,17 @@
           <button class="center-video-play-placeholder" type="button" aria-label="${label} video placeholder" disabled>\u25B6</button>
         </div>
       `}
-      ${isReading ? '<p class="track-note">Watch the story, then try the reading activity!</p>' : ''}
+      ${isReading
+        ? `<p class="track-note">${readingVideoTemporarilyDisabled
+          ? 'This reading video is being updated. Please check back soon!'
+          : 'Watch the story, then try the reading activity!'}</p>`
+        : ''}
     </section>
     <section class="track-card track-activity-card" aria-label="Week ${week} ${label} activity">
       <h2 class="section-title">\u2B50 ${activityHeading}</h2>
       <p>${activityCopy}</p>
       ${isReading
-        ? (week === 4
-          ? `<button class="track-activity-btn" id="week-4-reading-open" type="button"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></button><div id="week-4-reading-activity"></div>`
-          : (readingActivityHrefs[week]
-            ? `<a class="track-activity-btn" href="${readingActivityHrefs[week]}"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></a>`
-            : `<button class="track-activity-btn" type="button" disabled><span aria-hidden="true">${activityIcon}</span><span>Activity Placeholder</span></button>`))
+        ? `<button class="track-activity-btn" type="button" disabled><span aria-hidden="true">${activityIcon}</span><span>Loading Activity</span></button>`
         : `<a class="track-activity-btn" href="${phonicsGamesHref}"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></a>`}
     </section>`;
 

@@ -319,7 +319,7 @@
   }
 
   function setupSpin() {
-    app.innerHTML = `${pageStart('game-wheel.webp','Spin the Wheel','Spin slowly, press stop, then flip your picture card!',['🎡','⭐'])}
+    app.innerHTML = `${pageStart('game-wheel.webp','Spin the Wheel','Spin fast, press stop, then see what you get!',['🎡','⭐'])}
       <div class="wheel-wrap"><div class="pointer" aria-hidden="true"></div><div id="wheel" aria-label="Wheel with five bee actions"></div></div>
       <div id="result" role="status" aria-live="polite"></div>
       <div class="wheel-actions"><button class="pill-btn wheel-action-btn" id="spin-btn" type="button">🎡 SPIN!</button><button class="pill-btn wheel-action-btn stop-btn" id="stop-btn" type="button" hidden>🛑 STOP!</button></div>
@@ -339,8 +339,10 @@
     const backImage = document.getElementById('back-image');
     const cardWord = document.getElementById('card-word');
     const cardSentence = document.getElementById('card-sentence');
-    const segmentAngle = 360 / actions.length;
-    const spinSpeed = 75;
+    const bonus = window.SpinWheelBonus;
+    const wheelActions = [...actions, ...bonus.createSegments()];
+    const segmentAngle = 360 / wheelActions.length;
+    const spinSpeed = 540;
     let rotation = 0;
     let spinning = false;
     let stopping = false;
@@ -348,11 +350,12 @@
     let lastFrameTime = 0;
     let currentAction = null;
 
-    wheel.style.background = `conic-gradient(${actions.map((action,index) => `${action.color} ${index*segmentAngle}deg ${(index+1)*segmentAngle}deg`).join(',')})`;
-    actions.forEach((action,index) => {
+    wheel.style.background = `conic-gradient(${wheelActions.map((action,index) => `${action.color} ${index*segmentAngle}deg ${(index+1)*segmentAngle}deg`).join(',')})`;
+    wheelActions.forEach((action,index) => {
       const angle = (index*segmentAngle + segmentAngle/2) * Math.PI / 180;
       const label = document.createElement('span');
       label.className = 'wheel-label';
+      label.style.width = `${Math.max(16, 170 / wheelActions.length)}%`;
       label.style.setProperty('--label-x',`${50 + Math.sin(angle)*30}%`);
       label.style.setProperty('--label-y',`${50 - Math.cos(angle)*30}%`);
       label.innerHTML = `<img src="${action.image}" alt="" aria-hidden="true">`;
@@ -400,7 +403,7 @@
     function finishSpin() {
       const normalized = ((rotation%360)+360)%360;
       const pointerAngle = (360-normalized)%360;
-      const index = Math.floor(pointerAngle/segmentAngle)%actions.length;
+      const index = Math.floor(pointerAngle/segmentAngle)%wheelActions.length;
       spinning = false;
       stopping = false;
       document.body.classList.remove('wheel-is-spinning');
@@ -408,7 +411,15 @@
       stopButton.disabled = false;
       spinButton.hidden = false;
       spinButton.disabled = false;
-      showSelected(actions[index]);
+      const selected = wheelActions[index];
+      if (bonus.show(selected, {
+        onSpinAgain: () => spinButton.click(),
+        onClose: () => spinButton.focus({preventScroll:true})
+      })) {
+        result.textContent = selected.sentence;
+        return;
+      }
+      showSelected(selected);
     }
 
     spinButton.addEventListener('click', () => {

@@ -260,7 +260,7 @@
 
     <header style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-wheel.webp" alt="">Spin the Wheel</h1>
-      <p class="subtitle">Spin slowly, press stop, then flip your Week 4 picture card!</p>
+      <p class="subtitle">Spin fast, press stop, then see what you get!</p>
     </header>
 
     <div class="wheel-wrap">
@@ -296,13 +296,15 @@
 
   <script src="../../js/main.js"></script>
   <script src="../../js/week-4-vocabulary-data.js"></script>
+  <script src="../../js/spin-wheel-bonus.js"></script>
   <script>
     const WHEEL_COLORS = ['#7ed957', '#b388ff', '#ffa62b', '#ff8f66', '#2ec4b6', '#ff6fa5'];
-    const SEGMENTS = window.WEEK4_VOCABULARY.map((item, index) => ({
+    const LESSON_SEGMENTS = window.WEEK4_VOCABULARY.map((item, index) => ({
       ...item,
       word: item.label,
       color: WHEEL_COLORS[index]
     }));
+    const SEGMENTS = [...LESSON_SEGMENTS, ...window.SpinWheelBonus.createSegments()];
 
     const wheel = document.getElementById('wheel');
     const resultEl = document.getElementById('result');
@@ -315,7 +317,7 @@
     const backImage = document.getElementById('back-image');
     const cardWord = document.getElementById('card-word');
     const cardSentence = document.getElementById('card-sentence');
-    const SPIN_SPEED = 75;
+    const SPIN_SPEED = 540;
     const segmentAngle = 360 / SEGMENTS.length;
     let rotation = 0;
     let spinning = false;
@@ -345,6 +347,7 @@
       const label = document.createElement('span');
       const angle = (index * segmentAngle + segmentAngle / 2) * Math.PI / 180;
       label.className = 'wheel-label';
+      label.style.width = `${Math.max(16, 170 / SEGMENTS.length)}%`;
       const image = document.createElement('img');
       image.src = segment.image;
       image.alt = '';
@@ -399,7 +402,15 @@
       stopBtn.disabled = false;
       spinBtn.hidden = false;
       spinBtn.disabled = false;
-      showSelectedCard(SEGMENTS[index]);
+      const selected = SEGMENTS[index];
+      if (window.SpinWheelBonus.show(selected, {
+        onSpinAgain: () => spinBtn.click(),
+        onClose: () => spinBtn.focus({ preventScroll: true })
+      })) {
+        resultEl.textContent = selected.sentence;
+        return;
+      }
+      showSelectedCard(selected);
     }
 
     spinBtn.addEventListener('click', () => {

@@ -3,42 +3,42 @@
   const QUESTIONS = [
     {
       kicker: 'From the video',
-      question: 'How does the bee feel in spring?',
-      image: 'question-spring.png',
-      imageAlt: 'A bright spring garden filled with colorful flowers.',
+      question: 'Why do we have World Bee Day?',
+      image: 'question-mark-3d.png',
+      imageAlt: 'A colorful three-dimensional question mark.',
       answers: [
-        { text: 'The bee feels warm and happy.', image: 'spring-warm.png', alt: 'A warm and happy bee in a spring meadow.', correct: true },
-        { text: 'The bee feels cold and shivery.', image: 'winter-cold.png', alt: 'A cold bee shivering in snow.', correct: false }
+        { text: 'To help people learn why bees are important.', image: 'q1-bees-important-photo.png', alt: 'A teacher and children learning about bees beside flowers.', correct: true },
+        { text: 'To catch bees when they are flying outside.', image: 'q1-catch-bees-photo.png', alt: 'A child holding a net while bees fly outside.', correct: false }
       ]
     },
     {
       kicker: 'From the video',
-      question: 'How many bees can you see in summer?',
+      question: 'When is World Bee Day?',
       image: 'question-mark-3d.png',
       imageAlt: 'A colorful three-dimensional question mark.',
       answers: [
-        { text: 'I can see two hot bees.', image: 'summer-two-bees.png', alt: 'Two bees in a sunny summer meadow.', correct: true },
-        { text: 'I can see three cool bees.', image: 'fall-three-bees.png', alt: 'Three bees in a fall meadow.', correct: false }
+        { text: 'It is on May 20th.', image: 'q2-may-20-photo.png', alt: 'A May 20 calendar beside a bee on a flower.', correct: true },
+        { text: 'It is on June 20th.', image: 'q2-june-20-photo.png', alt: 'A June 20 calendar beside a bee on a flower.', correct: false }
       ]
     },
     {
       kicker: 'From the video',
-      question: 'Where do the bees go in winter?',
+      question: 'How do bees help plants make fruit?',
       image: 'question-mark-3d.png',
       imageAlt: 'A colorful three-dimensional question mark.',
       answers: [
-        { text: 'The bees go into the hive.', image: 'winter-inside-hive.png', alt: 'Bees keeping warm together inside the hive.', correct: true },
-        { text: 'The bees stay outside in the snow.', image: 'winter-outside-hive.png', alt: 'Cold bees standing outside in winter snow.', correct: false }
+        { text: 'They help pollinate flowers.', image: 'q3-pollinate-photo.png', alt: 'A honeybee pollinating a pink fruit-tree blossom.', correct: true },
+        { text: 'They water the trees.', image: 'q3-water-trees-photo.png', alt: 'A honeybee using a tiny watering can beside a young tree.', correct: false }
       ]
     },
     {
-      kicker: 'Think about nature',
-      question: 'Where should we put our trash?',
+      kicker: 'Think about the lesson',
+      question: 'What can we do to protect bees?',
       image: 'question-mark-3d.png',
-      imageAlt: 'A colorful question mark invites children to think about caring for nature.',
+      imageAlt: 'A colorful three-dimensional question mark.',
       answers: [
-        { text: 'In the trash bin.', image: 'answer-trash-bin.webp', alt: 'A child puts litter into a colorful outdoor trash bin.', correct: true },
-        { text: 'On the flowers.', image: 'answer-trash-on-flowers.webp', alt: 'A child drops litter onto sad flowers instead of using the nearby bin.', correct: false }
+        { text: 'We can plant flowers that bees like.', image: 'q4-plant-flowers-photo.png', alt: 'A child planting colorful flowers that attract bees.', correct: true },
+        { text: 'We can chase the bees.', image: 'q4-chase-bees-photo.png', alt: 'An adult gardener shooing bees away from flowers with a hat.', correct: false }
       ]
     }
   ];

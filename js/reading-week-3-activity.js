@@ -2,39 +2,39 @@
   const ASSET = '../assets/images/week-3/reading/activity/';
   const ROUNDS = [
     {
-      question: "What was the alien's planet like at the beginning?",
-      picture: 'q1-question.webp',
-      pictureAlt: 'The friendly alien describes a gray, bare planet to the child.',
+      question: 'What do we wear when we go to space?',
+      picture: 'life-q1-question.webp',
+      pictureAlt: 'A child thinks beside a large question mark in space.',
       options: [
-        { text: 'It was gray and bare.', image: 'q1-gray-bare.webp', alt: 'The sad alien stands on a gray, rocky planet with no plants.', correct: true },
-        { text: 'It was green with plants.', image: 'q1-green-plants.webp', alt: 'The child and alien stand on a lush green planet full of plants.' }
+        { text: 'A spacesuit.', image: 'life-q1-spacesuit.webp', alt: 'A complete white and blue spacesuit with a helmet, gloves, and boots.', correct: true },
+        { text: 'A swimsuit.', image: 'life-q1-swimsuit.webp', alt: 'A colorful swimsuit and swimming goggles beside a pool.' }
       ]
     },
     {
-      question: "What did the child take to the alien's planet?",
-      picture: 'q2-question.webp',
-      pictureAlt: 'The child shows seeds to the excited alien beside the spaceship.',
+      question: 'What do we ride to travel to space?',
+      picture: 'life-q2-question.webp',
+      pictureAlt: 'A child thinks beside a question mark and a glowing path toward space.',
       options: [
-        { text: 'She took seeds.', image: 'q2-seeds.webp', alt: 'The child carries seeds toward the alien spaceship.', correct: true },
-        { text: 'She took toys.', image: 'q2-toys.webp', alt: 'The child carries a teddy bear, blocks, and a ball toward the spaceship.' }
+        { text: 'A spaceship.', image: 'life-q2-spaceship.webp', alt: 'A rounded purple spaceship flying through space.', correct: true },
+        { text: 'A car.', image: 'life-q2-car.webp', alt: 'A bright red car on a sunny road.' }
       ]
     },
     {
-      question: "What grew on the alien's planet?",
-      picture: 'q3-question.webp',
-      pictureAlt: 'The child and alien happily discover flowers growing on the gray planet.',
+      question: 'What can we see in space?',
+      picture: 'life-q3-question.webp',
+      pictureAlt: 'A child looks at a large question mark through a round space window.',
       options: [
-        { text: 'Many flowers grew.', image: 'q3-flowers.webp', alt: 'Many colorful flowers grow around the child, alien, and spaceship.', correct: true },
-        { text: 'Tall buildings grew.', image: 'q3-buildings.webp', alt: 'Tall futuristic buildings stand on the alien planet.' }
+        { text: 'Stars and the Moon.', image: 'life-q3-stars-moon.webp', alt: 'A glowing crescent Moon surrounded by many bright stars.', correct: true },
+        { text: 'Fish.', image: 'life-q3-fish.webp', alt: 'Three colorful fish swimming in a toy aquarium.' }
       ]
     },
     {
-      question: 'How should we explore a new place?',
-      picture: 'q1-question.webp',
-      pictureAlt: 'A child and a friendly alien explore a new planet.',
+      question: 'Who might we meet in space?',
+      picture: 'life-q4-question.webp',
+      pictureAlt: 'A child waves toward an empty glowing doorway beside a large question mark.',
       options: [
-        { text: 'Stay with a grown-up.', image: 'q4-stay-with-grownup.webp', alt: 'A child safely explores a new trail beside a grown-up.', correct: true },
-        { text: 'Run away alone.', image: 'q4-run-alone.webp', alt: 'A child runs far ahead alone while a worried grown-up calls them back.' }
+        { text: 'An alien.', image: 'life-q4-alien.webp', alt: 'A friendly green alien waves in space.', correct: true },
+        { text: 'A puppy.', image: 'life-q4-puppy.webp', alt: 'A fluffy golden puppy sits on green grass.' }
       ]
     }
   ];

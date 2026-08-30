@@ -14,7 +14,7 @@
   const pageContent = {
     1: {
       icon: '🎬', heading: 'Reading Time',
-      description: 'Watch and listen to the Week 1 story.',
+      description: `Watch and listen to the Week ${week} story.`,
       body: '<div class="literacy-media-slot">Opening video placeholder</div>'
     },
     2: {
@@ -51,7 +51,26 @@
     5: ['../assets/images/week-4/literacy/page-05-background-clean.png', 'Choose whether Lorenzo Langstroth was a fireman, beekeeper, or nurse'],
     6: ['../assets/images/week-4/literacy/page-06-background-clean.png', 'Choose what would disappear without bees']
   };
-  const hasWeekOneReadingVideo = week === 1 && page === 1;
+  const readingTimeVideos = {
+    1: {
+      src: '../assets/video/week-1/literacy/page-01-reading-time.mp4',
+      poster: '../assets/images/week-1/literacy/page-01-reading-time-poster.webp'
+    },
+    2: {
+      src: '../assets/video/week-2/literacy/page-01-reading-time.mp4',
+      poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp'
+    },
+    3: {
+      src: '../assets/video/week-3/literacy/page-01-reading-time.mp4',
+      poster: '../assets/images/week-3/reading/zoom-to-space-thumbnail.png'
+    },
+    4: {
+      src: '../assets/video/week-4/literacy/page-01-reading-time.mp4',
+      poster: '../assets/images/week-4/literacy/page-01-reading-time-poster.webp'
+    }
+  };
+  const readingTimeVideo = page === 1 ? readingTimeVideos[week] : null;
+  const hasReadingTimeVideo = Boolean(readingTimeVideo);
   const previousHref = page === 1 ? `../week-${week}.html#card-literacy` : `week-${week}-page-${String(page - 1).padStart(2, '0')}.html#lesson-focus`;
   const nextHref = page < 6 ? `week-${week}-page-${String(page + 1).padStart(2, '0')}.html#lesson-focus` : '';
   const completionMarkup = week === 1 && page >= 3 ? `
@@ -83,27 +102,27 @@
     <section id="lesson-focus" class="card literacy-shell-card" aria-label="Week ${week} Literacy page ${page} content area">
       <h2 class="section-title">${content.icon} ${content.heading}</h2>
       <p>${content.description}</p>
-      <div class="literacy-placeholder${hasWeekOneReadingVideo ? ' literacy-video-lesson' : ''}">
+      <div class="literacy-placeholder${hasReadingTimeVideo ? ' literacy-video-lesson' : ''}">
         <div class="literacy-placeholder__content">
-          ${hasWeekOneReadingVideo ? `
+          ${hasReadingTimeVideo ? `
             <div class="literacy-reading-video-shell">
               <video
-                id="week-1-reading-time-video"
+                id="reading-time-video"
                 class="lesson-video literacy-reading-video"
                 controls
                 playsinline
                 preload="metadata"
-                poster="../assets/images/week-1/literacy/page-01-reading-time-poster.webp"
-                aria-label="Week 1 Reading Time video"
+                poster="${readingTimeVideo.poster}"
+                aria-label="Week ${week} Reading Time video"
               >
-                <source src="../assets/video/week-1/literacy/page-01-reading-time.mp4" type="video/mp4">
+                <source src="${readingTimeVideo.src}" type="video/mp4">
                 Your browser does not support this video.
               </video>
               <button
-                id="week-1-reading-time-play"
+                id="reading-time-play"
                 class="literacy-center-video-play"
                 type="button"
-                aria-label="Play the Week 1 Reading Time video"
+                aria-label="Play the Week ${week} Reading Time video"
               >▶</button>
             </div>
             <p class="literacy-video-tip">Tap the play button to begin Reading Time.</p>
@@ -130,8 +149,8 @@
       <p class="activity-build-note">Loading activity…</p>`;
   }
 
-  const readingVideo = document.getElementById('week-1-reading-time-video');
-  const readingPlayButton = document.getElementById('week-1-reading-time-play');
+  const readingVideo = document.getElementById('reading-time-video');
+  const readingPlayButton = document.getElementById('reading-time-play');
   if (readingVideo && readingPlayButton) {
     const showReadingPlayButton = () => { readingPlayButton.hidden = false; };
     const hideReadingPlayButton = () => { readingPlayButton.hidden = true; };
