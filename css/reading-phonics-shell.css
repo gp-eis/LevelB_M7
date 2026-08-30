@@ -178,8 +178,10 @@
   transition: transform .15s ease, filter .15s ease;
 }
 
-a.track-activity-btn:hover { transform: translateY(-4px); filter: brightness(1.04); }
-a.track-activity-btn:active { transform: translateY(2px); }
+.track-activity-btn:hover:not(:disabled) { transform: translateY(-4px); filter: brightness(1.04); }
+.track-activity-btn:active:not(:disabled) { transform: translateY(2px); }
+
+button.track-activity-btn { cursor: pointer; }
 
 .track-activity-btn:disabled,
 .center-video-play-placeholder:disabled { cursor: default; opacity: .78; }

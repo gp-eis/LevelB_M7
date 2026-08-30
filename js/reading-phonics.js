@@ -6,7 +6,7 @@
   const track = document.body.dataset.track === 'phonics' ? 'phonics' : 'reading';
   const titles = {
     1: 'Do you keep bees?',
-    2: 'What do bees do?',
+    2: 'Do we have World Bee Day?',
     3: 'Why do we need bees?',
     4: 'I am Lorenzo Langstroth.'
   };
@@ -25,11 +25,29 @@
     3: '../assets/video/week-3/phonics/week-3.mp4',
     4: '../assets/video/week-4/phonics/week-4.mp4'
   };
-  const phonicsVideo = isReading ? null : phonicsVideos[week];
+  const readingVideos = {
+    2: '../assets/video/week-2/reading/world-bee-day.mp4',
+    3: '../assets/video/week-3/reading/zoom-to-space.mp4',
+    4: '../assets/video/week-4/reading/week-4-reading.mp4'
+  };
+  const activeVideo = isReading ? readingVideos[week] : phonicsVideos[week];
   const readingThumbnails = {
-    1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.webp'
+    1: '../assets/images/week-1/reading/who-is-the-queen-thumbnail.webp',
+    2: '../assets/images/week-2/reading/world-bee-day-thumbnail.png',
+    3: '../assets/images/week-3/reading/zoom-to-space-thumbnail.png',
+    4: '../assets/images/week-4/reading/lorenzo-langstroth-thumbnail.png'
+  };
+  const readingThumbnailAlts = {
+    1: 'Who is the Queen? reading thumbnail',
+    2: 'Do we have World Bee Day? reading thumbnail',
+    3: 'Zoom to Space reading video thumbnail',
+    4: 'The Story of Lorenzo Langstroth reading thumbnail'
   };
   const readingThumbnail = isReading ? readingThumbnails[week] : null;
+  const readingActivityHrefs = {
+    2: 'week-2-activity.html',
+    3: 'week-3-activity.html'
+  };
   const phonicsGamesHref = week === 1
     ? '../games/phonics.html?from=phonics'
     : `../games/week-${week}/phonics.html?from=phonics`;
@@ -47,25 +65,25 @@
     </header>
     <section id="lesson-focus" class="track-card" aria-label="Week ${week} ${label} video">
       ${isReading ? `<h2 class="section-title">\u{1F3AC} ${label} Video</h2>` : ''}
-      ${phonicsVideo ? `
+      ${activeVideo ? `
         <div class="video-play-shell track-video-shell">
           <video
             class="track-video"
             controls
             playsinline
             preload="metadata"
-            ${week === 1 ? 'poster="../assets/images/week-1/phonics/week-1-poster.webp"' : ''}
-            aria-label="Week ${week} phonics lesson video"
+            ${isReading && readingThumbnail ? `poster="${readingThumbnail}"` : (!isReading && week === 1 ? 'poster="../assets/images/week-1/phonics/week-1-poster.webp"' : '')}
+            aria-label="Week ${week} ${label.toLowerCase()} lesson video"
           >
-            <source src="${phonicsVideo}" type="video/mp4">
+            <source src="${activeVideo}" type="video/mp4">
             Your browser does not support this video.
           </video>
-          <button class="center-video-play" type="button" aria-label="Play the Week ${week} phonics video">\u25B6</button>
+          <button class="center-video-play" type="button" aria-label="Play the Week ${week} ${label.toLowerCase()} video">\u25B6</button>
         </div>
       ` : `
         <div class="track-video-placeholder">
           ${readingThumbnail
-            ? `<img class="track-reading-thumbnail" src="${readingThumbnail}" alt="Who is the Queen? reading thumbnail">`
+            ? `<img class="track-reading-thumbnail" src="${readingThumbnail}" alt="${readingThumbnailAlts[week] || `Week ${week} reading thumbnail`}">`
             : `<div class="track-video-placeholder__copy">
                 <span aria-hidden="true">\u{1F3AC}</span>
                 <strong>Week ${week} ${label} video placeholder</strong>
@@ -76,11 +94,15 @@
       `}
       ${isReading ? '<p class="track-note">Watch the story, then try the reading activity!</p>' : ''}
     </section>
-    <section class="track-card track-activity-card" aria-label="Week ${week} ${label} activity placeholder">
+    <section class="track-card track-activity-card" aria-label="Week ${week} ${label} activity">
       <h2 class="section-title">\u2B50 ${activityHeading}</h2>
       <p>${activityCopy}</p>
       ${isReading
-        ? `<button class="track-activity-btn" type="button" disabled><span aria-hidden="true">${activityIcon}</span><span>Activity Placeholder</span></button>`
+        ? (week === 4
+          ? `<button class="track-activity-btn" id="week-4-reading-open" type="button"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></button><div id="week-4-reading-activity"></div>`
+          : (readingActivityHrefs[week]
+            ? `<a class="track-activity-btn" href="${readingActivityHrefs[week]}"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></a>`
+            : `<button class="track-activity-btn" type="button" disabled><span aria-hidden="true">${activityIcon}</span><span>Activity Placeholder</span></button>`))
         : `<a class="track-activity-btn" href="${phonicsGamesHref}"><span aria-hidden="true">${activityIcon}</span><span>Start Activity</span></a>`}
     </section>`;
 

@@ -32,12 +32,12 @@
       ]
     },
     {
-      question: 'What should we do when friends are different?',
-      image: 'question-4.webp',
-      imageAlt: 'Different friends welcome each other with smiles.',
+      question: 'What kind of story is this?',
+      image: 'question-1.webp',
+      imageAlt: 'The children meet a human queen and a queen bee in a magical garden.',
       answers: [
-        { label: 'Be kind and celebrate our differences.', image: 'answer-kind.webp', alt: 'Children welcoming one another with a friendly high-five.', correct: true },
-        { label: 'Laugh and turn away.', image: 'answer-unkind.webp', alt: 'A child laughs while another child feels sad.', correct: false }
+        { label: 'Fairytale', image: 'answer-fairytale.webp', alt: 'A magical fairytale book with a castle, queen, and crowned bee.', correct: true },
+        { label: 'Science book', image: 'answer-science-book.webp', alt: 'A science book with a microscope, planets, an atom model, and a magnifying glass.', correct: false }
       ]
     }
   ];
@@ -69,11 +69,27 @@
   activity.classList.add('w1-reading-activity-card');
   activity.innerHTML = `
     <h2 class="section-title">⭐ Who Is the Queen? Challenge</h2>
-    <div class="w1-reading-intro">
-      <p>Look, listen, and choose the right answer!</p>
-      <button class="w1-reading-speaker" id="w1-reading-intro" type="button" aria-label="Listen to the activity instructions">🔊</button>
-    </div>
-    <div id="w1-reading-game">
+    <p>After watching the story, answer four picture questions.</p>
+    <button class="track-activity-btn" id="w1-reading-open" type="button"><span aria-hidden="true">📖</span><span>Start Activity</span></button>`;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'w1-reading-modal';
+  overlay.id = 'w1-reading-modal';
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <section class="w1-reading-dialog" role="dialog" aria-modal="true" aria-labelledby="w1-reading-dialog-title">
+      <header class="w1-reading-dialog-header">
+        <div>
+          <h2 id="w1-reading-dialog-title">⭐ Who Is the Queen? Challenge</h2>
+          <div class="w1-reading-intro">
+            <p>Look, listen, and choose the right answer!</p>
+            <button class="w1-reading-speaker" id="w1-reading-intro" type="button" aria-label="Listen to the activity instructions">🔊</button>
+          </div>
+        </div>
+        <button class="w1-reading-close" id="w1-reading-close" type="button" aria-label="Close activity">✕</button>
+      </header>
+      <div class="w1-reading-dialog-body">
+        <div id="w1-reading-game">
       <div class="w1-reading-progress"><span id="w1-reading-progress-label"></span><span class="w1-reading-dots" id="w1-reading-dots" aria-hidden="true"></span></div>
       <div class="w1-reading-question">
         <img id="w1-reading-question-image" alt="">
@@ -82,17 +98,22 @@
       </div>
       <div class="w1-reading-answers" id="w1-reading-answers"></div>
       <p class="w1-reading-feedback" id="w1-reading-feedback" aria-live="polite"></p>
-    </div>
-    <section class="w1-reading-complete" id="w1-reading-complete" aria-live="polite" hidden>
-      <h2>🏆 Great job!</h2>
-      <p>You finished the Who Is the Queen? challenge!</p>
-      <div class="w1-reading-complete-actions">
-        <button class="track-activity-btn" id="w1-reading-again" type="button">🔄 Try Again</button>
-        <button class="w1-reading-speaker" id="w1-reading-complete-speaker" type="button" aria-label="Listen to the congratulations message">🔊</button>
+        </div>
+        <section class="w1-reading-complete" id="w1-reading-complete" aria-live="polite" hidden>
+          <h2>🏆 Great job!</h2>
+          <p>You finished the Who Is the Queen? challenge!</p>
+          <div class="w1-reading-complete-actions">
+            <button class="track-activity-btn" id="w1-reading-again" type="button">🔄 Try Again</button>
+            <button class="track-activity-btn" id="w1-reading-finish" type="button">✓ Finish</button>
+            <button class="w1-reading-speaker" id="w1-reading-complete-speaker" type="button" aria-label="Listen to the congratulations message">🔊</button>
+          </div>
+        </section>
       </div>
     </section>`;
+  document.body.appendChild(overlay);
 
   const game = document.querySelector('#w1-reading-game');
+  const dialogBody = document.querySelector('.w1-reading-dialog-body');
   const progressLabel = document.querySelector('#w1-reading-progress-label');
   const dots = document.querySelector('#w1-reading-dots');
   const questionImage = document.querySelector('#w1-reading-question-image');
@@ -103,6 +124,7 @@
   const completion = document.querySelector('#w1-reading-complete');
   let index = 0;
   let locked = false;
+  let lastFocus = null;
 
   function speak(text) {
     if (typeof window.speakAmericanEnglish === 'function') return window.speakAmericanEnglish(text, { rate: .82, pitch: 1.05 });
@@ -213,11 +235,34 @@
     feedback.className = 'w1-reading-feedback';
     setDisabled(false);
     renderProgress();
+    dialogBody.scrollTop = 0;
   }
 
+  function openActivity() {
+    lastFocus = document.activeElement;
+    index = 0;
+    render();
+    overlay.hidden = false;
+    document.body.classList.add('w1-reading-modal-open');
+    document.querySelector('#w1-reading-close').focus();
+  }
+
+  function closeActivity() {
+    overlay.hidden = true;
+    document.body.classList.remove('w1-reading-modal-open');
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (lastFocus instanceof HTMLElement) lastFocus.focus();
+  }
+
+  document.querySelector('#w1-reading-open').addEventListener('click', openActivity);
+  document.querySelector('#w1-reading-close').addEventListener('click', closeActivity);
   document.querySelector('#w1-reading-intro').addEventListener('click', () => speak('Look, listen, and choose the right answer!'));
   questionSpeaker.addEventListener('click', () => { if (!locked) speak(questions[index].question); });
   document.querySelector('#w1-reading-complete-speaker').addEventListener('click', () => speak('Great job! You finished the Who Is the Queen challenge!'));
   document.querySelector('#w1-reading-again').addEventListener('click', () => { index = 0; render(); });
-  render();
+  document.querySelector('#w1-reading-finish').addEventListener('click', closeActivity);
+  overlay.addEventListener('click', (event) => { if (event.target === overlay) closeActivity(); });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !overlay.hidden) closeActivity();
+  });
 })();
