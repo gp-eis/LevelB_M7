@@ -307,7 +307,9 @@ body.tool-page {
 .big-title { font-size:clamp(2.2rem,6vw,4rem); font-weight:700; color:#1e6fd9; text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(30,111,217,.22); letter-spacing:1px; }
 .back-link { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:999px; background:#fff; box-shadow:0 4px 0 rgba(42,159,214,.35); color:#1e6fd9; text-decoration:none; font-size:1.05rem; font-weight:700; transition:transform .12s ease; }
 .back-link:hover { transform:translateX(-4px); }
-.game-week-home-link { position:fixed !important; top:max(10px,env(safe-area-inset-top)) !important; right:max(10px,env(safe-area-inset-right)) !important; left:auto !important; z-index:2500 !important; min-height:44px; padding:9px 18px; border:3px solid rgba(255,255,255,.82); background:linear-gradient(180deg,#ffcf55,#f6a91d); color:#744200; box-shadow:0 5px 0 #c77b08,0 8px 18px rgba(67,92,121,.22); }
+.game-home-anchor-container { position:relative; }
+.game-week-home-link { position:absolute !important; top:var(--game-home-top,0) !important; right:0 !important; left:auto !important; z-index:2500 !important; min-height:44px; padding:9px 18px; border:3px solid rgba(255,255,255,.82); background:linear-gradient(180deg,#ffcf55,#f6a91d); color:#744200; box-shadow:0 5px 0 #c77b08,0 8px 18px rgba(67,92,121,.22); }
+.game-week-home-link.is-awaiting-position { visibility:hidden; }
 .game-week-home-link:hover { transform:translateY(-2px); }
 .game-week-home-link:focus-visible { outline:4px solid #174f9d; outline-offset:3px; }
 @media (max-width:600px) { .game-week-home-link { min-height:40px; padding:7px 11px !important; gap:5px; font-size:.82rem !important; } }

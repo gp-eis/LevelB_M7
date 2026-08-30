@@ -274,7 +274,30 @@ function setupGameWeekHomeButton() {
   homeLink.href = `${isNestedWeekFolder ? '../../' : '../'}week-${week}.html#card-games`;
   homeLink.setAttribute('aria-label', `Return to Week ${week} lesson selection`);
   homeLink.innerHTML = '<span aria-hidden="true">🏠</span><span>Home</span>';
+  homeLink.classList.add('is-awaiting-position');
   document.body.appendChild(homeLink);
+
+  const alignWithBackButton = () => {
+    const backLink = document.querySelector('.back-link:not(.game-week-home-link)');
+    const gamePage = backLink?.closest('.page') || backLink?.closest('main') || document.querySelector('main.page, main');
+    if (!backLink || !gamePage) return false;
+
+    gamePage.classList.add('game-home-anchor-container');
+    if (homeLink.parentElement !== gamePage) gamePage.appendChild(homeLink);
+    const pageRect = gamePage.getBoundingClientRect();
+    const backRect = backLink.getBoundingClientRect();
+    homeLink.style.setProperty('--game-home-top', `${Math.max(0, backRect.top - pageRect.top)}px`);
+    homeLink.classList.remove('is-awaiting-position');
+    return true;
+  };
+
+  if (!alignWithBackButton()) {
+    const observer = new MutationObserver(() => {
+      if (alignWithBackButton()) observer.disconnect();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+  window.addEventListener('resize', () => requestAnimationFrame(alignWithBackButton));
 }
 
 (() => {
