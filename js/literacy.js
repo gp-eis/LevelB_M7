@@ -65,7 +65,7 @@
       poster: '../assets/images/week-3/reading/zoom-to-space-thumbnail.png'
     },
     4: {
-      src: '../assets/video/week-4/literacy/page-01-reading-time.mp4',
+      src: '../assets/video/week-4/literacy/page-01-reading-time.mp4?v=20260902-korean',
       poster: '../assets/images/week-4/literacy/page-01-reading-time-poster.webp'
     }
   };
