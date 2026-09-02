@@ -61,7 +61,7 @@
       poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp'
     },
     3: {
-      src: '../assets/video/week-3/literacy/page-01-reading-time.mp4',
+      src: '../assets/video/week-3/literacy/page-01-reading-time.mp4?v=20260902-1',
       poster: '../assets/images/week-3/reading/zoom-to-space-thumbnail.png'
     },
     4: {

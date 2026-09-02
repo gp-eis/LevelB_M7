@@ -11,7 +11,7 @@
     4: 'I am Lorenzo Langstroth.'
   };
   const isReading = track === 'reading';
-  const readingVideoTemporarilyDisabled = isReading && week >= 2 && week <= 4;
+  const readingVideoTemporarilyDisabled = isReading && (week === 2 || week === 4);
   const label = isReading ? 'Reading' : 'Phonics';
   const heading = isReading ? `Reading \u2014 Week ${week}` : `Week ${week} \u2014 Phonics`;
   const titleIcon = isReading ? '\u{1F4D6}' : '\u{1F524}';
@@ -31,7 +31,7 @@
   const readingVideos = {
     1: '../assets/video/week-1/reading/who-is-the-queen.mp4',
     2: '../assets/video/week-2/reading/world-bee-day.mp4',
-    3: '../assets/video/week-3/reading/zoom-to-space.mp4',
+    3: '../assets/video/week-3/reading/zoom-to-space.mp4?v=20260902-1',
     4: '../assets/video/week-4/reading/week-4-reading.mp4'
   };
   const activeVideo = isReading
