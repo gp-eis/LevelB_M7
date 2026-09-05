@@ -22,12 +22,10 @@
   const restartButton=document.getElementById('page-two-activity-restart');
   const skipTopButton=document.getElementById('page-two-activity-skip-top');
   const video=document.getElementById('page-two-video');
-  const videoPlay=document.getElementById('page-two-video-play');
   const actionButtons=[...document.querySelectorAll('.page-two-action[data-action]')];
   if(!overlay||!stage||!video)return;
 
   let activeKey='';
-  let currentVideoKey='';
   let cleanups=[];
   const addCleanup=fn=>cleanups.push(fn);
   const cleanupActivity=()=>{cleanups.splice(0).forEach(fn=>{try{fn()}catch(_){}})};
@@ -175,8 +173,7 @@
   };
   const openActivity=key=>{if(!ACTIONS[key])return;activeKey=key;video.pause();overlay.hidden=false;document.body.style.overflow='hidden';renderActiveActivity();closeButton.focus()};
   const closeActivity=()=>{cleanupActivity();overlay.hidden=true;success.hidden=true;document.body.style.overflow='';actionButtons.find(button=>button.dataset.action===activeKey)?.focus()};
-  const showVideoPlay=()=>{if(currentVideoKey)videoPlay.hidden=false};const hideVideoPlay=()=>{videoPlay.hidden=true};
-  const loadAndPlayVideo=key=>{const action=ACTIONS[key];if(!action)return;currentVideoKey=key;video.pause();video.src=action.video;video.load();videoPlay.disabled=false;videoPlay.classList.remove('is-locked');videoPlay.innerHTML=`<span aria-hidden="true">▶</span><small>${action.label}</small>`;closeActivity();video.scrollIntoView({behavior:'smooth',block:'center'});video.play().catch(showVideoPlay)};
-  actionButtons.forEach(button=>button.addEventListener('click',()=>openActivity(button.dataset.action)));closeButton.addEventListener('click',closeActivity);restartButton.addEventListener('click',renderActiveActivity);skipTopButton.addEventListener('click',()=>loadAndPlayVideo(activeKey));watchButton.addEventListener('click',()=>loadAndPlayVideo(activeKey));videoPlay.addEventListener('click',()=>video.play().catch(showVideoPlay));video.addEventListener('play',hideVideoPlay);video.addEventListener('playing',hideVideoPlay);video.addEventListener('pause',showVideoPlay);video.addEventListener('ended',showVideoPlay);overlay.addEventListener('click',event=>{if(event.target===overlay)closeActivity()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)closeActivity()});
+  const loadAndPlayVideo=key=>{const action=ACTIONS[key];if(!action)return;video.pause();video.src=action.video;video.setAttribute('aria-label',`${action.label} video`);video.load();closeActivity();video.scrollIntoView({behavior:'smooth',block:'center'});video.play().catch(()=>{})};
+  actionButtons.forEach(button=>button.addEventListener('click',()=>openActivity(button.dataset.action)));closeButton.addEventListener('click',closeActivity);restartButton.addEventListener('click',renderActiveActivity);skipTopButton.addEventListener('click',()=>loadAndPlayVideo(activeKey));watchButton.addEventListener('click',()=>loadAndPlayVideo(activeKey));overlay.addEventListener('click',event=>{if(event.target===overlay)closeActivity()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!overlay.hidden)closeActivity()});
   try{JSON.parse(sessionStorage.getItem('levelB-m7-w1-p2-completed')||'[]').forEach(key=>actionButtons.find(item=>item.dataset.action===key)?.classList.add('is-complete'))}catch(_){}
 })();

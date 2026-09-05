@@ -179,28 +179,9 @@
   videoShell.className = 'topic-video-shell';
   video.parentNode.insertBefore(videoShell, video);
   videoShell.appendChild(video);
-  const videoLock = document.createElement('button');
-  videoLock.className = 'topic-video-lock is-locked';
-  videoLock.type = 'button';
-  videoLock.disabled = true;
-  videoLock.innerHTML = '<span aria-hidden="true">🔒</span><small>Choose a topic below. The activity is optional.</small>';
-  videoShell.appendChild(videoLock);
   video.pause();
-  video.removeAttribute('src');
-  video.querySelectorAll('source').forEach((source) => source.remove());
+  video.preload = 'auto';
   video.load();
-
-  let currentVideoReady = false;
-  const showVideoLock = () => { videoLock.hidden = false; };
-  const hideVideoLock = () => { videoLock.hidden = true; };
-  video.addEventListener('play', hideVideoLock);
-  video.addEventListener('playing', hideVideoLock);
-  video.addEventListener('pause', () => { if (currentVideoReady) showVideoLock(); });
-  video.addEventListener('ended', showVideoLock);
-  videoLock.addEventListener('click', () => {
-    if (!currentVideoReady) return;
-    video.play().catch(showVideoLock);
-  });
 
   const overlay = document.createElement('div');
   overlay.className = 'topic-activity-overlay';
@@ -400,17 +381,13 @@
 
   function playActiveVideo() {
     if (!activeTrigger) return;
-    currentVideoReady = true;
     video.pause();
     video.src = activeTrigger.dataset.video;
     video.setAttribute('aria-label', `${activeTrigger.dataset.line} video`);
-    videoLock.disabled = false;
-    videoLock.classList.remove('is-locked');
-    videoLock.innerHTML = `<span aria-hidden="true">▶</span><small>${activeTrigger.dataset.line}</small>`;
     video.load();
     closeActivity();
     video.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    video.play().catch(showVideoLock);
+    video.play().catch(() => {});
   }
 
   triggers.forEach((trigger) => {

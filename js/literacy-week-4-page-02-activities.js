@@ -40,28 +40,9 @@
   videoShell.className = 'w4-video-shell';
   video.parentNode.insertBefore(videoShell, video);
   videoShell.appendChild(video);
-
-  const videoCover = document.createElement('button');
-  videoCover.className = 'w4-video-cover';
-  videoCover.type = 'button';
-  videoCover.disabled = true;
-  videoCover.innerHTML = '<span aria-hidden="true">🔒</span><small>Choose an activity below.</small>';
-  videoShell.appendChild(videoCover);
   video.pause();
-  video.removeAttribute('src');
-  video.querySelectorAll('source').forEach((source) => source.remove());
+  video.preload = 'auto';
   video.load();
-
-  let videoReady = false;
-  const showVideoCover = () => { videoCover.hidden = false; };
-  const hideVideoCover = () => { videoCover.hidden = true; };
-  video.addEventListener('playing', hideVideoCover);
-  video.addEventListener('pause', () => { if (videoReady) showVideoCover(); });
-  video.addEventListener('ended', showVideoCover);
-  videoCover.addEventListener('click', () => {
-    if (!videoReady) return;
-    video.play().catch(showVideoCover);
-  });
 
   const overlay = document.createElement('div');
   overlay.className = 'w4-p2-overlay';
@@ -157,16 +138,13 @@
 
   function playActiveVideo() {
     if (!activeTrigger) return;
-    videoReady = true;
     video.pause();
     video.src = activeTrigger.dataset.video;
     video.setAttribute('aria-label', `${activeTrigger.dataset.line} video`);
-    videoCover.disabled = false;
-    videoCover.innerHTML = `<span aria-hidden="true">▶</span><small>${activeTrigger.dataset.line}</small>`;
     video.load();
     closeActivity();
     video.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    video.play().catch(showVideoCover);
+    video.play().catch(() => {});
   }
 
   function wireDropItem(item, target, onDrop) {
