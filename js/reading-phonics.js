@@ -11,7 +11,7 @@
     4: 'I am Lorenzo Langstroth.'
   };
   const isReading = track === 'reading';
-  const readingVideoTemporarilyDisabled = false;
+  const readingVideoTemporarilyDisabled = isReading && week === 2;
   const label = isReading ? 'Reading' : 'Phonics';
   const heading = isReading ? `Reading \u2014 Week ${week}` : `Week ${week} \u2014 Phonics`;
   const titleIcon = isReading ? '\u{1F4D6}' : '\u{1F524}';
