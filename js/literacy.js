@@ -58,7 +58,7 @@
     },
     2: {
       src: '../assets/video/week-2/literacy/page-01-reading-time-korean-web.mp4',
-      poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp'
+      poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp?v=20260906-1'
     },
     3: {
       src: '../assets/video/week-3/literacy/page-01-reading-time.mp4?v=20260903-literacy-3',
@@ -91,50 +91,49 @@
       ${nextHref ? `<a class="back-link next-page-link" href="${nextHref}">Next Page ➡️</a>` : ''}
     </nav>
     ${page > 1 ? `<a class="literacy-list-link" href="../week-${week}.html#card-literacy">🏠 Week ${week} Home</a>` : ''}
-    <header class="literacy-header">
+    <header class="${page === 1 ? 'center ' : ''}literacy-header">
       <h1 class="big-title">Week ${week} — ${weekTitles[week]}</h1>
       <nav class="week-tools" aria-label="Week tools">
         <a class="pill-btn orange" href="tpr.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">🎵 Week Song</a>
         <a class="pill-btn blue" href="flashcards.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">🃏 Flashcards</a>
-        <a class="pill-btn green" href="conversation.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">💬 Conversation</a>
+        ${page > 1 ? `<a class="pill-btn green" href="conversation.html?week=${week}&return=week-${week}-page-${String(page).padStart(2, '0')}.html%23lesson-focus&from=${page}">💬 Conversation</a>` : ''}
       </nav>
     </header>
-    <section id="lesson-focus" class="card literacy-shell-card" aria-label="Week ${week} Literacy page ${page} content area">
-      <h2 class="section-title">${content.icon} ${content.heading}</h2>
-      <p>${content.description}</p>
-      <div class="literacy-placeholder${hasReadingTimeVideo ? ' literacy-video-lesson' : ''}">
-        <div class="literacy-placeholder__content">
-          ${hasReadingTimeVideo ? `
-            <div class="literacy-reading-video-shell">
-              <video
-                id="reading-time-video"
-                class="lesson-video literacy-reading-video"
-                controls
-                playsinline
-                preload="metadata"
-                poster="${readingTimeVideo.poster}"
-                aria-label="Week ${week} Reading Time video"
-              >
-                <source src="${readingTimeVideo.src}" type="video/mp4">
-                Your browser does not support this video.
-              </video>
-              <button
-                id="reading-time-play"
-                class="literacy-center-video-play"
-                type="button"
-                aria-label="Play the Week ${week} Reading Time video"
-              >▶</button>
-            </div>
-            <p class="literacy-video-tip">Tap the play button to begin Reading Time.</p>
-          ` : `
+    <section id="lesson-focus" class="card ${page === 1 ? 'literacy-page-one-card' : 'literacy-shell-card'}" ${page === 1 ? 'style="margin-top:24px"' : ''} aria-label="Week ${week} Literacy page ${page} content area">
+      ${hasReadingTimeVideo ? `
+        <div class="video-play-shell literacy-reading-video-shell">
+          <video
+            id="reading-time-video"
+            class="lesson-video literacy-reading-video"
+            controls
+            playsinline
+            preload="metadata"
+            poster="${readingTimeVideo.poster}"
+            aria-label="Week ${week} Reading Time video"
+          >
+            <source src="${readingTimeVideo.src}" type="video/mp4">
+            Your browser does not support this video.
+          </video>
+          <button
+            id="reading-time-play"
+            class="center-video-play"
+            type="button"
+            aria-label="Play the Week ${week} Reading Time video"
+          >▶</button>
+        </div>
+      ` : `
+        <h2 class="section-title">${content.icon} ${content.heading}</h2>
+        <p>${content.description}</p>
+        <div class="literacy-placeholder">
+          <div class="literacy-placeholder__content">
             <span class="literacy-placeholder__icon" aria-hidden="true">${content.icon}</span>
             <strong>Page ${page} content placeholder</strong>
             <p>Ready for the Week ${week} lesson content.</p>
             ${content.body}
-          `}
+          </div>
+          ${completionMarkup}
         </div>
-        ${completionMarkup}
-      </div>
+      `}
     </section>`;
 
   const weekFourActivity = week === 4 ? weekFourActivities[page] : null;
