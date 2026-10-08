@@ -57,8 +57,8 @@
       poster: '../assets/images/week-1/literacy/page-01-reading-time-poster.webp'
     },
     2: {
-      src: '../assets/video/week-2/literacy/page-01-reading-time-korean-web.mp4',
-      poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp?v=20260906-1'
+      src: '../assets/video/week-2/literacy/page-01-reading-time-korean-web.mp4?v=20261008-1',
+      poster: '../assets/images/week-2/literacy/page-01-reading-time-poster.webp?v=20261008-1'
     },
     3: {
       src: '../assets/video/week-3/literacy/page-01-reading-time.mp4?v=20260903-literacy-3',
